@@ -755,8 +755,8 @@
 
         let state = {
             activeWorkout: { exercises: [] },
-            history: JSON.parse(localStorage.getItem('gym_history_v10') || '[]'),
-            frequentExercises: JSON.parse(localStorage.getItem('gym_frequent_v10') || '[]')
+            history: JSON.parse(localStorage.getItem('gym_history_v11') || '[]'),
+            frequentExercises: JSON.parse(localStorage.getItem('gym_frequent_v11') || '[]')
         };
 
         let restTimerInterval = null;
@@ -817,16 +817,16 @@
             const nameInput = document.getElementById('templateNameInput').value.trim();
             if (!nameInput) return;
 
-            let templates = JSON.parse(localStorage.getItem('gym_templates_list_v10') || '{}');
+            let templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
             templates[nameInput] = state.activeWorkout.exercises;
-            localStorage.setItem('gym_templates_list_v10', JSON.stringify(templates));
+            localStorage.setItem('gym_templates_list_v11', JSON.stringify(templates));
 
             closeModal('saveTemplateModal');
             alert("Шаблон успешно сохранен!");
         }
 
         function openLoadTemplateModal() {
-            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v10') || '{}');
+            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
             const container = document.getElementById('savedTemplatesList');
             container.innerHTML = '';
 
@@ -854,7 +854,7 @@
         }
 
         function loadSpecificTemplate(tplName) {
-            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v10') || '{}');
+            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
             if (templates[tplName]) {
                 state.activeWorkout.exercises = templates[tplName].map(ex => ({
                     name: ex.name,
@@ -865,7 +865,6 @@
                 renderSetupExercises();
                 closeModal('loadTemplateModal');
                 
-                // Проверка умного помощника сразу при загрузке шаблона
                 setTimeout(() => {
                     let tipFound = null;
                     state.activeWorkout.exercises.forEach(ex => {
@@ -958,7 +957,16 @@
                 alert("Добавьте хотя бы одно упражнение!");
                 return;
             }
-            state.activeWorkout.date = new Date().toLocaleDateString();
+            // Глубокое копирование упражнений для активной тренировки со сбросом статусов
+            state.activeWorkout = {
+                date: new Date().toLocaleDateString(),
+                exercises: state.activeWorkout.exercises.map(ex => ({
+                    name: ex.name,
+                    collapsed: false,
+                    manuallyOpened: false,
+                    sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
+                }))
+            };
             
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('activeScreen').style.display = 'block';
@@ -996,7 +1004,7 @@
             lastFinishedWorkoutData = JSON.parse(JSON.stringify(state.activeWorkout));
 
             state.history.unshift(state.activeWorkout);
-            localStorage.setItem('gym_history_v10', JSON.stringify(state.history));
+            localStorage.setItem('gym_history_v11', JSON.stringify(state.history));
             
             state.activeWorkout = { exercises: [] };
             stopTimer();
@@ -1124,7 +1132,7 @@
             if (!val) return;
             if (!state.frequentExercises.includes(val)) {
                 state.frequentExercises.unshift(val);
-                localStorage.setItem('gym_frequent_v10', JSON.stringify(state.frequentExercises));
+                localStorage.setItem('gym_frequent_v11', JSON.stringify(state.frequentExercises));
             }
             input.value = '';
             closeModal('exerciseModal');
@@ -1179,7 +1187,6 @@
             return null;
         }
 
-        // --- КНОПКА ПЕРЕНОСА УПРАЖНЕНИЯ В НАЧАЛО ОЧЕРЕДИ ---
         function makeExerciseCurrent(exIndex) {
             if (exIndex <= 0) return;
             const ex = state.activeWorkout.exercises.splice(exIndex, 1)[0];
@@ -1384,7 +1391,7 @@
             const lastSet = state.activeWorkout.exercises[exIndex].sets.slice(-1)[0];
             state.activeWorkout.exercises[exIndex].sets.push({
                 weight: lastSet ? lastSet.weight : '',
-                reps: lastSet ? lastSet.reps : '',
+                reps: lastSet ? last.reps : '',
                 completed: false
             });
             renderActiveWorkout();
