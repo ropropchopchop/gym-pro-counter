@@ -23,7 +23,8 @@
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
             --input-bg: rgba(0, 0, 0, 0.35);
-            --modal-bg: rgba(20, 28, 45, 0.95);
+            --modal-bg: rgba(20, 28, 45, 0.96);
+            --toast-bg: rgba(15, 23, 42, 0.95);
         }
 
         :root[data-theme="light"] {
@@ -41,13 +42,14 @@
             
             --text-main: #0f172a;
             --text-secondary: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.8);
+            --input-bg: rgba(255, 255, 255, 0.85);
             --modal-bg: rgba(255, 255, 255, 0.98);
+            --toast-bg: rgba(255, 255, 255, 0.95);
         }
 
         :root {
             --accent: #38bdf8;
-            --accent-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.9) 0%, rgba(2, 132, 199, 0.9) 100%);
+            --accent-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.95) 0%, rgba(2, 132, 199, 0.95) 100%);
             --success: #22c55e;
             --danger: #ef4444;
             --radius: 20px;
@@ -84,18 +86,13 @@
 
         .user-greeting h1 {
             font-size: 22px;
-            font-weight: 750;
+            font-weight: 800;
             letter-spacing: -0.5px;
         }
 
         .user-greeting p {
             font-size: 13px;
             color: var(--text-secondary);
-        }
-
-        .header-btns {
-            display: flex;
-            gap: 8px;
         }
 
         .icon-btn {
@@ -105,20 +102,44 @@
             border: 1px solid var(--glass-border);
             border-top: 1px solid var(--glass-border-light);
             color: var(--text-main);
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 12px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), var(--glass-inner-glow);
             transition: transform 0.2s, background 0.2s;
         }
 
-        .icon-btn:active {
-            transform: scale(0.95);
+        .icon-btn:active { transform: scale(0.94); }
+
+        /* Всплывающее уведомление внутри сайта (вместо alert) */
+        .toast {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--toast-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            max-width: 90%;
         }
 
-        /* Tabs Navigation */
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Навигация */
         .tabs {
             display: flex;
             gap: 6px;
@@ -153,15 +174,10 @@
             box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
         }
 
-        .view-section {
-            display: none;
-        }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
 
-        .view-section.active {
-            display: block;
-        }
-
-        /* Liquid Glass Cards */
+        /* Карточки Liquid Glass */
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(24px);
@@ -176,15 +192,14 @@
 
         .card-title {
             font-size: 16px;
-            font-weight: 650;
+            font-weight: 700;
             margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            letter-spacing: -0.2px;
         }
 
-        /* Buttons */
+        /* Кнопки */
         .btn {
             width: 100%;
             background: var(--accent-gradient);
@@ -201,10 +216,7 @@
             transition: transform 0.15s ease, opacity 0.2s;
         }
 
-        .btn:active {
-            transform: scale(0.97);
-            opacity: 0.9;
-        }
+        .btn:active { transform: scale(0.97); opacity: 0.9; }
 
         .btn-secondary {
             background: var(--glass-bg);
@@ -223,66 +235,86 @@
             transition: background 0.2s, transform 0.15s;
         }
 
-        .btn-secondary:hover {
-            background: var(--glass-bg-hover);
+        .btn-secondary:hover { background: var(--glass-bg-hover); }
+        .btn-secondary:active { transform: scale(0.97); }
+
+        /* Обертка для плавного перехода между индикатором подхода и таймером */
+        .status-switcher {
+            position: relative;
+            margin-bottom: 16px;
         }
 
-        .btn-secondary:active {
-            transform: scale(0.97);
-        }
-
-        /* Пульсация активного подхода */
         @keyframes prominentPulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), inset 0 1px 1px rgba(56, 189, 248, 0.6); border-color: rgba(56, 189, 248, 0.6); }
-            50% { transform: scale(1.015); box-shadow: 0 0 35px rgba(56, 189, 248, 0.7), inset 0 1px 1px rgba(56, 189, 248, 0.9); border-color: rgba(56, 189, 248, 1); }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), inset 0 1px 1px rgba(56, 189, 248, 0.6); border-color: rgba(56, 189, 248, 0.6); }
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(56, 189, 248, 0.5); border-color: rgba(56, 189, 248, 0.5); }
+            50% { transform: scale(1.015); box-shadow: 0 0 32px rgba(56, 189, 248, 0.65), inset 0 1px 1px rgba(56, 189, 248, 0.9); border-color: rgba(56, 189, 248, 1); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(56, 189, 248, 0.5); border-color: rgba(56, 189, 248, 0.5); }
         }
 
         .active-set-indicator {
-            background: rgba(56, 189, 248, 0.15);
+            background: rgba(56, 189, 248, 0.14);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 2px solid rgba(56, 189, 248, 0.8);
             padding: 14px 16px;
-            border-radius: 16px;
-            margin-bottom: 16px;
+            border-radius: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             animation: prominentPulse 2s infinite ease-in-out;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease;
+            opacity: 1;
+            max-height: 200px;
+            overflow: hidden;
         }
 
-        /* Таймер отдыха */
+        .active-set-indicator.hidden-panel {
+            opacity: 0;
+            transform: scale(0.95);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-width: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
         .timer-bar {
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(56, 189, 248, 0.08);
+            background: rgba(56, 189, 248, 0.1);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-top: 1px solid rgba(56, 189, 248, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-top: 1px solid rgba(56, 189, 248, 0.7);
             padding: 28px 16px;
             border-radius: var(--radius);
-            margin-bottom: 16px;
             text-align: center;
             box-shadow: 0 16px 40px rgba(56, 189, 248, 0.25), var(--glass-inner-glow);
-            animation: smoothFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, padding 0.35s ease;
+            opacity: 1;
+            max-height: 320px;
+            overflow: hidden;
         }
 
-        @keyframes smoothFade {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .timer-bar.hidden-panel {
+            opacity: 0;
+            transform: scale(0.95);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-width: 0;
+            margin: 0;
+            pointer-events: none;
         }
 
         .timer-display {
-            font-size: 52px;
+            font-size: 54px;
             font-weight: 850;
             color: var(--accent);
             margin: 8px 0;
-            text-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+            text-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
             letter-spacing: -1px;
         }
 
@@ -298,15 +330,15 @@
             border: 1px solid var(--glass-border);
             border-top: 1px solid var(--glass-border-light);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 10px;
             font-size: 13px;
-            font-weight: 550;
+            font-weight: 600;
             cursor: pointer;
             box-shadow: var(--glass-inner-glow);
         }
 
-        /* Exercise Blocks */
+        /* Блоки упражнений */
         .exercise-block {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -315,16 +347,23 @@
             border-radius: 16px;
             padding: 14px;
             margin-bottom: 12px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
         }
 
-        .exercise-block.completed { opacity: 0.65; }
-        .exercise-block.pending { opacity: 0.45; }
+        .exercise-block.completed {
+            border-color: rgba(34, 197, 94, 0.3);
+            opacity: 0.75;
+        }
+
+        .exercise-block.pending {
+            opacity: 0.65;
+        }
 
         .exercise-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 8px;
         }
 
         .exercise-collapsed {
@@ -332,15 +371,16 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            gap: 8px;
         }
 
         .exercise-collapsed-info {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
-        /* Строки подходов */
+        /* Строки подходов в тренировке */
         .set-row {
             display: grid;
             grid-template-columns: 35px 1fr 1fr 45px;
@@ -350,21 +390,22 @@
             padding: 8px;
             border-radius: 12px;
             background: rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: scale(0.8);
-            opacity: 0.3;
+            transform: scale(0.84);
+            opacity: 0.38;
         }
 
         .set-row.active-set {
             transform: scale(1);
             opacity: 1;
-            background: rgba(56, 189, 248, 0.08);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            border-top: 1px solid rgba(56, 189, 248, 0.6);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-top: 1px solid rgba(56, 189, 248, 0.7);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), var(--glass-inner-glow);
         }
 
+        /* Строки подходов в настройке (единый размер) */
         .setup-set-row {
             display: grid;
             grid-template-columns: 35px 1fr 1fr;
@@ -373,7 +414,7 @@
             margin-bottom: 6px;
             padding: 6px 8px;
             border-radius: 10px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.12);
             border: 1px solid var(--glass-border);
         }
 
@@ -384,7 +425,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
         }
 
         .input-group input {
@@ -407,7 +448,7 @@
 
         .input-group input:focus { outline: none; }
 
-        /* Кнопка с галочкой */
+        /* Круглая кнопка галочки */
         .check-btn {
             width: 38px;
             height: 38px;
@@ -427,40 +468,43 @@
         }
 
         .check-btn:active { transform: scale(0.9); }
+
         .check-btn.checked {
             background: var(--success);
             color: white;
             border-color: var(--success);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5), inset 0 1px 1px rgba(255,255,255,0.4);
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.45);
         }
+
         .check-btn.active-check-btn {
             background: var(--success);
             color: white;
             border-color: var(--success);
             box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
         }
+
         .check-btn.disabled-check-btn {
             background: rgba(128, 128, 128, 0.15);
-            color: rgba(128, 128, 128, 0.4);
+            color: rgba(128, 128, 128, 0.35);
             border-color: rgba(128, 128, 128, 0.2);
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        /* AI Overload Tip */
+        /* Умная подсказка прогрессии */
         .ai-tip {
-            background: rgba(34, 197, 94, 0.08);
+            background: rgba(34, 197, 94, 0.1);
             backdrop-filter: blur(12px);
             border-left: 3px solid var(--success);
-            border-top: 1px solid rgba(34, 197, 94, 0.2);
+            border-top: 1px solid rgba(34, 197, 94, 0.25);
             padding: 10px 12px;
             border-radius: 0 10px 10px 0;
             font-size: 12px;
-            color: #86efac;
+            color: var(--text-main);
             margin-top: 8px;
         }
 
-        /* History Detail Card */
+        /* История */
         .history-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -474,8 +518,6 @@
             transition: border-color 0.2s, transform 0.15s;
         }
 
-        .history-card:active { transform: scale(0.98); }
-
         .history-details {
             display: none;
             margin-top: 12px;
@@ -486,7 +528,7 @@
 
         .history-card.expanded .history-details { display: block; }
 
-        /* Modals */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -509,6 +551,7 @@
             border-top: 1px solid var(--glass-border-light);
             border-radius: 28px 28px 0 0;
             width: 100%;
+            max-width: 600px;
             max-height: 85vh;
             padding: 24px;
             overflow-y: auto;
@@ -531,7 +574,6 @@
             cursor: pointer;
             width: 100%;
             box-shadow: var(--glass-inner-glow);
-            transition: background 0.2s, transform 0.15s;
         }
 
         .muscle-group-btn:active { transform: scale(0.98); }
@@ -542,7 +584,9 @@
             cursor: pointer;
             font-size: 14px;
             color: var(--text-main);
-            transition: background 0.15s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .exercise-select-item:hover { background: var(--glass-bg-hover); }
@@ -566,6 +610,9 @@
 </head>
 <body>
 
+    <!-- Внутрисайтовое уведомление (вместо системного alert) -->
+    <div id="toastNotification" class="toast">Уведомление</div>
+
     <header>
         <div class="user-greeting">
             <h1>GymProCounter</h1>
@@ -576,15 +623,15 @@
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- Вкладки -->
     <div class="tabs">
         <button class="tab active" onclick="switchTab('workout')" id="tabWorkoutBtn">Тренировка</button>
         <button class="tab" onclick="switchTab('history')" id="tabHistoryBtn">История</button>
     </div>
 
-    <!-- TAB 1: WORKOUT -->
+    <!-- ВКЛАДКА 1: ТРЕНИРОВКА -->
     <div id="workoutView" class="view-section active">
-        <!-- СТАРТОВЫЙ ЭКРАН / НАСТРОЙКА -->
+        <!-- ЭКРАН НАСТРОЙКИ ТРЕНИРОВКИ -->
         <div id="startScreen">
             <div class="card">
                 <div class="card-title">Настройка тренировки</div>
@@ -600,10 +647,11 @@
 
                 <div style="margin-bottom: 16px;">
                     <div class="card-title" style="font-size: 14px; margin-bottom: 8px;">Упражнения в тренировке</div>
-                    <div id="setupExercisesContainer" style="margin-bottom: 8px;"></div>
-                    <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="openMuscleGroupModal()">+ Добавить упражнение</button>
+                    <div id="setupExercisesContainer" style="margin-bottom: 10px;"></div>
+                    <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="openMuscleGroupModal('setup')">+ Добавить упражнение</button>
                 </div>
 
+                <!-- Кнопки шаблонов под добавленными упражнениями -->
                 <div style="display: flex; gap: 8px; margin-bottom: 16px;">
                     <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openSaveTemplateModal()">💾 Сохранить тренировку</button>
                     <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openLoadTemplateModal()">📂 Загрузить тренировку</button>
@@ -613,53 +661,57 @@
             </div>
         </div>
 
-        <!-- АКТИВНЫЙ ЭКРАН ТРЕНИРОВКИ -->
+        <!-- ЭКРАН АКТИВНОЙ ТРЕНИРОВКИ -->
         <div id="activeScreen" style="display: none;">
             
-            <div class="active-set-indicator" id="activeSetIndicatorBar">
-                <div>
-                    <span style="font-size: 11px; color: var(--text-secondary); display: block;">ТЕКУЩИЙ ПОДХОД</span>
-                    <div id="activeIndicatorText" style="font-size: 14px; font-weight: 650; color: var(--text-main); margin-top: 2px;">Упражнение • Подход 1 в процессе</div>
+            <div class="status-switcher">
+                <!-- Окно текущего подхода -->
+                <div class="active-set-indicator" id="activeSetIndicatorBar">
+                    <div style="flex: 1; padding-right: 10px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); display: block;" id="activeIndicatorLabel">ТЕКУЩИЙ ПОДХОД</span>
+                        <div id="activeIndicatorText" style="font-size: 14px; font-weight: 650; color: var(--text-main); margin-top: 2px;">Упражнение • Подход 1 в процессе</div>
+                    </div>
+                    <div id="activeIndicatorActionArea">
+                        <button class="check-btn active-check-btn" id="activeIndicatorCheckBtn" onclick="completeCurrentActiveSet()" style="width: 42px; height: 42px;">✓</button>
+                    </div>
                 </div>
-                <button class="check-btn active-check-btn" id="activeIndicatorCheckBtn" onclick="completeCurrentActiveSet()" style="width: 40px; height: 40px;">✓</button>
-            </div>
 
-            <div class="timer-bar" id="timerBarContainer">
-                <span style="font-size: 13px; color: var(--text-secondary);">Отдых между подходами:</span>
-                <div class="timer-display" id="timerDisplay">01:30</div>
-                <div class="timer-controls">
-                    <button onclick="adjustTimer(-15)">-15с</button>
-                    <button onclick="adjustTimer(15)">+15с</button>
-                    <button onclick="skipTimer()" style="color: var(--accent);">Дальше</button>
+                <!-- Таймер отдыха -->
+                <div class="timer-bar hidden-panel" id="timerBarContainer">
+                    <span style="font-size: 13px; color: var(--text-secondary);">Отдых между подходами:</span>
+                    <div class="timer-display" id="timerDisplay">01:30</div>
+                    <div class="timer-controls">
+                        <button onclick="adjustTimer(-15)">-15с</button>
+                        <button onclick="adjustTimer(15)">+15с</button>
+                        <button onclick="skipTimer()" style="color: var(--accent);">Дальше</button>
+                    </div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-title">
                     <span>Тренировка в процессе</span>
-                    <span id="totalTonnage" style="color: var(--accent); font-size: 14px;">0 кг</span>
+                    <span id="totalTonnage" style="color: var(--accent); font-size: 15px; font-weight: 700;">0 кг</span>
                 </div>
                 
                 <div id="exercisesContainer"></div>
 
-                <button class="btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openMuscleGroupModal()">+ Добавить упражнение</button>
+                <button class="btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openMuscleGroupModal('active')">+ Добавить упражнение</button>
             </div>
 
             <button class="btn" onclick="finishWorkout()" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); margin-top: 10px;">🏁 Завершить тренировку</button>
         </div>
     </div>
 
-    <!-- TAB 2: HISTORY -->
+    <!-- ВКЛАДКА 2: ИСТОРИЯ -->
     <div id="historyView" class="view-section">
         <div class="card">
             <div class="card-title">История тренировок</div>
-            <div id="historyContainer">
-                <p style="color: var(--text-secondary); font-size: 14px;" id="noHistoryText">Пока нет завершенных тренировок.</p>
-            </div>
+            <div id="historyContainer"></div>
         </div>
     </div>
 
-    <!-- MODAL: SELECT MUSCLE GROUP -->
+    <!-- МОДАЛКА: ВЫБОР ГРУППЫ МЫШЦ -->
     <div class="modal" id="muscleModal">
         <div class="modal-content">
             <div class="card-title">Выберите группу мышц</div>
@@ -668,57 +720,71 @@
         </div>
     </div>
 
-    <!-- MODAL: SELECT EXERCISE -->
+    <!-- МОДАЛКА: ВЫБОР УПРАЖНЕНИЯ -->
     <div class="modal" id="exerciseModal">
         <div class="modal-content">
-            <div class="card-title">Выберите упражнение</div>
-            <div id="exerciseListContainer" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <div class="card-title" id="selectExerciseTitle">Выберите упражнение</div>
+            <div id="exerciseListContainer" style="max-height: 260px; overflow-y: auto; margin-bottom: 12px;"></div>
             <div class="custom-exercise-input">
-                <input type="text" id="customExerciseInput" placeholder="Свое упражнение...">
+                <input type="text" id="customExerciseInput" placeholder="Добавить свое в эту группу...">
                 <button class="btn" style="width: auto; padding: 12px 18px;" onclick="addCustomExercise()">Добавить</button>
             </div>
             <button class="btn-secondary" onclick="closeModal('exerciseModal')" style="width: 100%; margin-top: 12px;">Назад</button>
         </div>
     </div>
 
-    <!-- MODAL: SAVE TEMPLATE -->
+    <!-- МОДАЛКА: НАСТРОЙКА НОВОГО УПРАЖНЕНИЯ ВО ВРЕМЯ ТРЕНИРОВКИ -->
+    <div class="modal" id="inWorkoutSetupModal">
+        <div class="modal-content">
+            <div class="card-title" id="quickSetupExTitle">Настройка упражнения</div>
+            <div id="quickSetupSetsContainer" style="margin-bottom: 12px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="quickRemoveSet()">- Подход</button>
+                <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="quickAddSet()">+ Подход</button>
+            </div>
+            <button class="btn" onclick="confirmQuickSetup()">Сохранить</button>
+            <button class="btn-secondary" onclick="closeModal('inWorkoutSetupModal')" style="width: 100%; margin-top: 8px;">Отмена</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: СОХРАНИТЬ ТРЕНИРОВКУ -->
     <div class="modal" id="saveTemplateModal">
         <div class="modal-content">
             <div class="card-title">Сохранить тренировку</div>
-            <div class="custom-exercise-input" style="margin-bottom: 12px;">
-                <input type="text" id="templateNameInput" placeholder="Название шаблона...">
+            <div class="custom-exercise-input" style="margin-bottom: 14px;">
+                <input type="text" id="templateNameInput" placeholder="Название (например, День ног)...">
             </div>
             <button class="btn" onclick="confirmSaveTemplate()" style="margin-bottom: 8px;">Сохранить</button>
             <button class="btn-secondary" onclick="closeModal('saveTemplateModal')" style="width: 100%; margin-top: 0;">Отмена</button>
         </div>
     </div>
 
-    <!-- MODAL: LOAD TEMPLATE -->
+    <!-- МОДАЛКА: ЗАГРУЗИТЬ ТРЕНИРОВКУ -->
     <div class="modal" id="loadTemplateModal">
         <div class="modal-content">
             <div class="card-title">Загрузить тренировку</div>
-            <div id="savedTemplatesList" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <div id="savedTemplatesList" style="max-height: 280px; overflow-y: auto; margin-bottom: 12px;"></div>
             <button class="btn-secondary" onclick="closeModal('loadTemplateModal')" style="width: 100%; margin-top: 0;">Закрыть</button>
         </div>
     </div>
 
-    <!-- RESULT MODAL -->
+    <!-- МОДАЛКА: КАРТОЧКА РЕЗУЛЬТАТА (1080x1920) -->
     <div class="modal" id="resultModal">
         <div class="modal-content" style="text-align: center; padding-bottom: 30px;">
             <div class="card-title" style="justify-content: center;">Результат тренировки</div>
             
-            <div id="storyCardPreview" style="width: 100%; max-width: 280px; height: 497px; margin: 15px auto; background: linear-gradient(135deg, #070913 0%, #1e293b 100%); border-radius: 20px; border: 2px solid rgba(56,189,248,0.4); padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;">
+            <div id="storyCardPreview" style="width: 100%; max-width: 270px; height: 480px; margin: 12px auto; background: linear-gradient(135deg, #070913 0%, #1e293b 100%); border-radius: 20px; border: 2px solid rgba(56,189,248,0.4); padding: 28px 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(56,189,248,0.2); border-radius: 50%; filter: blur(30px);"></div>
                 <div>
                     <h2 style="color: #38bdf8; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">GymProCounter</h2>
-                    <p style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Дневник тренировок</p>
+                    <p style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Твой помощник в зале</p>
                 </div>
                 <div>
-                    <div style="font-size: 13px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Поднято сегодня</div>
-                    <div id="storyTonnageVal" style="font-size: 38px; font-weight: 900; color: #f8fafc; margin: 8px 0; text-shadow: 0 0 20px rgba(56,189,248,0.4);">0 кг</div>
-                    <div id="storyDurationVal" style="font-size: 14px; color: #38bdf8; font-weight: 600;">⏱️ 0 мин.</div>
+                    <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Сегодня я поднял</div>
+                    <div id="storyTonnageVal" style="font-size: 36px; font-weight: 900; color: #f8fafc; margin: 8px 0; text-shadow: 0 0 20px rgba(56,189,248,0.4);">0 кг</div>
+                    <div id="storyDurationVal" style="font-size: 14px; color: #38bdf8; font-weight: 600;">за 0 минут</div>
                 </div>
-                <div style="font-size: 10px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; pt-2;">Время становиться сильнее 💪</div>
+                <div style="font-size: 11px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; padding-top: 10px;">Время становиться сильнее 💪</div>
             </div>
 
             <button class="btn" onclick="downloadStoryImage()" style="margin-bottom: 10px;">📥 Сохранить в галерею</button>
@@ -732,6 +798,7 @@
         let currentTheme = 'dark';
         let initialRestSeconds = 90;
         let isResting = false;
+        let addingMode = 'setup'; // 'setup' или 'active'
 
         const muscleGroupsData = {
             chest: "Грудь",
@@ -739,33 +806,35 @@
             legs: "Ноги",
             glutes: "Ягодицы",
             shoulders: "Плечи",
-            arms: "Руки",
+            arms: "Руки (Бицепс / Трицепс)",
             abs: "Пресс"
         };
 
         const exercisesData = {
-            chest: ["Жим штанги лежа", "Жим гантелей лежа", "Жим в наклоне", "Отжимания на брусьях", "Сведения в кроссовере", "Жим в тренажере", "Пуловер", "Отжимания от пола"],
-            back: ["Подтягивания", "Тяга штанги в наклоне", "Тяга верхнего блока", "Тяга гантели к поясу", "Тяга нижнего блока", "Пулловер на блоке", "Гиперэкстензия"],
-            legs: ["Приседания со штангой", "Жим ногами", "Выпады с гантелями", "Румынская тяга", "Сгибания ног сидя", "Разгибания ног", "Подъем на носки стоя"],
-            glutes: ["Ягодичный мостик со штангой", "Тяга сумо", "Махи ногой в кроссовере", "Отведение ноги назад", "Приседания плие"],
-            shoulders: ["Жим штанги стоя", "Жим гантелей сидя", "Махи гантелями в стороны", "Махи перед собой", "Махи в наклоне"],
-            arms: ["Подъем штанги на бицепс", "Молот", "Французский жим", "Разгибания на блоке", "Жим узким хватом"],
-            abs: ["Скручивания", "Подъем ног в висе", "Планка", "Боковая планка", "Русский твист"]
+            chest: ["Жим штанги лежа", "Жим гантелей лежа", "Жим штанги в наклоне", "Жим гантелей в наклоне", "Отжимания на брусьях", "Сведения в кроссовере", "Жим в тренажере сидя", "Пуловер с гантелью", "Отжимания от пола", "Сведения в тренажере (Бабочка)"],
+            back: ["Подтягивания широким хватом", "Тяга штанги в наклоне", "Тяга верхнего блока к груди", "Тяга гантели одной рукой", "Тяга горизонтального блока", "Пуловер на верхнем блоке", "Гиперэкстензия", "Шраги со штангой", "Тяга Т-грифа", "Австралийские подтягивания"],
+            legs: ["Приседания со штангой", "Жим ногами в тренажере", "Выпады с гантелями", "Румынская тяга", "Сгибания ног лежа", "Разгибания ног сидя", "Подъем на носки стоя", "Гакк-приседания", "Болгарские сплит-приседания", "Фронтальные приседания"],
+            glutes: ["Ягодичный мостик со штангой", "Становая тяга сумо", "Отведение ноги в кроссовере", "Румынская тяга на одной ноге", "Болгарские выпады на ягодицы", "Приседания плие с гантелью", "Гиперэкстензия с круглой спиной", "Зашагивания на тумбу", "Разведение ног в тренажере", "Выпады назад в Смите"],
+            shoulders: ["Армейский жим штанги стоя", "Жим гантелей сидя", "Махи гантелями в стороны", "Подъем гантелей перед собой", "Разведения в наклоне на заднюю дельту", "Тяга штанги к подбородку", "Жим Арнольда", "Отведения руки в кроссовере", "Обратные разведения в тренажере", "Тяга каната к лицу (Face Pull)"],
+            arms: ["Подъем штанги на бицепс стоя", "Сгибания рук «Молот»", "Французский жим лежа", "Разгибания рук на верхнем блоке", "Подъем гантелей на бицепс с супинацией", "Жим лежа узким хватом", "Сгибания на скамье Скотта", "Разгибания с гантелью из-за головы", "Концентрированный подъем на бицепс", "Отжимания на брусьях на трицепс"],
+            abs: ["Скручивания на полу", "Подъем ног в висе", "Планка классическая", "Молитва на верхнем блоке", "Русский твист с весом", "Велосипед лежа", "Подъем туловища на наклонной скамье", "Боковая планка", "Складка (книжка)", "Ролик для пресса"]
         };
 
         let state = {
+            setupExercises: [],
             activeWorkout: { exercises: [] },
-            history: JSON.parse(localStorage.getItem('gym_history_v11') || '[]'),
-            frequentExercises: JSON.parse(localStorage.getItem('gym_frequent_v11') || '[]')
+            history: JSON.parse(localStorage.getItem('gym_pro_history') || '[]'),
+            // Хранение кастомных и популярных упражнений СТРОГО по группам мышц
+            customByGroup: JSON.parse(localStorage.getItem('gym_pro_custom_by_group') || '{}')
         };
 
         let restTimerInterval = null;
         let restTimeRemaining = 90;
         let selectedMuscleKey = null;
-        let workoutStartTime = null;
         let workoutElapsedSeconds = 0;
         let workoutTimerInterval = null;
         let lastFinishedWorkoutData = null;
+        let tempQuickExercise = null;
 
         window.onload = function () {
             if (window.Telegram && window.Telegram.WebApp) {
@@ -775,6 +844,18 @@
             renderSetupExercises();
             renderHistory();
         };
+
+        // Внутрисайтовое всплывающее уведомление
+        let toastTimeout = null;
+        function showNotice(text) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = text;
+            toast.classList.add('show');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2600);
+        }
 
         function toggleTheme() {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -804,9 +885,10 @@
             document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }
 
+        // --- ШАБЛОНЫ ТРЕНИРОВОК (БЕЗ БРАУЗЕРНЫХ ALERT) ---
         function openSaveTemplateModal() {
-            if (!state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
-                alert("Сначала добавьте упражнения!");
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                showNotice("Сначала добавьте упражнения в тренировку!");
                 return;
             }
             document.getElementById('templateNameInput').value = `Тренировка ${new Date().toLocaleDateString()}`;
@@ -815,24 +897,27 @@
 
         function confirmSaveTemplate() {
             const nameInput = document.getElementById('templateNameInput').value.trim();
-            if (!nameInput) return;
+            if (!nameInput) {
+                showNotice("Введите название тренировки!");
+                return;
+            }
 
-            let templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
-            templates[nameInput] = state.activeWorkout.exercises;
-            localStorage.setItem('gym_templates_list_v11', JSON.stringify(templates));
+            let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            templates[nameInput] = JSON.parse(JSON.stringify(state.setupExercises));
+            localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
 
             closeModal('saveTemplateModal');
-            alert("Шаблон успешно сохранен!");
+            showNotice(`Тренировка «${nameInput}» сохранена!`);
         }
 
         function openLoadTemplateModal() {
-            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
             const container = document.getElementById('savedTemplatesList');
             container.innerHTML = '';
 
             const keys = Object.keys(templates);
             if (keys.length === 0) {
-                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных шаблонов.</p>`;
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных тренировок.</p>`;
             } else {
                 keys.forEach(tplName => {
                     const item = document.createElement('div');
@@ -841,11 +926,17 @@
                     item.style.alignItems = 'center';
                     item.style.padding = '12px';
                     item.style.borderBottom = '1px solid var(--glass-border)';
-                    item.style.cursor = 'pointer';
 
+                    const safeName = tplName.replace(/'/g, "\\'");
                     item.innerHTML = `
-                        <span style="font-size: 14px; font-weight: 600;">${tplName}</span>
-                        <button onclick="loadSpecificTemplate('${tplName.replace(/'/g, "\\'")}')" class="btn" style="width: auto; padding: 6px 12px; font-size: 12px;">Загрузить</button>
+                        <div>
+                            <strong style="font-size: 14px;">${tplName}</strong>
+                            <div style="font-size: 11px; color: var(--text-secondary);">${templates[tplName].length} упр.</div>
+                        </div>
+                        <div style="display: flex; gap: 6px;">
+                            <button onclick="loadSpecificTemplate('${safeName}')" class="btn" style="width: auto; padding: 6px 14px; font-size: 12px;">Загрузить</button>
+                            <button onclick="deleteTemplate('${safeName}')" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 12px; color: var(--danger);">✕</button>
+                        </div>
                     `;
                     container.appendChild(item);
                 });
@@ -853,56 +944,53 @@
             document.getElementById('loadTemplateModal').classList.add('open');
         }
 
+        function deleteTemplate(tplName) {
+            let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            delete templates[tplName];
+            localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+            openLoadTemplateModal();
+            showNotice("Шаблон удален");
+        }
+
         function loadSpecificTemplate(tplName) {
-            const templates = JSON.parse(localStorage.getItem('gym_templates_list_v11') || '{}');
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
             if (templates[tplName]) {
-                state.activeWorkout.exercises = templates[tplName].map(ex => ({
+                state.setupExercises = templates[tplName].map(ex => ({
                     name: ex.name,
-                    collapsed: false,
-                    manuallyOpened: false,
                     sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
                 }));
                 renderSetupExercises();
                 closeModal('loadTemplateModal');
-                
-                setTimeout(() => {
-                    let tipFound = null;
-                    state.activeWorkout.exercises.forEach(ex => {
-                        let tip = checkProgressiveOverload(ex.name);
-                        if (tip) tipFound = tip;
-                    });
-                    if (tipFound) {
-                        alert(tipFound);
-                    } else {
-                        alert("Шаблон загружен!");
-                    }
-                }, 100);
+                showNotice(`Загружена тренировка «${tplName}»`);
             }
         }
 
+        // --- ЭКРАН НАСТРОЙКИ ТРЕНИРОВКИ ---
         function renderSetupExercises() {
             const container = document.getElementById('setupExercisesContainer');
             container.innerHTML = '';
-            if (!state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
-                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Список пока пуст</p>`;
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Список упражнений пока пуст</p>`;
                 return;
             }
 
-            state.activeWorkout.exercises.forEach((ex, exIdx) => {
+            state.setupExercises.forEach((ex, exIdx) => {
                 const block = document.createElement('div');
-                block.style.background = 'rgba(0,0,0,0.15)';
+                block.style.background = 'rgba(0,0,0,0.12)';
                 block.style.border = '1px solid var(--glass-border)';
-                block.style.borderRadius = '12px';
-                block.style.padding = '10px';
+                block.style.borderRadius = '14px';
+                block.style.padding = '12px';
                 block.style.marginBottom = '10px';
+
+                let overloadTipText = checkProgressiveOverload(ex.name);
 
                 let setsHtml = `
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <strong style="font-size: 14px;">${ex.name}</strong>
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="removeSetupSet(${exIdx})" style="background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer;">- Подход</button>
-                            <button onclick="addSetupSet(${exIdx})" style="background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer;">+ Подход</button>
-                            <button onclick="removeSetupExercise(${exIdx})" style="background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer;">✕</button>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button onclick="removeSetupSet(${exIdx})" style="background:none; border:none; color:var(--danger); font-size:12px; font-weight:600; cursor:pointer;">- Подход</button>
+                            <button onclick="addSetupSet(${exIdx})" style="background:none; border:none; color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;">+ Подход</button>
+                            <button onclick="removeSetupExercise(${exIdx})" style="background:none; border:none; color:var(--text-secondary); font-size:14px; cursor:pointer;">✕</button>
                         </div>
                     </div>
                 `;
@@ -910,29 +998,33 @@
                 ex.sets.forEach((set, setIdx) => {
                     setsHtml += `
                         <div class="setup-set-row">
-                            <span style="text-align:center; font-size: 12px; color: var(--text-secondary);">${setIdx + 1}</span>
+                            <span style="text-align:center; font-size: 12px; color: var(--text-secondary);">#${setIdx + 1}</span>
                             <div class="input-group">
-                                <input type="number" placeholder="Вес (кг)" value="${set.weight}" onchange="updateSetupSet(${exIdx}, ${setIdx}, 'weight', this.value)">
+                                <input type="number" placeholder="Вес (кг)" value="${set.weight}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].weight = this.value">
                             </div>
                             <div class="input-group">
-                                <input type="number" placeholder="Повт" value="${set.reps}" onchange="updateSetupSet(${exIdx}, ${setIdx}, 'reps', this.value)">
+                                <input type="number" placeholder="Повторы" value="${set.reps}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].reps = this.value">
                             </div>
                         </div>
                     `;
                 });
+
+                if (overloadTipText) {
+                    setsHtml += `<div class="ai-tip">${overloadTipText}</div>`;
+                }
+
+                setsHtml += `
+                    <button class="btn-secondary" style="width: 100%; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="showNotice('Параметры упражнения «${ex.name}» сохранены')">Сохранить</button>
+                `;
 
                 block.innerHTML = setsHtml;
                 container.appendChild(block);
             });
         }
 
-        function updateSetupSet(exIdx, setIdx, field, val) {
-            state.activeWorkout.exercises[exIdx].sets[setIdx][field] = val;
-        }
-
         function addSetupSet(exIdx) {
-            const last = state.activeWorkout.exercises[exIdx].sets.slice(-1)[0];
-            state.activeWorkout.exercises[exIdx].sets.push({
+            const last = state.setupExercises[exIdx].sets.slice(-1)[0];
+            state.setupExercises[exIdx].sets.push({
                 weight: last ? last.weight : '',
                 reps: last ? last.reps : '',
                 completed: false
@@ -941,49 +1033,54 @@
         }
 
         function removeSetupSet(exIdx) {
-            if (state.activeWorkout.exercises[exIdx].sets.length > 1) {
-                state.activeWorkout.exercises[exIdx].sets.pop();
+            if (state.setupExercises[exIdx].sets.length > 1) {
+                state.setupExercises[exIdx].sets.pop();
                 renderSetupExercises();
             }
         }
 
         function removeSetupExercise(exIdx) {
-            state.activeWorkout.exercises.splice(exIdx, 1);
+            state.setupExercises.splice(exIdx, 1);
             renderSetupExercises();
         }
 
+        // --- СТАРТ И ЗАВЕРШЕНИЕ АКТИВНОЙ ТРЕНИРОВКИ ---
         function startActiveWorkout() {
-            if (!state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
-                alert("Добавьте хотя бы одно упражнение!");
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                showNotice("Добавьте хотя бы одно упражнение для старта!");
                 return;
             }
-            // Глубокое копирование упражнений для активной тренировки со сбросом статусов
+
+            // Переносим все настроенные упражнения и веса в активную тренировку
             state.activeWorkout = {
                 date: new Date().toLocaleDateString(),
-                exercises: state.activeWorkout.exercises.map(ex => ({
+                exercises: state.setupExercises.map(ex => ({
                     name: ex.name,
-                    collapsed: false,
                     manuallyOpened: false,
-                    sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
+                    sets: ex.sets.map(s => ({
+                        weight: s.weight || '',
+                        reps: s.reps || '',
+                        completed: false
+                    }))
                 }))
             };
             
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('activeScreen').style.display = 'block';
 
-            workoutStartTime = Date.now();
             workoutElapsedSeconds = 0;
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
             workoutTimerInterval = setInterval(() => {
                 workoutElapsedSeconds++;
             }, 1000);
 
+            stopTimer();
             renderActiveWorkout();
         }
 
         function finishWorkout() {
-            if (!state.activeWorkout || state.activeWorkout.exercises.length === 0) {
-                alert("Нет данных тренировки.");
+            if (!state.activeWorkout || !state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
+                showNotice("Нет данных тренировки.");
                 return;
             }
 
@@ -1003,9 +1100,10 @@
 
             lastFinishedWorkoutData = JSON.parse(JSON.stringify(state.activeWorkout));
 
-            state.history.unshift(state.activeWorkout);
-            localStorage.setItem('gym_history_v11', JSON.stringify(state.history));
+            state.history.unshift(lastFinishedWorkoutData);
+            localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
             
+            state.setupExercises = [];
             state.activeWorkout = { exercises: [] };
             stopTimer();
             document.getElementById('startScreen').style.display = 'block';
@@ -1016,7 +1114,7 @@
             openResultModal(lastFinishedWorkoutData);
         }
 
-        // --- AUDIO & TIMER ---
+        // --- ЗВУКИ И ТАЙМЕР ОТДЫХА ---
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1041,13 +1139,13 @@
         }
 
         function startRestTimer() {
-            stopTimer();
+            clearInterval(restTimerInterval);
             isResting = true;
             restTimeRemaining = initialRestSeconds;
             updateTimerDisplay();
             
-            document.getElementById('activeSetIndicatorBar').style.display = 'none';
-            document.getElementById('timerBarContainer').style.display = 'flex';
+            document.getElementById('activeSetIndicatorBar').classList.add('hidden-panel');
+            document.getElementById('timerBarContainer').classList.remove('hidden-panel');
             renderActiveWorkout();
 
             restTimerInterval = setInterval(() => {
@@ -1079,9 +1177,11 @@
             isResting = false;
             restTimeRemaining = initialRestSeconds;
             updateTimerDisplay();
-            document.getElementById('timerBarContainer').style.display = 'none';
-            document.getElementById('activeSetIndicatorBar').style.display = 'flex';
-            renderActiveWorkout();
+            document.getElementById('timerBarContainer').classList.add('hidden-panel');
+            document.getElementById('activeSetIndicatorBar').classList.remove('hidden-panel');
+            if (document.getElementById('activeScreen').style.display === 'block') {
+                renderActiveWorkout();
+            }
         }
 
         function updateTimerDisplay() {
@@ -1090,8 +1190,9 @@
             document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }
 
-        // --- MODALS ---
-        function openMuscleGroupModal() {
+        // --- ВЫБОР УПРАЖНЕНИЙ (С ПРИВЯЗКОЙ СВОИХ К КОНКРЕТНОЙ ГРУППЕ МЫШЦ) ---
+        function openMuscleGroupModal(mode) {
+            if (mode) addingMode = mode;
             const listEl = document.getElementById('muscleGroupsList');
             listEl.innerHTML = '';
             for (let key in muscleGroupsData) {
@@ -1113,13 +1214,22 @@
         function openExerciseModal() {
             const container = document.getElementById('exerciseListContainer');
             container.innerHTML = '';
-            let exercises = [...new Set([...state.frequentExercises, ...(exercisesData[selectedMuscleKey] || [])])];
+            document.getElementById('selectExerciseTitle').innerText = muscleGroupsData[selectedMuscleKey];
 
-            exercises.forEach(exName => {
+            const groupCustomList = state.customByGroup[selectedMuscleKey] || [];
+            const baseList = exercisesData[selectedMuscleKey] || [];
+            // Сначала идут выбранные/добавленные пользователем именно в этой группе мышц, затем остальные из топ-10
+            let combinedExercises = [...new Set([...groupCustomList, ...baseList])];
+
+            combinedExercises.forEach(exName => {
+                const isPrioritized = groupCustomList.includes(exName);
                 const item = document.createElement('div');
                 item.className = 'exercise-select-item';
-                item.innerText = exName;
-                item.onclick = () => addExerciseToWorkout(exName);
+                item.innerHTML = `
+                    <span>${exName}</span>
+                    ${isPrioritized ? '<span style="font-size: 11px; color: var(--accent);">★ Недавнее</span>' : ''}
+                `;
+                item.onclick = () => rememberAndSelectExercise(exName);
                 container.appendChild(item);
             });
 
@@ -1130,20 +1240,25 @@
             const input = document.getElementById('customExerciseInput');
             const val = input.value.trim();
             if (!val) return;
-            if (!state.frequentExercises.includes(val)) {
-                state.frequentExercises.unshift(val);
-                localStorage.setItem('gym_frequent_v11', JSON.stringify(state.frequentExercises));
-            }
             input.value = '';
-            closeModal('exerciseModal');
-            addExerciseToWorkout(val);
+            rememberAndSelectExercise(val);
         }
 
-        function addExerciseToWorkout(name) {
+        function rememberAndSelectExercise(name) {
+            if (!state.customByGroup[selectedMuscleKey]) {
+                state.customByGroup[selectedMuscleKey] = [];
+            }
+            // Поднимаем упражнение в начало списка только внутри текущей группы мышц
+            state.customByGroup[selectedMuscleKey] = [
+                name,
+                ...state.customByGroup[selectedMuscleKey].filter(item => item !== name)
+            ];
+            localStorage.setItem('gym_pro_custom_by_group', JSON.stringify(state.customByGroup));
+
             closeModal('exerciseModal');
+
             const newEx = {
                 name: name,
-                collapsed: false,
                 manuallyOpened: false,
                 sets: [
                     { weight: '', reps: '', completed: false },
@@ -1152,13 +1267,61 @@
                 ]
             };
 
-            if (document.getElementById('activeScreen').style.display === 'block') {
-                state.activeWorkout.exercises.push(newEx);
-                renderActiveWorkout();
+            if (addingMode === 'active' || document.getElementById('activeScreen').style.display === 'block') {
+                // В режиме тренировки открываем окно предварительной настройки упражнения с кнопкой "Сохранить"
+                openQuickSetupModal(newEx);
             } else {
-                state.activeWorkout.exercises.push(newEx);
+                state.setupExercises.push(newEx);
                 renderSetupExercises();
+                showNotice(`Добавлено: ${name}`);
             }
+        }
+
+        // Окно настройки нового упражнения во время активной тренировки
+        function openQuickSetupModal(exObj) {
+            tempQuickExercise = JSON.parse(JSON.stringify(exObj));
+            document.getElementById('quickSetupExTitle').innerText = tempQuickExercise.name;
+            renderQuickSetupSets();
+            document.getElementById('inWorkoutSetupModal').classList.add('open');
+        }
+
+        function renderQuickSetupSets() {
+            const container = document.getElementById('quickSetupSetsContainer');
+            container.innerHTML = '';
+            tempQuickExercise.sets.forEach((set, sIdx) => {
+                container.innerHTML += `
+                    <div class="setup-set-row">
+                        <span style="text-align:center; font-size: 12px; color: var(--text-secondary);">#${sIdx + 1}</span>
+                        <div class="input-group">
+                            <input type="number" placeholder="Вес (кг)" value="${set.weight}" oninput="tempQuickExercise.sets[${sIdx}].weight = this.value">
+                        </div>
+                        <div class="input-group">
+                            <input type="number" placeholder="Повторы" value="${set.reps}" oninput="tempQuickExercise.sets[${sIdx}].reps = this.value">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function quickAddSet() {
+            const last = tempQuickExercise.sets.slice(-1)[0];
+            tempQuickExercise.sets.push({ weight: last ? last.weight : '', reps: last ? last.reps : '', completed: false });
+            renderQuickSetupSets();
+        }
+
+        function quickRemoveSet() {
+            if (tempQuickExercise.sets.length > 1) {
+                tempQuickExercise.sets.pop();
+                renderQuickSetupSets();
+            }
+        }
+
+        function confirmQuickSetup() {
+            state.activeWorkout.exercises.push(tempQuickExercise);
+            tempQuickExercise = null;
+            closeModal('inWorkoutSetupModal');
+            renderActiveWorkout();
+            showNotice("Упражнение добавлено в тренировку!");
         }
 
         function closeModal(modalId) {
@@ -1172,89 +1335,95 @@
             state.history.forEach(w => {
                 w.exercises.forEach(e => {
                     if (e.name === exerciseName) {
-                        pastRecords.push(e);
+                        const completedSets = e.sets.filter(s => s.completed || (Number(s.weight) > 0 && Number(s.reps) > 0));
+                        if (completedSets.length > 0) {
+                            pastRecords.push(completedSets);
+                        }
                     }
                 });
             });
 
-            if (pastRecords.length >= 1) {
-                let lastRec = pastRecords[0];
-                let allRepsHigh = lastRec.sets.every(s => Number(s.reps) >= 12 && s.completed);
-                if (allRepsHigh) {
-                    return "🔥 Отличные показатели! Похоже, вы засиделись на этом весе. Попробуйте добавить 2.5–5 кг или сделать больше повторений.";
+            if (pastRecords.length === 0) return null;
+
+            // 1. Если в последней тренировке достигнуто >= 12 повторений во всех подходах
+            const lastSets = pastRecords[0];
+            const hitMaxReps = lastSets.every(s => Number(s.reps) >= 12);
+            if (hitMaxReps) {
+                return "💡 Вы уверенно делаете 12+ повторений! Попробуйте увеличить рабочий вес на 2.5–5 кг.";
+            }
+
+            // 2. Если пользователь топчется на одном максимальном весе 2 и более тренировок подряд
+            if (pastRecords.length >= 2) {
+                const maxWeightLast = Math.max(...pastRecords[0].map(s => Number(s.weight) || 0));
+                const maxWeightPrev = Math.max(...pastRecords[1].map(s => Number(s.weight) || 0));
+                if (maxWeightLast > 0 && maxWeightLast === maxWeightPrev) {
+                    return `💡 Вес ${maxWeightLast} кг держится уже несколько тренировок. Попробуйте добавить 2.5 кг, +1 подход или +1–2 повторения!`;
                 }
             }
             return null;
         }
 
-        function makeExerciseCurrent(exIndex) {
-            if (exIndex <= 0) return;
-            const ex = state.activeWorkout.exercises.splice(exIndex, 1)[0];
-            state.activeWorkout.exercises.unshift(ex);
+        // --- ПЕРЕКЛЮЧЕНИЕ НА ДРУГОЕ УПРАЖНЕНИЕ (ЕСЛИ ТРЕНАЖЕР ЗАНЯТ) ---
+        function makeExerciseCurrent(targetIndex) {
+            let firstUnfinishedIndex = state.activeWorkout.exercises.findIndex(ex => !ex.sets.every(s => s.completed));
+            if (firstUnfinishedIndex === -1 || targetIndex === firstUnfinishedIndex) return;
+
+            const chosenEx = state.activeWorkout.exercises.splice(targetIndex, 1)[0];
+            chosenEx.manuallyOpened = false;
+            state.activeWorkout.exercises.splice(firstUnfinishedIndex, 0, chosenEx);
             renderActiveWorkout();
+            showNotice(`Текущее упражнение: ${chosenEx.name}`);
         }
 
-        // --- WORKOUT FLOW RENDERING ---
+        // --- ОТРИСОВКА АКТИВНОЙ ТРЕНИРОВКИ ---
         function renderActiveWorkout() {
             const container = document.getElementById('exercisesContainer');
             container.innerHTML = '';
+
+            // 1. Несбрасываемый глобальный подсчет общего тоннажа по всем упражнениям
             let totalTonnage = 0;
+            state.activeWorkout.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) {
+                        totalTonnage += Number(s.weight) * Number(s.reps);
+                    }
+                });
+            });
+            document.getElementById('totalTonnage').innerText = `${totalTonnage} кг`;
 
-            const allExercisesDone = state.activeWorkout.exercises.length > 0 && state.activeWorkout.exercises.every(ex => ex.sets.every(s => s.completed));
-
-            if (allExercisesDone) {
-                document.getElementById('activeIndicatorLabel').innerText = "ТРЕНИРОВКА ЗАВЕРШЕНА";
-                document.getElementById('activeIndicatorText').innerText = "Завершить тренировку?";
-                
-                const checkBtn = document.getElementById('activeIndicatorCheckBtn');
-                checkBtn.style.display = 'none';
-
-                let indicatorBar = document.getElementById('activeSetIndicatorBar');
-                let actionContainer = document.getElementById('finishPromptButtons');
-                if (!actionContainer) {
-                    actionContainer = document.createElement('div');
-                    actionContainer.id = 'finishPromptButtons';
-                    actionContainer.style.display = 'flex';
-                    actionContainer.style.gap = '6px';
-                    indicatorBar.appendChild(actionContainer);
-                }
-                actionContainer.innerHTML = `
-                    <button class="btn" style="padding: 8px 12px; font-size: 13px; width: auto;" onclick="finishWorkout()">Завершить</button>
-                    <button class="btn-secondary" style="margin-top:0; padding: 8px 12px; font-size: 13px;" onclick="openMuscleGroupModal()">Добавить упражнение</button>
-                `;
-            } else {
-                const checkBtn = document.getElementById('activeIndicatorCheckBtn');
-                checkBtn.style.display = 'flex';
-                const actionContainer = document.getElementById('finishPromptButtons');
-                if (actionContainer) actionContainer.innerHTML = '';
-            }
+            // 2. Проверяем, завершены ли все упражнения
+            const allExercisesDone = state.activeWorkout.exercises.length > 0 &&
+                state.activeWorkout.exercises.every(ex => ex.sets.every(s => s.completed));
 
             let firstUnfinishedIndex = state.activeWorkout.exercises.findIndex(ex => !ex.sets.every(s => s.completed));
-            if (firstUnfinishedIndex === -1 && state.activeWorkout.exercises.length > 0) {
-                firstUnfinishedIndex = state.activeWorkout.exercises.length - 1;
-            }
 
-            let activeExName = "";
-            let activeSetNum = 1;
-            let activeExIndex = -1;
-            let activeSetIndex = -1;
-
-            if (firstUnfinishedIndex !== -1 && !allExercisesDone) {
+            const actionArea = document.getElementById('activeIndicatorActionArea');
+            if (allExercisesDone) {
+                document.getElementById('activeIndicatorLabel').innerText = "ВСЕ УПРАЖНЕНИЯ ВЫПОЛНЕНЫ";
+                document.getElementById('activeIndicatorText').innerText = "Завершить тренировку?";
+                actionArea.innerHTML = `
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn" style="padding: 8px 12px; font-size: 12px; width: auto;" onclick="finishWorkout()">Завершить</button>
+                        <button class="btn-secondary" style="margin-top:0; padding: 8px 12px; font-size: 12px;" onclick="openMuscleGroupModal('active')">+ Упражнение</button>
+                    </div>
+                `;
+                window.currentActiveExIndex = -1;
+                window.currentActiveSetIndex = -1;
+            } else if (firstUnfinishedIndex !== -1) {
                 const curEx = state.activeWorkout.exercises[firstUnfinishedIndex];
-                activeExName = curEx.name;
                 const unfinSetIdx = curEx.sets.findIndex(s => !s.completed);
-                if (unfinSetIdx !== -1) {
-                    activeSetNum = unfinSetIdx + 1;
-                    activeExIndex = firstUnfinishedIndex;
-                    activeSetIndex = unfinSetIdx;
-                }
-            }
+                const activeSetNum = unfinSetIdx !== -1 ? unfinSetIdx + 1 : 1;
 
-            if (!allExercisesDone) {
                 document.getElementById('activeIndicatorLabel').innerText = "ТЕКУЩИЙ ПОДХОД";
-                document.getElementById('activeIndicatorText').innerText = `${activeExName} • Подход ${activeSetNum} в процессе`;
+                document.getElementById('activeIndicatorText').innerText = `${curEx.name} • Подход ${activeSetNum} в процессе`;
+                actionArea.innerHTML = `
+                    <button class="check-btn active-check-btn" onclick="completeCurrentActiveSet()" style="width: 42px; height: 42px;">✓</button>
+                `;
+                window.currentActiveExIndex = firstUnfinishedIndex;
+                window.currentActiveSetIndex = unfinSetIdx;
             }
 
+            // 3. Отрисовка каждого упражнения
             state.activeWorkout.exercises.forEach((ex, exIndex) => {
                 const block = document.createElement('div');
                 const isAllCompleted = ex.sets.every(s => s.completed);
@@ -1265,78 +1434,91 @@
                 else if (isCurrent) stateClass = 'current';
 
                 block.className = `exercise-block ${stateClass}`;
+
+                // Индивидуальный счетчик тоннажа для конкретного упражнения
+                let exerciseTonnage = 0;
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) {
+                        exerciseTonnage += Number(s.weight) * Number(s.reps);
+                    }
+                });
+
                 const isCollapsed = !isCurrent && !ex.manuallyOpened;
 
                 if (isCollapsed) {
-                    let setsSummary = ex.sets.map((s, i) => `${s.weight || 0}кг×${s.reps || 0}`).join(', ');
+                    const statusText = isAllCompleted
+                        ? `✓ Выполнено (${exerciseTonnage} кг)`
+                        : `⏳ Ожидает • ${ex.sets.length} подх.`;
+
                     block.innerHTML = `
                         <div class="exercise-collapsed" onclick="toggleExerciseCollapse(${exIndex})">
-                            <div>
+                            <div style="flex: 1;">
                                 <strong style="font-size: 15px;">${ex.name}</strong>
-                                <div class="exercise-collapsed-info">${isAllCompleted ? '✓ Выполнено' : '⏳ Ожидает'}: ${setsSummary}</div>
+                                <div class="exercise-collapsed-info">${statusText}</div>
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                ${!isCurrent && !isAllCompleted ? `<button onclick="event.stopPropagation(); makeExerciseCurrent(${exIndex})" class="btn-secondary" style="margin-top:0; padding: 4px 8px; font-size: 11px;">Сделать текущим</button>` : ''}
+                                ${!isCurrent && !isAllCompleted ? `<button onclick="event.stopPropagation(); makeExerciseCurrent(${exIndex})" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 11px; border-color: rgba(56,189,248,0.4); color: var(--accent);">⚡ Сделать текущим</button>` : ''}
                                 <span style="color: var(--accent); font-size: 13px;">▼</span>
                             </div>
                         </div>
                     `;
                 } else {
-                    let exerciseTonnage = 0;
-                    ex.sets.forEach(s => {
-                        if (s.completed && s.weight && s.reps) {
-                            exerciseTonnage += Number(s.weight) * Number(s.reps);
-                            totalTonnage += Number(s.weight) * Number(s.reps);
-                        }
-                    });
-
                     let setsHtml = `
-                        <div class="exercise-header">
+                        <div class="exercise-header" onclick="${!isCurrent ? `toggleExerciseCollapse(${exIndex})` : ''}" style="${!isCurrent ? 'cursor:pointer;' : ''}">
                             <div>
                                 <strong style="font-size: 15px;">${ex.name}</strong>
-                                <span style="font-size: 12px; color: var(--accent); margin-left: 8px;">(${exerciseTonnage} кг)</span>
+                                <span style="font-size: 12px; color: var(--accent); margin-left: 8px; font-weight: 600;">${exerciseTonnage} кг</span>
                             </div>
-                            <div style="display: flex; gap: 12px; align-items: center;">
-                                ${!isCurrent ? `<button onclick="toggleExerciseCollapse(${exIndex})" style="background:none; border:none; color:var(--text-secondary); font-size:12px; cursor:pointer;">▲</button>` : ''}
-                                ${isCurrent ? `<button onclick="removeSet(${exIndex})" style="background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer;">- Подход</button>` : ''}
-                                ${isCurrent ? `<button onclick="addSet(${exIndex})" style="background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer;">+ Подход</button>` : ''}
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                ${!isCurrent && !isAllCompleted ? `<button onclick="event.stopPropagation(); makeExerciseCurrent(${exIndex})" class="btn-secondary" style="margin-top:0; padding: 4px 8px; font-size: 11px; color: var(--accent);">⚡ Сделать текущим</button>` : ''}
+                                ${!isCurrent ? `<span style="color:var(--text-secondary); font-size:12px;">▲ Свернуть</span>` : ''}
+                                ${isCurrent ? `<button onclick="removeSet(${exIndex})" style="background:none; border:none; color:var(--danger); font-size:12px; font-weight:600; cursor:pointer;">- Подход</button>` : ''}
+                                ${isCurrent ? `<button onclick="addSet(${exIndex})" style="background:none; border:none; color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;">+ Подход</button>` : ''}
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 35px 1fr 1fr 45px; gap: 8px; font-size: 11px; color: var(--text-secondary); margin: 8px 0 4px 0; text-align:center;">
-                            <div>Подход</div><div>Вес (кг)</div><div>Повт</div><div>✓</div>
+                            <div>Подход</div><div>Вес (кг)</div><div>Повт</div><div>${isCurrent ? '✓' : ''}</div>
                         </div>
                     `;
 
                     let firstUnfinishedSet = ex.sets.findIndex(s => !s.completed);
-                    if (firstUnfinishedSet === -1) firstUnfinishedSet = ex.sets.length - 1;
 
                     ex.sets.forEach((set, setIndex) => {
-                        const isCurrentSet = isCurrent && setIndex === firstUnfinishedSet && !set.completed;
+                        // Если идет таймер отдыха — все строки подходов выглядят как неактивные
+                        const isCurrentSet = !isResting && isCurrent && setIndex === firstUnfinishedSet && !set.completed;
                         const setRowClass = isCurrentSet ? 'set-row active-set' : 'set-row';
                         
-                        let checkBtnClass = 'check-btn';
-                        let isDisabled = false;
+                        let actionCellHtml = '';
+                        if (!isCurrent) {
+                            // В уже сделанных или ожидающих упражнениях убираем кнопки, чтобы случайно не нажимать
+                            actionCellHtml = `<span style="text-align:center; font-size:14px; color:${set.completed ? 'var(--success)' : 'var(--text-secondary)'};">${set.completed ? '✓' : '•'}</span>`;
+                        } else {
+                            let checkBtnClass = 'check-btn';
+                            let isDisabled = false;
 
-                        if (isResting || !isCurrent) {
-                            checkBtnClass += ' disabled-check-btn';
-                            isDisabled = true;
-                        } else if (isCurrentSet) {
-                            checkBtnClass += ' active-check-btn';
-                        } else if (!set.completed && setIndex > firstUnfinishedSet) {
-                            checkBtnClass += ' disabled-check-btn';
-                            isDisabled = true;
+                            if (set.completed) {
+                                checkBtnClass += ' checked';
+                            } else if (isCurrentSet) {
+                                checkBtnClass += ' active-check-btn';
+                            } else {
+                                // Во время отдыха или для будущих подходов кнопка серая и заблокирована
+                                checkBtnClass += ' disabled-check-btn';
+                                isDisabled = true;
+                            }
+
+                            actionCellHtml = `<button class="${checkBtnClass}" ${isDisabled ? 'disabled' : ''} onclick="toggleSet(${exIndex}, ${setIndex})">✓</button>`;
                         }
 
                         setsHtml += `
                             <div class="${setRowClass}">
                                 <span style="text-align:center; font-size: 13px; color: var(--text-secondary);">${setIndex + 1}</span>
                                 <div class="input-group">
-                                    <input type="number" ${!isCurrent ? 'disabled' : ''} value="${set.weight}" onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
+                                    <input type="number" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.weight}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'weight', this.value)">
                                 </div>
                                 <div class="input-group">
-                                    <input type="number" ${!isCurrent ? 'disabled' : ''} value="${set.reps}" onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
+                                    <input type="number" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.reps}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'reps', this.value)">
                                 </div>
-                                <button class="${checkBtnClass} ${set.completed ? 'checked' : ''}" ${isDisabled ? 'disabled' : ''} onclick="${isDisabled ? '' : `toggleSet(${exIndex},${setIndex})`}">✓</button>
+                                ${actionCellHtml}
                             </div>
                         `;
                     });
@@ -1351,14 +1533,23 @@
 
                 container.appendChild(block);
             });
+        }
 
+        // Обновление веса и повторов на лету без сброса фокуса клавиатуры
+        function updateSetValue(exIndex, setIndex, field, value) {
+            state.activeWorkout.exercises[exIndex].sets[setIndex][field] = value;
+            let totalTonnage = 0;
+            state.activeWorkout.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) {
+                        totalTonnage += Number(s.weight) * Number(s.reps);
+                    }
+                });
+            });
             document.getElementById('totalTonnage').innerText = `${totalTonnage} кг`;
-            window.currentActiveExIndex = activeExIndex;
-            window.currentActiveSetIndex = activeSetIndex;
         }
 
         function completeCurrentActiveSet() {
-            if (isResting) return;
             if (window.currentActiveExIndex !== undefined && window.currentActiveExIndex !== -1 &&
                 window.currentActiveSetIndex !== undefined && window.currentActiveSetIndex !== -1) {
                 toggleSet(window.currentActiveExIndex, window.currentActiveSetIndex);
@@ -1370,13 +1561,7 @@
             renderActiveWorkout();
         }
 
-        function updateSet(exIndex, setIndex, field, value) {
-            state.activeWorkout.exercises[exIndex].sets[setIndex][field] = value;
-            renderActiveWorkout();
-        }
-
         function toggleSet(exIndex, setIndex) {
-            if (isResting) return;
             const set = state.activeWorkout.exercises[exIndex].sets[setIndex];
             set.completed = !set.completed;
             if (set.completed) {
@@ -1391,7 +1576,7 @@
             const lastSet = state.activeWorkout.exercises[exIndex].sets.slice(-1)[0];
             state.activeWorkout.exercises[exIndex].sets.push({
                 weight: lastSet ? lastSet.weight : '',
-                reps: lastSet ? last.reps : '',
+                reps: lastSet ? lastSet.reps : '',
                 completed: false
             });
             renderActiveWorkout();
@@ -1405,7 +1590,7 @@
             }
         }
 
-        // --- HISTORY ---
+        // --- ИСТОРИЯ И КАРТОЧКА СТОРИС 1080x1920 ---
         function renderHistory() {
             const container = document.getElementById('historyContainer');
             
@@ -1434,19 +1619,19 @@
                 let durationText = workout.duration ? `⏱️ ${workout.duration} мин.` : '';
 
                 let detailsHtml = workout.exercises.map(ex => {
-                    let setsStr = ex.sets.map((s, i) => `#${i+1}: ${s.weight || 0}кг × ${s.reps || 0} повт.`).join('<br>');
-                    return `<div style="margin-bottom: 6px;"><strong style="color: var(--accent);">${ex.name}</strong><br><span style="color: var(--text-secondary);">${setsStr}</span></div>`;
+                    let setsStr = ex.sets.map((s, i) => `Подход ${i+1}: ${s.weight || 0} кг × ${s.reps || 0} повт.`).join('<br>');
+                    return `<div style="margin-bottom: 8px;"><strong style="color: var(--accent);">${ex.name}</strong> (${ex.sets.length} подх.)<br><span style="color: var(--text-secondary);">${setsStr}</span></div>`;
                 }).join('');
 
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items: center; cursor: pointer;" onclick="this.parentElement.classList.toggle('expanded')">
-                        <div>
+                        <div style="flex: 1; padding-right: 8px;">
                             <strong style="font-size:14px;">📅 ${workout.date} ${durationText ? '• ' + durationText : ''}</strong>
                             <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">${exercisesSummary}</div>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <span style="color: var(--accent); font-size: 13px; font-weight: 600;">${workoutTonnage} кг</span>
-                            <button onclick="event.stopPropagation(); openResultModalFromHistory(${index})" class="btn-secondary" style="margin-top:0; padding: 4px 8px; font-size: 12px;">📤 Поделиться</button>
+                            <span style="color: var(--accent); font-size: 13px; font-weight: 700;">${workoutTonnage} кг ▾</span>
+                            <button onclick="event.stopPropagation(); openResultModalFromHistory(${index})" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 12px;">📤</button>
                         </div>
                     </div>
                     <div class="history-details">
@@ -1459,11 +1644,11 @@
 
         function openResultModal(workoutData) {
             const tonnage = workoutData.totalTonnage || 0;
-            const duration = workoutData.duration || 0;
+            const duration = workoutData.duration || 1;
 
             lastFinishedWorkoutData = workoutData;
             document.getElementById('storyTonnageVal').innerText = `${tonnage} кг`;
-            document.getElementById('storyDurationVal').innerText = `⏱️ ${duration} мин.`;
+            document.getElementById('storyDurationVal').innerText = `за ${duration} мин.`;
             document.getElementById('resultModal').classList.add('open');
         }
 
@@ -1478,8 +1663,8 @@
             const canvas = document.getElementById('exportCanvas');
             const ctx = canvas.getContext('2d');
 
-            const tonnage = lastFinishedWorkoutData ? lastFinishedWorkoutData.totalTonnage : 0;
-            const duration = lastFinishedWorkoutData ? lastFinishedWorkoutData.duration : 0;
+            const tonnage = lastFinishedWorkoutData ? (lastFinishedWorkoutData.totalTonnage || 0) : 0;
+            const duration = lastFinishedWorkoutData ? (lastFinishedWorkoutData.duration || 1) : 1;
 
             const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
             bgGrad.addColorStop(0, '#070913');
@@ -1489,51 +1674,48 @@
 
             ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
             ctx.beginPath();
-            ctx.arc(900, 200, 350, 0, Math.PI * 2);
+            ctx.arc(900, 250, 380, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.fillStyle = 'rgba(147, 51, 234, 0.12)';
             ctx.beginPath();
-            ctx.arc(200, 1700, 400, 0, Math.PI * 2);
+            ctx.arc(180, 1680, 420, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
             ctx.lineWidth = 4;
             ctx.beginPath();
-            ctx.roundRect(140, 360, 800, 1200, 40);
+            ctx.roundRect(120, 320, 840, 1280, 48);
             ctx.fill();
             ctx.stroke();
 
             ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 54px -apple-system, sans-serif';
+            ctx.font = 'bold 64px -apple-system, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('GymProCounter', 540, 520);
+            ctx.fillText('GymProCounter', 540, 500);
 
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '32px -apple-system, sans-serif';
-            ctx.fillText("Дневник тренировок", 540, 580);
-
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = 'bold 36px -apple-system, sans-serif';
-            ctx.fillText("ПОДНЯТО СЕГОДНЯ", 540, 850);
+            ctx.font = '34px -apple-system, sans-serif';
+            ctx.fillText('Твой помощник в зале', 540, 565);
 
             ctx.fillStyle = '#f8fafc';
-            ctx.font = 'bold 130px -apple-system, sans-serif';
-            ctx.fillText(`${tonnage} кг`, 540, 1020);
+            ctx.font = 'bold 46px -apple-system, sans-serif';
+            ctx.fillText(`Сегодня я поднял ${tonnage} кг,`, 540, 920);
 
             ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 50px -apple-system, sans-serif';
-            ctx.fillText(`⏱️ ${duration} мин.`, 540, 1160);
+            ctx.font = 'bold 58px -apple-system, sans-serif';
+            ctx.fillText(`за ${duration} минут!`, 540, 1020);
 
             ctx.fillStyle = '#64748b';
-            ctx.font = '30px -apple-system, sans-serif';
-            ctx.fillText("Время становиться сильнее 💪", 540, 1460);
+            ctx.font = '32px -apple-system, sans-serif';
+            ctx.fillText('Время становиться сильнее 💪', 540, 1460);
 
             const link = document.createElement('a');
-            link.download = 'GymProCounter_Workout.png';
+            link.download = 'GymProCounter_Result.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+            showNotice("Карточка сохранена!");
         }
     </script>
 </body>
