@@ -1016,6 +1016,8 @@
         let currentTheme = 'dark';
         let initialRestSeconds = 90;
         let isResting = false;
+        let restEndTime = null;
+        let lastTickBeepSecond = null;
         let addingMode = 'setup';
 
         let currentLoadedTemplateName = null;
@@ -1051,6 +1053,7 @@
         let restTimerInterval = null;
         let restTimeRemaining = 90;
         let selectedMuscleKey = null;
+        let workoutStartTimestamp = null;
         let workoutElapsedSeconds = 0;
         let workoutTimerInterval = null;
         let lastFinishedWorkoutData = null;
@@ -1067,6 +1070,18 @@
             renderHistory();
             checkActiveSessionRecovery();
         };
+
+        // Синхронизация таймеров при возврате в приложение из фонового режима
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                if (workoutStartTimestamp && document.getElementById('activeScreen').style.display === 'block') {
+                    workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+                }
+                if (isResting) {
+                    tickRestTimer();
+                }
+            }
+        });
 
         // Склонение слова "минута" (1 минута, 2 минуты, 5 минут)
         function formatMinutesRussian(num) {
@@ -1148,21 +1163,26 @@
 
         function adjustInitialRest(delta) {
             initialRestSeconds = Math.max(15, initialRestSeconds + delta);
-            restTimeRemaining = initialRestSeconds;
+            if (!isResting) {
+                restTimeRemaining = initialRestSeconds;
+                updateTimerDisplay();
+            }
             const mins = Math.floor(initialRestSeconds / 60).toString().padStart(2, '0');
             const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
             document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
-            document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }
 
-        // --- СОХРАНЕНИЕ, ВОССТАНОВЛЕНИЕ И ПОЛНЫЙ СБРОС СЕССИИ ---
+        // --- СОХРАНЕНИЕ, ВОССТАНОВЛЕНИЕ И ПОЛНЫЙ СБРОС СЕССИИ (С УЧЕТОМ ХОДА ТАЙМЕРА ОТДЫХА) ---
         function saveActiveSessionState() {
             if (document.getElementById('activeScreen').style.display === 'block' &&
                 state.activeWorkout && state.activeWorkout.exercises && state.activeWorkout.exercises.length > 0) {
                 const sessionPayload = {
                     activeWorkout: state.activeWorkout,
+                    workoutStartTimestamp: workoutStartTimestamp,
                     elapsedSeconds: workoutElapsedSeconds,
-                    initialRestSeconds: initialRestSeconds
+                    initialRestSeconds: initialRestSeconds,
+                    isResting: isResting,
+                    restEndTime: restEndTime
                 };
                 localStorage.setItem('gym_pro_active_session', JSON.stringify(sessionPayload));
             } else {
@@ -1190,22 +1210,33 @@
             try {
                 const parsed = JSON.parse(savedSession);
                 state.activeWorkout = parsed.activeWorkout;
-                workoutElapsedSeconds = parsed.elapsedSeconds || 0;
+                workoutStartTimestamp = parsed.workoutStartTimestamp || (Date.now() - (parsed.elapsedSeconds || 0) * 1000);
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+
                 if (parsed.initialRestSeconds) {
                     initialRestSeconds = parsed.initialRestSeconds;
-                    restTimeRemaining = initialRestSeconds;
+                    const mins = Math.floor(initialRestSeconds / 60).toString().padStart(2, '0');
+                    const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
                 }
+
                 document.getElementById('startScreen').style.display = 'none';
                 document.getElementById('activeScreen').style.display = 'block';
 
                 if (workoutTimerInterval) clearInterval(workoutTimerInterval);
                 workoutTimerInterval = setInterval(() => {
-                    workoutElapsedSeconds++;
+                    workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
                     saveActiveSessionState();
                 }, 1000);
 
-                stopTimer();
-                renderActiveWorkout();
+                // Если во время закрытия шел таймер отдыха и время еще осталось — продолжаем отсчет с актуального остатка
+                if (parsed.isResting && parsed.restEndTime && parsed.restEndTime > Date.now()) {
+                    startRestTimer(parsed.restEndTime);
+                } else {
+                    stopTimer();
+                    renderActiveWorkout();
+                }
+
                 scrollToTop();
                 showNotice("Тренировка восстановлена");
             } catch (e) {
@@ -1223,12 +1254,12 @@
             );
         }
 
-        // Полный сброс тренировки до абсолютно чистого стартового экрана (без упражнений и без загруженных шаблонов)
         function resetWorkoutToCleanState() {
             closeModal('sessionRecoveryModal');
             localStorage.removeItem('gym_pro_active_session');
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
             workoutTimerInterval = null;
+            workoutStartTimestamp = null;
             workoutElapsedSeconds = 0;
 
             stopTimer();
@@ -1248,7 +1279,7 @@
             showNotice("Тренировка сброшена");
         }
 
-        // --- МОДАЛКА ПОДТВЕРЖДЕНИЯ ДЕЙСТВИЯ ---
+        // --- МОДАЛКА ПОДТВЕРЖДЕНИЕ ДЕЙСТВИЯ ---
         function askConfirmation(title, message, onConfirmCallback) {
             document.getElementById('confirmModalTitle').innerText = title;
             document.getElementById('confirmModalText').innerText = message;
@@ -1735,10 +1766,11 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('activeScreen').style.display = 'block';
 
+            workoutStartTimestamp = Date.now();
             workoutElapsedSeconds = 0;
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
             workoutTimerInterval = setInterval(() => {
-                workoutElapsedSeconds++;
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
                 saveActiveSessionState();
             }, 1000);
 
@@ -1755,6 +1787,9 @@
             }
 
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+            if (workoutStartTimestamp) {
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+            }
             localStorage.removeItem('gym_pro_active_session');
 
             const durationMins = Math.max(1, Math.round(workoutElapsedSeconds / 60));
@@ -1777,6 +1812,7 @@
             
             state.setupExercises = [];
             state.activeWorkout = { exercises: [] };
+            workoutStartTimestamp = null;
             currentLoadedTemplateName = null;
             isTemplateModified = false;
             updateTemplateButtonUI();
@@ -1796,7 +1832,6 @@
 
         function setAmbientAudioSession() {
             try {
-                // В iOS 17+ / Safari WebKit режим 'ambient' микширует звук поверх играющей музыки без её остановки
                 if (navigator.audioSession && navigator.audioSession.type !== 'ambient') {
                     navigator.audioSession.type = 'ambient';
                 }
@@ -1864,7 +1899,6 @@
                     osc.start(now);
                     osc.stop(now + 0.08);
                 } else if (type === 'finish') {
-                    // Мягкий двойной сигнал завершения отдыха
                     const freqs = [528, 660];
                     freqs.forEach((f, idx) => {
                         const start = now + idx * 0.14;
@@ -1883,33 +1917,63 @@
             } catch (e) {}
         }
 
-        function startRestTimer() {
+        // --- ТАЙМЕР ОТДЫХА НА РЕАЛЬНЫХ ВРЕМЕННЫХ МЕТКАХ (НЕ СБРАСЫВАЕТСЯ В ФОНЕ) ---
+        function startRestTimer(customEndTime) {
             unlockAudioOnUserGesture();
             clearInterval(restTimerInterval);
             isResting = true;
-            restTimeRemaining = initialRestSeconds;
+            restEndTime = customEndTime || (Date.now() + initialRestSeconds * 1000);
+            restTimeRemaining = Math.max(0, Math.ceil((restEndTime - Date.now()) / 1000));
+            lastTickBeepSecond = null;
+
+            if (restTimeRemaining <= 0) {
+                stopTimer();
+                return;
+            }
+
             updateTimerDisplay();
-            
             document.getElementById('activeSetIndicatorBar').classList.add('hidden-panel');
             document.getElementById('timerBarContainer').classList.remove('hidden-panel');
             renderActiveWorkout();
+            saveActiveSessionState();
 
-            restTimerInterval = setInterval(() => {
-                restTimeRemaining--;
+            restTimerInterval = setInterval(tickRestTimer, 250);
+        }
+
+        function tickRestTimer() {
+            if (!isResting || !restEndTime) return;
+            const remaining = Math.max(0, Math.ceil((restEndTime - Date.now()) / 1000));
+            if (remaining !== restTimeRemaining) {
+                restTimeRemaining = remaining;
                 updateTimerDisplay();
-                if (restTimeRemaining > 0 && restTimeRemaining <= 5) {
+
+                if (restTimeRemaining > 0 && restTimeRemaining <= 5 && lastTickBeepSecond !== restTimeRemaining) {
+                    lastTickBeepSecond = restTimeRemaining;
                     playTimerSound('tick');
                 }
-                if (restTimeRemaining <= 0) {
-                    stopTimer();
-                    playTimerSound('finish');
-                }
-            }, 1000);
+            }
+
+            if (restTimeRemaining <= 0) {
+                stopTimer();
+                playTimerSound('finish');
+            }
         }
 
         function adjustTimer(seconds) {
-            restTimeRemaining = Math.max(0, restTimeRemaining + seconds);
-            updateTimerDisplay();
+            if (isResting && restEndTime) {
+                restEndTime += seconds * 1000;
+                const now = Date.now();
+                if (restEndTime < now) restEndTime = now;
+                restTimeRemaining = Math.max(0, Math.ceil((restEndTime - now) / 1000));
+                updateTimerDisplay();
+                saveActiveSessionState();
+                if (restTimeRemaining <= 0) {
+                    stopTimer();
+                }
+            } else {
+                restTimeRemaining = Math.max(0, restTimeRemaining + seconds);
+                updateTimerDisplay();
+            }
         }
 
         function skipTimer() {
@@ -1920,12 +1984,15 @@
             clearInterval(restTimerInterval);
             restTimerInterval = null;
             isResting = false;
+            restEndTime = null;
+            lastTickBeepSecond = null;
             restTimeRemaining = initialRestSeconds;
             updateTimerDisplay();
             document.getElementById('timerBarContainer').classList.add('hidden-panel');
             document.getElementById('activeSetIndicatorBar').classList.remove('hidden-panel');
             if (document.getElementById('activeScreen').style.display === 'block') {
                 renderActiveWorkout();
+                saveActiveSessionState();
             }
         }
 
@@ -2025,7 +2092,6 @@
             }
         }
 
-        // Окно настройки нового упражнения во время активной тренировки
         function openQuickSetupModal(exObj) {
             tempQuickExercise = JSON.parse(JSON.stringify(exObj));
             document.getElementById('quickSetupExTitle').innerText = tempQuickExercise.name;
@@ -2125,7 +2191,6 @@
             showNotice(`Текущее упражнение: ${chosenEx.name}`);
         }
 
-        // Обновление плашки запланированного веса и повторений в окне текущего подхода
         function updateCurrentIndicatorPlanBadge(weightVal, repsVal) {
             const planBadge = document.getElementById('activeIndicatorPlan');
             if (!planBadge) return;
@@ -2332,7 +2397,6 @@
             set.completed = !set.completed;
             if (set.completed) {
                 startRestTimer();
-                // Пролистываем вверх к окну таймера / текущего подхода
                 scrollToTop();
             } else {
                 stopTimer();
