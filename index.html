@@ -8,86 +8,130 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root[data-theme="dark"] {
-            --bg-color: #070913;
-            --mesh-1: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.15) 0%, transparent 45%);
-            --mesh-2: radial-gradient(circle at 85% 85%, rgba(147, 51, 234, 0.12) 0%, transparent 45%);
-            --mesh-3: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 60%);
+            --bg-color: #05070f;
+            --orb-1: rgba(56, 189, 248, 0.22);
+            --orb-2: rgba(139, 92, 246, 0.18);
+            --orb-3: rgba(16, 185, 129, 0.12);
             
-            --glass-bg: rgba(255, 255, 255, 0.04);
-            --glass-bg-hover: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-light: rgba(255, 255, 255, 0.25);
-            --glass-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.45);
-            --glass-inner-glow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+            --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --glass-border-top: rgba(255, 255, 255, 0.38);
+            --glass-border-left: rgba(255, 255, 255, 0.26);
+            --glass-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.55);
+            --glass-inner-glow: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.32), inset 0 -1px 1.5px 0 rgba(255, 255, 255, 0.06);
             
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
-            --input-bg: rgba(0, 0, 0, 0.35);
-            --modal-bg: rgba(20, 28, 45, 0.96);
-            --toast-bg: rgba(15, 23, 42, 0.95);
+            --input-bg: rgba(5, 8, 18, 0.45);
+            --modal-bg: rgba(15, 23, 42, 0.82);
+            --toast-bg: rgba(15, 23, 42, 0.9);
         }
 
         :root[data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --mesh-1: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.2) 0%, transparent 45%);
-            --mesh-2: radial-gradient(circle at 85% 85%, rgba(147, 51, 234, 0.12) 0%, transparent 45%);
-            --mesh-3: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 60%);
+            --bg-color: #eef4fb;
+            --orb-1: rgba(56, 189, 248, 0.3);
+            --orb-2: rgba(168, 85, 247, 0.2);
+            --orb-3: rgba(14, 165, 233, 0.18);
             
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-bg-hover: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(203, 213, 225, 0.8);
-            --glass-border-light: rgba(255, 255, 255, 1);
-            --glass-shadow: 0 16px 40px 0 rgba(148, 163, 184, 0.2);
-            --glass-inner-glow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 100%);
+            --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.7) 100%);
+            --glass-border: rgba(255, 255, 255, 0.65);
+            --glass-border-top: rgba(255, 255, 255, 1);
+            --glass-border-left: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 18px 40px -10px rgba(100, 116, 139, 0.22);
+            --glass-inner-glow: inset 0 2px 2px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 2px 0 rgba(255, 255, 255, 0.5);
             
             --text-main: #0f172a;
-            --text-secondary: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.85);
-            --modal-bg: rgba(255, 255, 255, 0.98);
-            --toast-bg: rgba(255, 255, 255, 0.95);
+            --text-secondary: #475569;
+            --input-bg: rgba(255, 255, 255, 0.72);
+            --modal-bg: rgba(248, 250, 252, 0.88);
+            --toast-bg: rgba(255, 255, 255, 0.94);
         }
 
         :root {
             --accent: #38bdf8;
-            --accent-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.95) 0%, rgba(2, 132, 199, 0.95) 100%);
+            --accent-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.92) 0%, rgba(2, 132, 199, 0.88) 100%);
             --success: #22c55e;
             --danger: #ef4444;
-            --radius: 20px;
+            --radius: 24px;
+            --blur-filter: blur(32px) saturate(200%);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-color);
-            background-image: var(--mesh-1), var(--mesh-2), var(--mesh-3);
-            background-attachment: fixed;
             color: var(--text-main);
             padding: 16px;
             padding-bottom: 90px;
             max-width: 600px;
             margin: 0 auto;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.35s ease, color 0.35s ease;
+        }
+
+        /* Живой фон для преломления сквозь Liquid Glass */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(65px);
+            animation: floatOrb 14s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: var(--orb-1);
+            top: -60px; left: -60px;
+        }
+
+        .orb-2 {
+            width: 340px; height: 340px;
+            background: var(--orb-2);
+            bottom: 5%; right: -80px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 240px; height: 240px;
+            background: var(--orb-3);
+            top: 40%; left: 20%;
+            animation-delay: -9s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.12); }
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             padding: 0 4px;
         }
 
         .user-greeting h1 {
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.6px;
         }
 
         .user-greeting p {
@@ -97,42 +141,43 @@
 
         .icon-btn {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
             color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 12px;
+            padding: 9px 14px;
+            border-radius: 16px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), var(--glass-inner-glow);
-            transition: transform 0.2s, background 0.2s;
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+            transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .icon-btn:active { transform: scale(0.94); }
+        .icon-btn:active { transform: scale(0.92); }
 
-        /* Всплывающее уведомление внутри сайта (вместо alert) */
+        /* Уведомление в стиле капсулы Liquid Glass */
         .toast {
             position: fixed;
             top: 16px;
             left: 50%;
-            transform: translateX(-50%) translateY(-100px);
+            transform: translateX(-50%) translateY(-120px);
             background: var(--toast-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--accent);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
+            border: 1px solid var(--glass-border-top);
             color: var(--text-main);
-            padding: 12px 20px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 600;
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 650;
             z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 14px 35px rgba(0,0,0,0.35), var(--glass-inner-glow);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             text-align: center;
-            max-width: 90%;
+            max-width: 92%;
         }
 
         .toast.show {
@@ -143,35 +188,36 @@
         .tabs {
             display: flex;
             gap: 6px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             padding: 5px;
-            border-radius: 16px;
+            border-radius: 20px;
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
             box-shadow: var(--glass-shadow), var(--glass-inner-glow);
         }
 
         .tab {
             flex: 1;
-            padding: 10px;
+            padding: 11px;
             text-align: center;
             background: transparent;
             border: none;
             color: var(--text-secondary);
             font-size: 14px;
-            font-weight: 600;
-            border-radius: 12px;
+            font-weight: 650;
+            border-radius: 15px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .tab.active {
             background: var(--accent-gradient);
             color: #fff;
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4), inset 0 1.5px 1.5px rgba(255,255,255,0.55);
         }
 
         .view-section { display: none; }
@@ -180,10 +226,11 @@
         /* Карточки Liquid Glass */
         .card {
             background: var(--glass-bg);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
             border-radius: var(--radius);
             padding: 20px;
             margin-bottom: 16px;
@@ -204,64 +251,77 @@
             width: 100%;
             background: var(--accent-gradient);
             color: white;
-            border: none;
-            border-top: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-top-color: rgba(255,255,255,0.6);
             padding: 15px;
-            border-radius: var(--radius);
+            border-radius: 20px;
             font-size: 15px;
-            font-weight: 650;
+            font-weight: 700;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.35), inset 0 1px 1px rgba(255,255,255,0.4);
-            transition: transform 0.15s ease, opacity 0.2s;
+            box-shadow: 0 10px 28px rgba(56, 189, 248, 0.38), inset 0 1.5px 2px rgba(255,255,255,0.55);
+            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s;
         }
 
-        .btn:active { transform: scale(0.97); opacity: 0.9; }
+        .btn:active { transform: scale(0.97); opacity: 0.92; }
 
         .btn-secondary {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
             color: var(--text-main);
             padding: 12px;
-            border-radius: 14px;
+            border-radius: 16px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 650;
             cursor: pointer;
             margin-top: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05), var(--glass-inner-glow);
-            transition: background 0.2s, transform 0.15s;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08), var(--glass-inner-glow);
+            transition: background 0.2s, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .btn-secondary:hover { background: var(--glass-bg-hover); }
         .btn-secondary:active { transform: scale(0.97); }
 
-        /* Обертка для плавного перехода между индикатором подхода и таймером */
+        .share-pill-btn {
+            margin-top: 0;
+            padding: 6px 11px;
+            font-size: 12px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--accent);
+            border-color: rgba(56, 189, 248, 0.35);
+        }
+
+        /* Переключатель индикатора подхода и таймера */
         .status-switcher {
             position: relative;
             margin-bottom: 16px;
         }
 
         @keyframes prominentPulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(56, 189, 248, 0.5); border-color: rgba(56, 189, 248, 0.5); }
-            50% { transform: scale(1.015); box-shadow: 0 0 32px rgba(56, 189, 248, 0.65), inset 0 1px 1px rgba(56, 189, 248, 0.9); border-color: rgba(56, 189, 248, 1); }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(56, 189, 248, 0.5); border-color: rgba(56, 189, 248, 0.5); }
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.45); border-color: rgba(56, 189, 248, 0.55); }
+            50% { transform: scale(1.016); box-shadow: 0 10px 36px rgba(56, 189, 248, 0.55), inset 0 2px 3px rgba(255, 255, 255, 0.75); border-color: rgba(56, 189, 248, 1); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.45); border-color: rgba(56, 189, 248, 0.55); }
         }
 
         .active-set-indicator {
-            background: rgba(56, 189, 248, 0.14);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid rgba(56, 189, 248, 0.8);
-            padding: 14px 16px;
-            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.06) 100%);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
+            border: 1.5px solid rgba(56, 189, 248, 0.75);
+            padding: 15px 18px;
+            border-radius: 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: prominentPulse 2s infinite ease-in-out;
-            transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease;
+            animation: prominentPulse 2.2s infinite ease-in-out;
+            transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, padding 0.35s ease;
             opacity: 1;
             max-height: 200px;
             overflow: hidden;
@@ -283,15 +343,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(56, 189, 248, 0.1);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            border-top: 1px solid rgba(56, 189, 248, 0.7);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.05) 100%);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-top-color: rgba(255, 255, 255, 0.65);
             padding: 28px 16px;
             border-radius: var(--radius);
             text-align: center;
-            box-shadow: 0 16px 40px rgba(56, 189, 248, 0.25), var(--glass-inner-glow);
+            box-shadow: 0 20px 45px rgba(56, 189, 248, 0.25), var(--glass-inner-glow);
             transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, padding 0.35s ease;
             opacity: 1;
             max-height: 320px;
@@ -313,9 +373,9 @@
             font-size: 54px;
             font-weight: 850;
             color: var(--accent);
-            margin: 8px 0;
+            margin: 6px 0;
             text-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
         }
 
         .timer-controls {
@@ -326,14 +386,14 @@
 
         .timer-controls button {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
             color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 10px;
+            padding: 8px 15px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 650;
             cursor: pointer;
             box-shadow: var(--glass-inner-glow);
         }
@@ -341,22 +401,25 @@
         /* Блоки упражнений */
         .exercise-block {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
-            border-radius: 16px;
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            border-radius: 18px;
             padding: 14px;
             margin-bottom: 12px;
+            box-shadow: var(--glass-inner-glow);
             transition: all 0.3s ease;
         }
 
         .exercise-block.completed {
-            border-color: rgba(34, 197, 94, 0.3);
-            opacity: 0.75;
+            border-color: rgba(34, 197, 94, 0.35);
+            opacity: 0.78;
         }
 
         .exercise-block.pending {
-            opacity: 0.65;
+            opacity: 0.68;
         }
 
         .exercise-header {
@@ -388,10 +451,10 @@
             align-items: center;
             margin-bottom: 8px;
             padding: 8px;
-            border-radius: 12px;
+            border-radius: 14px;
             background: rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
             transform: scale(0.84);
             opacity: 0.38;
         }
@@ -399,13 +462,13 @@
         .set-row.active-set {
             transform: scale(1);
             opacity: 1;
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            border-top: 1px solid rgba(56, 189, 248, 0.7);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0.04) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            border-top-color: rgba(255, 255, 255, 0.6);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), var(--glass-inner-glow);
         }
 
-        /* Строки подходов в настройке (единый размер) */
+        /* Строки подходов в настройке */
         .setup-set-row {
             display: grid;
             grid-template-columns: 35px 1fr 1fr;
@@ -413,8 +476,8 @@
             align-items: center;
             margin-bottom: 6px;
             padding: 6px 8px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.1);
             border: 1px solid var(--glass-border);
         }
 
@@ -423,9 +486,10 @@
             align-items: center;
             background: var(--input-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 10px;
+            border-top-color: rgba(255, 255, 255, 0.22);
+            border-radius: 11px;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.12);
         }
 
         .input-group input {
@@ -436,7 +500,7 @@
             padding: 8px 4px;
             text-align: center;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 650;
             -moz-appearance: textfield;
         }
 
@@ -446,7 +510,10 @@
             margin: 0;
         }
 
-        .input-group input:focus { outline: none; }
+        .input-group input:focus {
+            outline: none;
+            background: rgba(56, 189, 248, 0.08);
+        }
 
         /* Круглая кнопка галочки */
         .check-btn {
@@ -454,51 +521,51 @@
             height: 38px;
             border-radius: 50%;
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
             font-size: 15px;
             box-shadow: var(--glass-inner-glow);
         }
 
-        .check-btn:active { transform: scale(0.9); }
+        .check-btn:active { transform: scale(0.88); }
 
         .check-btn.checked {
             background: var(--success);
             color: white;
             border-color: var(--success);
-            box-shadow: 0 0 16px rgba(34, 197, 94, 0.45);
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.45), inset 0 1.5px 1.5px rgba(255,255,255,0.45);
         }
 
         .check-btn.active-check-btn {
             background: var(--success);
             color: white;
             border-color: var(--success);
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), inset 0 1.5px 1.5px rgba(255,255,255,0.45);
         }
 
         .check-btn.disabled-check-btn {
-            background: rgba(128, 128, 128, 0.15);
+            background: rgba(128, 128, 128, 0.14);
             color: rgba(128, 128, 128, 0.35);
-            border-color: rgba(128, 128, 128, 0.2);
+            border-color: rgba(128, 128, 128, 0.18);
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        /* Умная подсказка прогрессии */
+        /* Подсказка прогрессии */
         .ai-tip {
-            background: rgba(34, 197, 94, 0.1);
+            background: rgba(34, 197, 94, 0.12);
             backdrop-filter: blur(12px);
             border-left: 3px solid var(--success);
-            border-top: 1px solid rgba(34, 197, 94, 0.25);
+            border-top: 1px solid rgba(34, 197, 94, 0.28);
             padding: 10px 12px;
-            border-radius: 0 10px 10px 0;
+            border-radius: 0 12px 12px 0;
             font-size: 12px;
             color: var(--text-main);
             margin-top: 8px;
@@ -507,11 +574,12 @@
         /* История */
         .history-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
-            border-radius: 16px;
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            border-radius: 18px;
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: var(--glass-shadow), var(--glass-inner-glow);
@@ -533,9 +601,9 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             z-index: 100;
             justify-content: center;
             align-items: flex-end;
@@ -545,31 +613,31 @@
 
         .modal-content {
             background-color: var(--modal-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: var(--blur-filter);
+            -webkit-backdrop-filter: var(--blur-filter);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
-            border-radius: 28px 28px 0 0;
+            border-top: 1.5px solid var(--glass-border-top);
+            border-radius: 30px 30px 0 0;
             width: 100%;
             max-width: 600px;
-            max-height: 85vh;
-            padding: 24px;
+            max-height: 88vh;
+            padding: 20px 22px 24px 22px;
             overflow-y: auto;
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.3), var(--glass-inner-glow);
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.35), var(--glass-inner-glow);
             color: var(--text-main);
         }
 
         .muscle-group-btn {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-border-light);
+            border-top-color: var(--glass-border-top);
             color: var(--text-main);
             padding: 14px;
-            border-radius: 14px;
+            border-radius: 16px;
             text-align: left;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 650;
             margin-bottom: 8px;
             cursor: pointer;
             width: 100%;
@@ -579,7 +647,7 @@
         .muscle-group-btn:active { transform: scale(0.98); }
 
         .exercise-select-item {
-            padding: 14px;
+            padding: 13px 12px;
             border-bottom: 1px solid var(--glass-border);
             cursor: pointer;
             font-size: 14px;
@@ -603,14 +671,20 @@
             border: 1px solid var(--glass-border);
             color: var(--text-main);
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Внутрисайтовое уведомление (вместо системного alert) -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <!-- Внутрисайтовое уведомление -->
     <div id="toastNotification" class="toast">Уведомление</div>
 
     <header>
@@ -634,13 +708,16 @@
         <!-- ЭКРАН НАСТРОЙКИ ТРЕНИРОВКИ -->
         <div id="startScreen">
             <div class="card">
-                <div class="card-title">Настройка тренировки</div>
+                <div class="card-title">
+                    <span>Настройка тренировки</span>
+                    <span id="loadedTemplateBadge" style="font-size: 12px; color: var(--accent); font-weight: 600;"></span>
+                </div>
                 
                 <div style="margin-bottom: 16px;">
                     <label style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 6px;">Время отдыха между подходами:</label>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--input-bg); padding: 10px; border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--input-bg); padding: 10px; border-radius: 14px; border: 1px solid var(--glass-border);">
                         <button class="btn-secondary" style="margin-top:0; padding: 6px 14px;" onclick="adjustInitialRest(-15)">-15с</button>
-                        <span id="initialRestDisplay" style="font-size: 18px; font-weight: 700; color: var(--accent);">01:30</span>
+                        <span id="initialRestDisplay" style="font-size: 18px; font-weight: 750; color: var(--accent);">01:30</span>
                         <button class="btn-secondary" style="margin-top:0; padding: 6px 14px;" onclick="adjustInitialRest(15)">+15с</button>
                     </div>
                 </div>
@@ -649,6 +726,13 @@
                     <div class="card-title" style="font-size: 14px; margin-bottom: 8px;">Упражнения в тренировке</div>
                     <div id="setupExercisesContainer" style="margin-bottom: 10px;"></div>
                     <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="openMuscleGroupModal('setup')">+ Добавить упражнение</button>
+                </div>
+
+                <!-- Кнопка обновления загруженного шаблона (появляется только при изменениях в загруженном шаблоне) -->
+                <div id="updateTemplateContainer" style="display: none; margin-bottom: 10px;">
+                    <button class="btn-secondary" id="updateTemplateBtn" style="width: 100%; margin-top: 0; border-color: rgba(34, 197, 94, 0.55); color: var(--success);" onclick="updateCurrentLoadedTemplate()">
+                        🔄 Обновить сохранённую тренировку
+                    </button>
                 </div>
 
                 <!-- Кнопки шаблонов под добавленными упражнениями -->
@@ -691,7 +775,7 @@
             <div class="card">
                 <div class="card-title">
                     <span>Тренировка в процессе</span>
-                    <span id="totalTonnage" style="color: var(--accent); font-size: 15px; font-weight: 700;">0 кг</span>
+                    <span id="totalTonnage" style="color: var(--accent); font-size: 15px; font-weight: 750;">0 кг</span>
                 </div>
                 
                 <div id="exercisesContainer"></div>
@@ -726,10 +810,11 @@
             <div class="card-title" id="selectExerciseTitle">Выберите упражнение</div>
             <div id="exerciseListContainer" style="max-height: 260px; overflow-y: auto; margin-bottom: 12px;"></div>
             <div class="custom-exercise-input">
-                <input type="text" id="customExerciseInput" placeholder="Добавить свое в эту группу...">
+                <input type="text" id="customExerciseInput" enterkeyhint="done" placeholder="Добавить свое в эту группу..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomExercise();}">
                 <button class="btn" style="width: auto; padding: 12px 18px;" onclick="addCustomExercise()">Добавить</button>
             </div>
-            <button class="btn-secondary" onclick="closeModal('exerciseModal')" style="width: 100%; margin-top: 12px;">Назад</button>
+            <!-- Возврат к выбору мышечных групп -->
+            <button class="btn-secondary" onclick="backToMuscleGroups()" style="width: 100%; margin-top: 12px;">← Назад к группам мышц</button>
         </div>
     </div>
 
@@ -752,7 +837,7 @@
         <div class="modal-content">
             <div class="card-title">Сохранить тренировку</div>
             <div class="custom-exercise-input" style="margin-bottom: 14px;">
-                <input type="text" id="templateNameInput" placeholder="Название (например, День ног)...">
+                <input type="text" id="templateNameInput" enterkeyhint="done" placeholder="Название (например, День ног)..." onkeydown="if(event.key==='Enter'){event.preventDefault();confirmSaveTemplate();}">
             </div>
             <button class="btn" onclick="confirmSaveTemplate()" style="margin-bottom: 8px;">Сохранить</button>
             <button class="btn-secondary" onclick="closeModal('saveTemplateModal')" style="width: 100%; margin-top: 0;">Отмена</button>
@@ -768,27 +853,18 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА: КАРТОЧКА РЕЗУЛЬТАТА (1080x1920) -->
+    <!-- МОДАЛКА: КАРТОЧКА РЕЗУЛЬТАТА (КОМПАКТНАЯ БЕЗ ПРОКРУТКИ) -->
     <div class="modal" id="resultModal">
-        <div class="modal-content" style="text-align: center; padding-bottom: 30px;">
-            <div class="card-title" style="justify-content: center;">Результат тренировки</div>
+        <div class="modal-content" style="text-align: center; padding: 18px 20px 22px 20px;">
+            <div class="card-title" style="justify-content: center; margin-bottom: 8px; font-size: 15px;">Результат тренировки</div>
             
-            <div id="storyCardPreview" style="width: 100%; max-width: 270px; height: 480px; margin: 12px auto; background: linear-gradient(135deg, #070913 0%, #1e293b 100%); border-radius: 20px; border: 2px solid rgba(56,189,248,0.4); padding: 28px 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(56,189,248,0.2); border-radius: 50%; filter: blur(30px);"></div>
-                <div>
-                    <h2 style="color: #38bdf8; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">GymProCounter</h2>
-                    <p style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Твой помощник в зале</p>
-                </div>
-                <div>
-                    <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Сегодня я поднял</div>
-                    <div id="storyTonnageVal" style="font-size: 36px; font-weight: 900; color: #f8fafc; margin: 8px 0; text-shadow: 0 0 20px rgba(56,189,248,0.4);">0 кг</div>
-                    <div id="storyDurationVal" style="font-size: 14px; color: #38bdf8; font-weight: 600;">за 0 минут</div>
-                </div>
-                <div style="font-size: 11px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; padding-top: 10px;">Время становиться сильнее 💪</div>
+            <!-- Компактное превью с реальной сгенерированной картинкой (позволяет также зажать пальцем на iOS) -->
+            <div style="display: flex; justify-content: center; margin: 8px auto 12px auto;">
+                <img id="storyCardImagePreview" alt="Story Result" style="width: 185px; height: 329px; border-radius: 18px; border: 1.5px solid rgba(56,189,248,0.45); box-shadow: 0 14px 32px rgba(0,0,0,0.45); object-fit: cover; display: block;">
             </div>
 
-            <button class="btn" onclick="downloadStoryImage()" style="margin-bottom: 10px;">📥 Сохранить в галерею</button>
-            <button class="btn-secondary" onclick="closeModal('resultModal')" style="width: 100%; margin-top: 0;">Закрыть</button>
+            <button class="btn" onclick="shareOrDownloadStoryImage()" style="padding: 13px; margin-bottom: 8px; font-size: 14px;">📥 Сохранить в галерею</button>
+            <button class="btn-secondary" onclick="closeModal('resultModal')" style="width: 100%; margin-top: 0; padding: 11px; font-size: 14px;">Закрыть</button>
         </div>
     </div>
 
@@ -798,7 +874,11 @@
         let currentTheme = 'dark';
         let initialRestSeconds = 90;
         let isResting = false;
-        let addingMode = 'setup'; // 'setup' или 'active'
+        let addingMode = 'setup';
+
+        // Отслеживание загруженного шаблона для кнопки "Обновить сохранённую тренировку"
+        let currentLoadedTemplateName = null;
+        let isTemplateModified = false;
 
         const muscleGroupsData = {
             chest: "Грудь",
@@ -824,7 +904,6 @@
             setupExercises: [],
             activeWorkout: { exercises: [] },
             history: JSON.parse(localStorage.getItem('gym_pro_history') || '[]'),
-            // Хранение кастомных и популярных упражнений СТРОГО по группам мышц
             customByGroup: JSON.parse(localStorage.getItem('gym_pro_custom_by_group') || '{}')
         };
 
@@ -841,11 +920,28 @@
                 window.Telegram.WebApp.ready();
                 window.Telegram.WebApp.expand();
             }
+            initAudioEngine();
             renderSetupExercises();
             renderHistory();
         };
 
-        // Внутрисайтовое всплывающее уведомление
+        // --- АВТОМАТИЧЕСКИЙ ПЕРЕХОД КУРСОРА ПО НАЖАТИЮ "ВВОД" (ENTER / NEXT) ---
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.classList.contains('nav-input')) {
+                e.preventDefault();
+                const allNavInputs = Array.from(document.querySelectorAll('input.nav-input:not([disabled])'))
+                    .filter(el => el.offsetParent !== null);
+                const currentIndex = allNavInputs.indexOf(e.target);
+                if (currentIndex !== -1 && currentIndex + 1 < allNavInputs.length) {
+                    const nextInput = allNavInputs[currentIndex + 1];
+                    nextInput.focus();
+                    nextInput.select();
+                } else {
+                    e.target.blur();
+                }
+            }
+        });
+
         let toastTimeout = null;
         function showNotice(text) {
             const toast = document.getElementById('toastNotification');
@@ -885,13 +981,52 @@
             document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }
 
-        // --- ШАБЛОНЫ ТРЕНИРОВОК (БЕЗ БРАУЗЕРНЫХ ALERT) ---
+        // --- ОТСЛЕЖИВАНИЕ ИЗМЕНЕНИЙ В ЗАГРУЖЕННОМ ШАБЛОНЕ ---
+        function markTemplateModified() {
+            if (currentLoadedTemplateName) {
+                isTemplateModified = true;
+                updateTemplateButtonUI();
+            }
+        }
+
+        function updateTemplateButtonUI() {
+            const badge = document.getElementById('loadedTemplateBadge');
+            const updateContainer = document.getElementById('updateTemplateContainer');
+            const updateBtn = document.getElementById('updateTemplateBtn');
+
+            if (currentLoadedTemplateName) {
+                badge.innerText = `📂 ${currentLoadedTemplateName}`;
+                if (isTemplateModified) {
+                    updateContainer.style.display = 'block';
+                    updateBtn.innerText = `🔄 Обновить сохранённую тренировку «${currentLoadedTemplateName}»`;
+                } else {
+                    updateContainer.style.display = 'none';
+                }
+            } else {
+                badge.innerText = '';
+                updateContainer.style.display = 'none';
+            }
+        }
+
+        function updateCurrentLoadedTemplate() {
+            if (!currentLoadedTemplateName) return;
+            cleanAllSetupEmptySets();
+            let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            templates[currentLoadedTemplateName] = JSON.parse(JSON.stringify(state.setupExercises));
+            localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            showNotice(`Тренировка «${currentLoadedTemplateName}» обновлена!`);
+        }
+
+        // --- ШАБЛОНЫ ТРЕНИРОВОК ---
         function openSaveTemplateModal() {
             if (!state.setupExercises || state.setupExercises.length === 0) {
                 showNotice("Сначала добавьте упражнения в тренировку!");
                 return;
             }
-            document.getElementById('templateNameInput').value = `Тренировка ${new Date().toLocaleDateString()}`;
+            document.getElementById('templateNameInput').value = currentLoadedTemplateName || `Тренировка ${new Date().toLocaleDateString()}`;
             document.getElementById('saveTemplateModal').classList.add('open');
         }
 
@@ -901,10 +1036,15 @@
                 showNotice("Введите название тренировки!");
                 return;
             }
-
+            cleanAllSetupEmptySets();
             let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
             templates[nameInput] = JSON.parse(JSON.stringify(state.setupExercises));
             localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+
+            currentLoadedTemplateName = nameInput;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
 
             closeModal('saveTemplateModal');
             showNotice(`Тренировка «${nameInput}» сохранена!`);
@@ -948,6 +1088,11 @@
             let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
             delete templates[tplName];
             localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+            if (currentLoadedTemplateName === tplName) {
+                currentLoadedTemplateName = null;
+                isTemplateModified = false;
+                updateTemplateButtonUI();
+            }
             openLoadTemplateModal();
             showNotice("Шаблон удален");
         }
@@ -959,9 +1104,39 @@
                     name: ex.name,
                     sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
                 }));
+                currentLoadedTemplateName = tplName;
+                isTemplateModified = false;
+                updateTemplateButtonUI();
                 renderSetupExercises();
                 closeModal('loadTemplateModal');
                 showNotice(`Загружена тренировка «${tplName}»`);
+            }
+        }
+
+        // Удаление незаполненных строк подходов при сохранении
+        function cleanExerciseEmptySets(ex) {
+            const filledSets = ex.sets.filter(s => String(s.weight).trim() !== '' || String(s.reps).trim() !== '');
+            if (filledSets.length > 0) {
+                ex.sets = filledSets;
+            } else {
+                ex.sets = [{ weight: '', reps: '', completed: false }];
+            }
+        }
+
+        function cleanAllSetupEmptySets() {
+            state.setupExercises.forEach(ex => cleanExerciseEmptySets(ex));
+        }
+
+        function saveSetupExerciseBlock(exIdx) {
+            const ex = state.setupExercises[exIdx];
+            const beforeCount = ex.sets.length;
+            cleanExerciseEmptySets(ex);
+            const removedCount = beforeCount - ex.sets.length;
+            renderSetupExercises();
+            if (removedCount > 0) {
+                showNotice(`Сохранено (удалено пустых подходов: ${removedCount})`);
+            } else {
+                showNotice(`Параметры «${ex.name}» сохранены`);
             }
         }
 
@@ -978,7 +1153,7 @@
                 const block = document.createElement('div');
                 block.style.background = 'rgba(0,0,0,0.12)';
                 block.style.border = '1px solid var(--glass-border)';
-                block.style.borderRadius = '14px';
+                block.style.borderRadius = '16px';
                 block.style.padding = '12px';
                 block.style.marginBottom = '10px';
 
@@ -1000,10 +1175,10 @@
                         <div class="setup-set-row">
                             <span style="text-align:center; font-size: 12px; color: var(--text-secondary);">#${setIdx + 1}</span>
                             <div class="input-group">
-                                <input type="number" placeholder="Вес (кг)" value="${set.weight}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].weight = this.value">
+                                <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="Вес (кг)" value="${set.weight}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].weight = this.value; markTemplateModified();">
                             </div>
                             <div class="input-group">
-                                <input type="number" placeholder="Повторы" value="${set.reps}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].reps = this.value">
+                                <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="Повторы" value="${set.reps}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].reps = this.value; markTemplateModified();">
                             </div>
                         </div>
                     `;
@@ -1014,7 +1189,7 @@
                 }
 
                 setsHtml += `
-                    <button class="btn-secondary" style="width: 100%; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="showNotice('Параметры упражнения «${ex.name}» сохранены')">Сохранить</button>
+                    <button class="btn-secondary" style="width: 100%; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="saveSetupExerciseBlock(${exIdx})">Сохранить</button>
                 `;
 
                 block.innerHTML = setsHtml;
@@ -1029,18 +1204,21 @@
                 reps: last ? last.reps : '',
                 completed: false
             });
+            markTemplateModified();
             renderSetupExercises();
         }
 
         function removeSetupSet(exIdx) {
             if (state.setupExercises[exIdx].sets.length > 1) {
                 state.setupExercises[exIdx].sets.pop();
+                markTemplateModified();
                 renderSetupExercises();
             }
         }
 
         function removeSetupExercise(exIdx) {
             state.setupExercises.splice(exIdx, 1);
+            markTemplateModified();
             renderSetupExercises();
         }
 
@@ -1051,7 +1229,9 @@
                 return;
             }
 
-            // Переносим все настроенные упражнения и веса в активную тренировку
+            unlockAudioOnUserGesture();
+            cleanAllSetupEmptySets();
+
             state.activeWorkout = {
                 date: new Date().toLocaleDateString(),
                 exercises: state.setupExercises.map(ex => ({
@@ -1105,6 +1285,10 @@
             
             state.setupExercises = [];
             state.activeWorkout = { exercises: [] };
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+
             stopTimer();
             document.getElementById('startScreen').style.display = 'block';
             document.getElementById('activeScreen').style.display = 'none';
@@ -1114,31 +1298,140 @@
             openResultModal(lastFinishedWorkoutData);
         }
 
-        // --- ЗВУКИ И ТАЙМЕР ОТДЫХА ---
+        // --- ЗВУКОВОЙ ДВИЖОК С ПОДДЕРЖКОЙ IPHONE (WEB AUDIO + WAV AUDIO ELEMENT + HAPTICS) ---
         let audioCtx = null;
-        function getAudioContext() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            return audioCtx;
+        let tickAudioEl = null;
+        let finishAudioEl = null;
+        let audioUnlocked = false;
+
+        function createWavDataUri(freq, durationSec, volume) {
+            const sampleRate = 22050;
+            const numSamples = Math.floor(sampleRate * durationSec);
+            const buffer = new ArrayBuffer(44 + numSamples * 2);
+            const view = new DataView(buffer);
+
+            const writeStr = (offset, str) => {
+                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+            };
+
+            writeStr(0, 'RIFF');
+            view.setUint32(4, 36 + numSamples * 2, true);
+            writeStr(8, 'WAVE');
+            writeStr(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeStr(36, 'data');
+            view.setUint32(40, numSamples * 2, true);
+
+            for (let i = 0; i < numSamples; i++) {
+                const t = i / sampleRate;
+                const envelope = Math.exp(-t * (4 / durationSec));
+                const sample = Math.sin(2 * Math.PI * freq * t) * volume * envelope;
+                view.setInt16(44 + i * 2, Math.max(-1, Math.min(1, sample)) * 32767, true);
+            }
+
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+            return 'data:audio/wav;base64,' + btoa(binary);
         }
 
-        function playBeep(frequency, duration, volume) {
+        function initAudioEngine() {
             try {
-                const ctx = getAudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = frequency;
-                gain.gain.setValueAtTime(volume, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + duration);
+                tickAudioEl = new Audio(createWavDataUri(640, 0.09, 0.25));
+                finishAudioEl = new Audio(createWavDataUri(528, 0.45, 0.45));
+                tickAudioEl.preload = 'auto';
+                finishAudioEl.preload = 'auto';
+            } catch (e) {}
+
+            document.addEventListener('touchstart', unlockAudioOnUserGesture, { once: true, passive: true });
+            document.addEventListener('click', unlockAudioOnUserGesture, { once: true });
+        }
+
+        function unlockAudioOnUserGesture() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (!audioUnlocked) {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+
+                    if (tickAudioEl) {
+                        tickAudioEl.muted = true;
+                        tickAudioEl.play().then(() => {
+                            tickAudioEl.pause();
+                            tickAudioEl.currentTime = 0;
+                            tickAudioEl.muted = false;
+                        }).catch(() => {});
+                    }
+                    if (finishAudioEl) {
+                        finishAudioEl.muted = true;
+                        finishAudioEl.play().then(() => {
+                            finishAudioEl.pause();
+                            finishAudioEl.currentTime = 0;
+                            finishAudioEl.muted = false;
+                        }).catch(() => {});
+                    }
+                    audioUnlocked = true;
+                }
+            } catch (e) {}
+        }
+
+        function playTimerSound(type) {
+            try {
+                if (type === 'tick') {
+                    if (tickAudioEl) {
+                        tickAudioEl.currentTime = 0;
+                        tickAudioEl.play().catch(() => {});
+                    }
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    }
+                } else if (type === 'finish') {
+                    if (finishAudioEl) {
+                        finishAudioEl.currentTime = 0;
+                        finishAudioEl.play().catch(() => {});
+                    }
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                    } else if (navigator.vibrate) {
+                        navigator.vibrate(200);
+                    }
+                }
+
+                if (audioCtx) {
+                    if (audioCtx.state === 'suspended') audioCtx.resume();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    const freq = type === 'tick' ? 640 : 528;
+                    const dur = type === 'tick' ? 0.08 : 0.42;
+                    const vol = type === 'tick' ? 0.08 : 0.18;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + dur);
+                }
             } catch (e) {}
         }
 
         function startRestTimer() {
+            unlockAudioOnUserGesture();
             clearInterval(restTimerInterval);
             isResting = true;
             restTimeRemaining = initialRestSeconds;
@@ -1152,12 +1445,11 @@
                 restTimeRemaining--;
                 updateTimerDisplay();
                 if (restTimeRemaining > 0 && restTimeRemaining <= 5) {
-                    playBeep(600, 0.08, 0.03);
+                    playTimerSound('tick');
                 }
                 if (restTimeRemaining <= 0) {
                     stopTimer();
-                    playBeep(440, 0.4, 0.08);
-                    if (navigator.vibrate) navigator.vibrate(200);
+                    playTimerSound('finish');
                 }
             }, 1000);
         }
@@ -1190,7 +1482,7 @@
             document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }
 
-        // --- ВЫБОР УПРАЖНЕНИЙ (С ПРИВЯЗКОЙ СВОИХ К КОНКРЕТНОЙ ГРУППЕ МЫШЦ) ---
+        // --- ВЫБОР ГРУППЫ МЫШЦ И УПРАЖНЕНИЙ ---
         function openMuscleGroupModal(mode) {
             if (mode) addingMode = mode;
             const listEl = document.getElementById('muscleGroupsList');
@@ -1211,6 +1503,11 @@
             openExerciseModal();
         }
 
+        function backToMuscleGroups() {
+            closeModal('exerciseModal');
+            openMuscleGroupModal();
+        }
+
         function openExerciseModal() {
             const container = document.getElementById('exerciseListContainer');
             container.innerHTML = '';
@@ -1218,7 +1515,6 @@
 
             const groupCustomList = state.customByGroup[selectedMuscleKey] || [];
             const baseList = exercisesData[selectedMuscleKey] || [];
-            // Сначала идут выбранные/добавленные пользователем именно в этой группе мышц, затем остальные из топ-10
             let combinedExercises = [...new Set([...groupCustomList, ...baseList])];
 
             combinedExercises.forEach(exName => {
@@ -1227,7 +1523,7 @@
                 item.className = 'exercise-select-item';
                 item.innerHTML = `
                     <span>${exName}</span>
-                    ${isPrioritized ? '<span style="font-size: 11px; color: var(--accent);">★ Недавнее</span>' : ''}
+                    ${isPrioritized ? '<span style="font-size: 11px; color: var(--accent);">★ Выбирали ранее</span>' : ''}
                 `;
                 item.onclick = () => rememberAndSelectExercise(exName);
                 container.appendChild(item);
@@ -1248,7 +1544,6 @@
             if (!state.customByGroup[selectedMuscleKey]) {
                 state.customByGroup[selectedMuscleKey] = [];
             }
-            // Поднимаем упражнение в начало списка только внутри текущей группы мышц
             state.customByGroup[selectedMuscleKey] = [
                 name,
                 ...state.customByGroup[selectedMuscleKey].filter(item => item !== name)
@@ -1268,10 +1563,10 @@
             };
 
             if (addingMode === 'active' || document.getElementById('activeScreen').style.display === 'block') {
-                // В режиме тренировки открываем окно предварительной настройки упражнения с кнопкой "Сохранить"
                 openQuickSetupModal(newEx);
             } else {
                 state.setupExercises.push(newEx);
+                markTemplateModified();
                 renderSetupExercises();
                 showNotice(`Добавлено: ${name}`);
             }
@@ -1293,10 +1588,10 @@
                     <div class="setup-set-row">
                         <span style="text-align:center; font-size: 12px; color: var(--text-secondary);">#${sIdx + 1}</span>
                         <div class="input-group">
-                            <input type="number" placeholder="Вес (кг)" value="${set.weight}" oninput="tempQuickExercise.sets[${sIdx}].weight = this.value">
+                            <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="Вес (кг)" value="${set.weight}" oninput="tempQuickExercise.sets[${sIdx}].weight = this.value">
                         </div>
                         <div class="input-group">
-                            <input type="number" placeholder="Повторы" value="${set.reps}" oninput="tempQuickExercise.sets[${sIdx}].reps = this.value">
+                            <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="Повторы" value="${set.reps}" oninput="tempQuickExercise.sets[${sIdx}].reps = this.value">
                         </div>
                     </div>
                 `;
@@ -1317,6 +1612,7 @@
         }
 
         function confirmQuickSetup() {
+            cleanExerciseEmptySets(tempQuickExercise);
             state.activeWorkout.exercises.push(tempQuickExercise);
             tempQuickExercise = null;
             closeModal('inWorkoutSetupModal');
@@ -1345,14 +1641,12 @@
 
             if (pastRecords.length === 0) return null;
 
-            // 1. Если в последней тренировке достигнуто >= 12 повторений во всех подходах
             const lastSets = pastRecords[0];
             const hitMaxReps = lastSets.every(s => Number(s.reps) >= 12);
             if (hitMaxReps) {
                 return "💡 Вы уверенно делаете 12+ повторений! Попробуйте увеличить рабочий вес на 2.5–5 кг.";
             }
 
-            // 2. Если пользователь топчется на одном максимальном весе 2 и более тренировок подряд
             if (pastRecords.length >= 2) {
                 const maxWeightLast = Math.max(...pastRecords[0].map(s => Number(s.weight) || 0));
                 const maxWeightPrev = Math.max(...pastRecords[1].map(s => Number(s.weight) || 0));
@@ -1380,7 +1674,6 @@
             const container = document.getElementById('exercisesContainer');
             container.innerHTML = '';
 
-            // 1. Несбрасываемый глобальный подсчет общего тоннажа по всем упражнениям
             let totalTonnage = 0;
             state.activeWorkout.exercises.forEach(ex => {
                 ex.sets.forEach(s => {
@@ -1391,7 +1684,6 @@
             });
             document.getElementById('totalTonnage').innerText = `${totalTonnage} кг`;
 
-            // 2. Проверяем, завершены ли все упражнения
             const allExercisesDone = state.activeWorkout.exercises.length > 0 &&
                 state.activeWorkout.exercises.every(ex => ex.sets.every(s => s.completed));
 
@@ -1423,7 +1715,6 @@
                 window.currentActiveSetIndex = unfinSetIdx;
             }
 
-            // 3. Отрисовка каждого упражнения
             state.activeWorkout.exercises.forEach((ex, exIndex) => {
                 const block = document.createElement('div');
                 const isAllCompleted = ex.sets.every(s => s.completed);
@@ -1435,7 +1726,6 @@
 
                 block.className = `exercise-block ${stateClass}`;
 
-                // Индивидуальный счетчик тоннажа для конкретного упражнения
                 let exerciseTonnage = 0;
                 ex.sets.forEach(s => {
                     if (s.completed && s.weight && s.reps) {
@@ -1484,13 +1774,11 @@
                     let firstUnfinishedSet = ex.sets.findIndex(s => !s.completed);
 
                     ex.sets.forEach((set, setIndex) => {
-                        // Если идет таймер отдыха — все строки подходов выглядят как неактивные
                         const isCurrentSet = !isResting && isCurrent && setIndex === firstUnfinishedSet && !set.completed;
                         const setRowClass = isCurrentSet ? 'set-row active-set' : 'set-row';
                         
                         let actionCellHtml = '';
                         if (!isCurrent) {
-                            // В уже сделанных или ожидающих упражнениях убираем кнопки, чтобы случайно не нажимать
                             actionCellHtml = `<span style="text-align:center; font-size:14px; color:${set.completed ? 'var(--success)' : 'var(--text-secondary)'};">${set.completed ? '✓' : '•'}</span>`;
                         } else {
                             let checkBtnClass = 'check-btn';
@@ -1501,7 +1789,6 @@
                             } else if (isCurrentSet) {
                                 checkBtnClass += ' active-check-btn';
                             } else {
-                                // Во время отдыха или для будущих подходов кнопка серая и заблокирована
                                 checkBtnClass += ' disabled-check-btn';
                                 isDisabled = true;
                             }
@@ -1513,10 +1800,10 @@
                             <div class="${setRowClass}">
                                 <span style="text-align:center; font-size: 13px; color: var(--text-secondary);">${setIndex + 1}</span>
                                 <div class="input-group">
-                                    <input type="number" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.weight}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'weight', this.value)">
+                                    <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.weight}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'weight', this.value)">
                                 </div>
                                 <div class="input-group">
-                                    <input type="number" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.reps}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'reps', this.value)">
+                                    <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.reps}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'reps', this.value)">
                                 </div>
                                 ${actionCellHtml}
                             </div>
@@ -1535,7 +1822,6 @@
             });
         }
 
-        // Обновление веса и повторов на лету без сброса фокуса клавиатуры
         function updateSetValue(exIndex, setIndex, field, value) {
             state.activeWorkout.exercises[exIndex].sets[setIndex][field] = value;
             let totalTonnage = 0;
@@ -1550,6 +1836,7 @@
         }
 
         function completeCurrentActiveSet() {
+            unlockAudioOnUserGesture();
             if (window.currentActiveExIndex !== undefined && window.currentActiveExIndex !== -1 &&
                 window.currentActiveSetIndex !== undefined && window.currentActiveSetIndex !== -1) {
                 toggleSet(window.currentActiveExIndex, window.currentActiveSetIndex);
@@ -1562,6 +1849,7 @@
         }
 
         function toggleSet(exIndex, setIndex) {
+            unlockAudioOnUserGesture();
             const set = state.activeWorkout.exercises[exIndex].sets[setIndex];
             set.completed = !set.completed;
             if (set.completed) {
@@ -1590,7 +1878,31 @@
             }
         }
 
-        // --- ИСТОРИЯ И КАРТОЧКА СТОРИС 1080x1920 ---
+        // --- ИСТОРИЯ, ПОВТОР ТРЕНИРОВКИ И КАРТОЧКА СТОРИС ---
+        function repeatWorkoutFromHistory(index) {
+            const workout = state.history[index];
+            if (!workout) return;
+
+            state.setupExercises = workout.exercises.map(ex => ({
+                name: ex.name,
+                sets: ex.sets.map(s => ({
+                    weight: s.weight || '',
+                    reps: s.reps || '',
+                    completed: false
+                }))
+            }));
+
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('activeScreen').style.display = 'none';
+            renderSetupExercises();
+            switchTab('workout');
+            showNotice("Тренировка перенесена в настройку!");
+        }
+
         function renderHistory() {
             const container = document.getElementById('historyContainer');
             
@@ -1630,25 +1942,87 @@
                             <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">${exercisesSummary}</div>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <span style="color: var(--accent); font-size: 13px; font-weight: 700;">${workoutTonnage} кг ▾</span>
-                            <button onclick="event.stopPropagation(); openResultModalFromHistory(${index})" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 12px;">📤</button>
+                            <span style="color: var(--accent); font-size: 13px; font-weight: 750;">${workoutTonnage} кг ▾</span>
+                            <button onclick="event.stopPropagation(); openResultModalFromHistory(${index})" class="btn-secondary share-pill-btn">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                                <span>Поделиться</span>
+                            </button>
                         </div>
                     </div>
                     <div class="history-details">
                         ${detailsHtml}
+                        <button class="btn-secondary" style="width: 100%; margin-top: 10px; border-color: rgba(56,189,248,0.45); color: var(--accent);" onclick="event.stopPropagation(); repeatWorkoutFromHistory(${index})">
+                            🔄 Повторить эту тренировку
+                        </button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function openResultModal(workoutData) {
-            const tonnage = workoutData.totalTonnage || 0;
-            const duration = workoutData.duration || 1;
+        function drawStoryCanvas(workoutData) {
+            const canvas = document.getElementById('exportCanvas');
+            const ctx = canvas.getContext('2d');
 
+            const tonnage = workoutData ? (workoutData.totalTonnage || 0) : 0;
+            const duration = workoutData ? (workoutData.duration || 1) : 1;
+
+            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+            bgGrad.addColorStop(0, '#05070f');
+            bgGrad.addColorStop(1, '#1e293b');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+            ctx.beginPath();
+            ctx.arc(880, 260, 380, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(139, 92, 246, 0.15)';
+            ctx.beginPath();
+            ctx.arc(200, 1660, 420, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.roundRect(120, 320, 840, 1280, 56);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 68px -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('GymProCounter', 540, 500);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '34px -apple-system, sans-serif';
+            ctx.fillText('Твой помощник в зале', 540, 565);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 36px -apple-system, sans-serif';
+            ctx.fillText('СЕГОДНЯ Я ПОДНЯЛ', 540, 820);
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'bold 124px -apple-system, sans-serif';
+            ctx.fillText(`${tonnage} кг`, 540, 980);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 56px -apple-system, sans-serif';
+            ctx.fillText(`за ${duration} минут!`, 540, 1100);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 36px -apple-system, sans-serif';
+            ctx.fillText('@GymProCounterBot', 540, 1460);
+
+            return canvas.toDataURL('image/png');
+        }
+
+        function openResultModal(workoutData) {
             lastFinishedWorkoutData = workoutData;
-            document.getElementById('storyTonnageVal').innerText = `${tonnage} кг`;
-            document.getElementById('storyDurationVal').innerText = `за ${duration} мин.`;
+            const dataUrl = drawStoryCanvas(workoutData);
+            document.getElementById('storyCardImagePreview').src = dataUrl;
             document.getElementById('resultModal').classList.add('open');
         }
 
@@ -1659,63 +2033,36 @@
             }
         }
 
-        function downloadStoryImage() {
+        async function shareOrDownloadStoryImage() {
             const canvas = document.getElementById('exportCanvas');
-            const ctx = canvas.getContext('2d');
+            drawStoryCanvas(lastFinishedWorkoutData);
 
-            const tonnage = lastFinishedWorkoutData ? (lastFinishedWorkoutData.totalTonnage || 0) : 0;
-            const duration = lastFinishedWorkoutData ? (lastFinishedWorkoutData.duration || 1) : 1;
+            try {
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                if (blob) {
+                    const file = new File([blob], 'GymProCounter_Result.png', { type: 'image/png' });
+                    // Нативный способ сохранения в Фото на iPhone (iOS Share Sheet -> "Сохранить изображение")
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'GymProCounter'
+                        });
+                        showNotice("Готово!");
+                        return;
+                    }
+                }
+            } catch (err) {
+                if (err && err.name === 'AbortError') return;
+            }
 
-            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
-            bgGrad.addColorStop(0, '#070913');
-            bgGrad.addColorStop(1, '#1e293b');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, 1080, 1920);
-
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
-            ctx.beginPath();
-            ctx.arc(900, 250, 380, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = 'rgba(147, 51, 234, 0.12)';
-            ctx.beginPath();
-            ctx.arc(180, 1680, 420, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.roundRect(120, 320, 840, 1280, 48);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 64px -apple-system, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('GymProCounter', 540, 500);
-
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '34px -apple-system, sans-serif';
-            ctx.fillText('Твой помощник в зале', 540, 565);
-
-            ctx.fillStyle = '#f8fafc';
-            ctx.font = 'bold 46px -apple-system, sans-serif';
-            ctx.fillText(`Сегодня я поднял ${tonnage} кг,`, 540, 920);
-
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 58px -apple-system, sans-serif';
-            ctx.fillText(`за ${duration} минут!`, 540, 1020);
-
-            ctx.fillStyle = '#64748b';
-            ctx.font = '32px -apple-system, sans-serif';
-            ctx.fillText('Время становиться сильнее 💪', 540, 1460);
-
+            // Fallback для ПК и старых браузеров
             const link = document.createElement('a');
             link.download = 'GymProCounter_Result.png';
             link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
             link.click();
-            showNotice("Карточка сохранена!");
+            document.body.removeChild(link);
+            showNotice("Зажмите превью карточки пальцем, чтобы сохранить в Фото");
         }
     </script>
 </body>
