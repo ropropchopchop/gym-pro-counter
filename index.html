@@ -223,6 +223,10 @@
         .view-section { display: none; }
         .view-section.active { display: block; }
 
+        #historyView {
+            padding-bottom: 35vh;
+        }
+
         /* Карточки Liquid Glass */
         .card {
             background: var(--glass-bg);
@@ -583,7 +587,12 @@
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: var(--glass-shadow), var(--glass-inner-glow);
-            transition: border-color 0.2s, transform 0.15s;
+            transition: border-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+        }
+
+        .history-card.expanded {
+            border-color: rgba(56, 189, 248, 0.55);
+            box-shadow: 0 14px 35px rgba(56, 189, 248, 0.18), var(--glass-inner-glow);
         }
 
         .history-details {
@@ -1890,7 +1899,27 @@
             }
         }
 
-        // --- ИСТОРИЯ, ПОВТОР ТРЕНИРОВКИ И КАРТОЧКА СТОРИС ---
+        // --- ИСТОРИЯ, РАСКРЫТИЕ С ПРОКРУТКОЙ В ЦЕНТР ВНИМАНИЯ И ПОВТОР ТРЕНИРОВКИ ---
+        function toggleHistoryCard(headerEl) {
+            const card = headerEl.parentElement;
+            const isExpanding = !card.classList.contains('expanded');
+            card.classList.toggle('expanded');
+
+            if (isExpanding) {
+                setTimeout(() => {
+                    const rect = card.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    // Поднимаем раскрытую карточку в верхнюю треть экрана, чтобы она и её детали были в центре внимания
+                    const targetY = Math.max(0, scrollTop + rect.top - (window.innerHeight * 0.2));
+                    try {
+                        window.scrollTo({ top: targetY, behavior: 'smooth' });
+                    } catch (e) {
+                        window.scrollTo(0, targetY);
+                    }
+                }, 40);
+            }
+        }
+
         function repeatWorkoutFromHistory(index) {
             const workout = state.history[index];
             if (!workout) return;
@@ -1949,7 +1978,7 @@
                 }).join('');
 
                 card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items: center; cursor: pointer;" onclick="this.parentElement.classList.toggle('expanded')">
+                    <div style="display:flex; justify-content:space-between; align-items: center; cursor: pointer;" onclick="toggleHistoryCard(this)">
                         <div style="flex: 1; padding-right: 8px;">
                             <strong style="font-size:14px;">📅 ${workout.date} ${durationText ? '• ' + durationText : ''}</strong>
                             <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">${exercisesSummary}</div>
