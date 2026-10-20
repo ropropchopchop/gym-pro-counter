@@ -728,7 +728,7 @@
                     <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="openMuscleGroupModal('setup')">+ Добавить упражнение</button>
                 </div>
 
-                <!-- Кнопка обновления загруженного шаблона (появляется только при изменениях в загруженном шаблоне) -->
+                <!-- Кнопка обновления загруженного шаблона -->
                 <div id="updateTemplateContainer" style="display: none; margin-bottom: 10px;">
                     <button class="btn-secondary" id="updateTemplateBtn" style="width: 100%; margin-top: 0; border-color: rgba(34, 197, 94, 0.55); color: var(--success);" onclick="updateCurrentLoadedTemplate()">
                         🔄 Обновить сохранённую тренировку
@@ -813,7 +813,6 @@
                 <input type="text" id="customExerciseInput" enterkeyhint="done" placeholder="Добавить свое в эту группу..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomExercise();}">
                 <button class="btn" style="width: auto; padding: 12px 18px;" onclick="addCustomExercise()">Добавить</button>
             </div>
-            <!-- Возврат к выбору мышечных групп -->
             <button class="btn-secondary" onclick="backToMuscleGroups()" style="width: 100%; margin-top: 12px;">← Назад к группам мышц</button>
         </div>
     </div>
@@ -853,12 +852,11 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА: КАРТОЧКА РЕЗУЛЬТАТА (КОМПАКТНАЯ БЕЗ ПРОКРУТКИ) -->
+    <!-- МОДАЛКА: КАРТОЧКА РЕЗУЛЬТАТА -->
     <div class="modal" id="resultModal">
         <div class="modal-content" style="text-align: center; padding: 18px 20px 22px 20px;">
             <div class="card-title" style="justify-content: center; margin-bottom: 8px; font-size: 15px;">Результат тренировки</div>
             
-            <!-- Компактное превью с реальной сгенерированной картинкой (позволяет также зажать пальцем на iOS) -->
             <div style="display: flex; justify-content: center; margin: 8px auto 12px auto;">
                 <img id="storyCardImagePreview" alt="Story Result" style="width: 185px; height: 329px; border-radius: 18px; border: 1.5px solid rgba(56,189,248,0.45); box-shadow: 0 14px 32px rgba(0,0,0,0.45); object-fit: cover; display: block;">
             </div>
@@ -876,7 +874,6 @@
         let isResting = false;
         let addingMode = 'setup';
 
-        // Отслеживание загруженного шаблона для кнопки "Обновить сохранённую тренировку"
         let currentLoadedTemplateName = null;
         let isTemplateModified = false;
 
@@ -925,7 +922,20 @@
             renderHistory();
         };
 
-        // --- АВТОМАТИЧЕСКИЙ ПЕРЕХОД КУРСОРА ПО НАЖАТИЮ "ВВОД" (ENTER / NEXT) ---
+        // Плавная прокрутка страницы в самое начало при смене экранов
+        function scrollToTop() {
+            setTimeout(() => {
+                try {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } catch (e) {
+                    window.scrollTo(0, 0);
+                }
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 20);
+        }
+
+        // Автоматический переход курсора по нажатию "Ввод" (Enter / Next)
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.classList.contains('nav-input')) {
                 e.preventDefault();
@@ -970,6 +980,7 @@
                 document.getElementById('historyView').classList.add('active');
                 renderHistory();
             }
+            scrollToTop();
         }
 
         function adjustInitialRest(delta) {
@@ -1109,11 +1120,11 @@
                 updateTemplateButtonUI();
                 renderSetupExercises();
                 closeModal('loadTemplateModal');
+                scrollToTop();
                 showNotice(`Загружена тренировка «${tplName}»`);
             }
         }
 
-        // Удаление незаполненных строк подходов при сохранении
         function cleanExerciseEmptySets(ex) {
             const filledSets = ex.sets.filter(s => String(s.weight).trim() !== '' || String(s.reps).trim() !== '');
             if (filledSets.length > 0) {
@@ -1256,6 +1267,7 @@
 
             stopTimer();
             renderActiveWorkout();
+            scrollToTop();
         }
 
         function finishWorkout() {
@@ -1298,7 +1310,7 @@
             openResultModal(lastFinishedWorkoutData);
         }
 
-        // --- ЗВУКОВОЙ ДВИЖОК С ПОДДЕРЖКОЙ IPHONE (WEB AUDIO + WAV AUDIO ELEMENT + HAPTICS) ---
+        // --- ЗВУКОВОЙ ДВИЖОК С ПОДДЕРЖКОЙ IPHONE ---
         let audioCtx = null;
         let tickAudioEl = null;
         let finishAudioEl = null;
@@ -1900,6 +1912,7 @@
             document.getElementById('activeScreen').style.display = 'none';
             renderSetupExercises();
             switchTab('workout');
+            scrollToTop();
             showNotice("Тренировка перенесена в настройку!");
         }
 
@@ -2041,7 +2054,6 @@
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                 if (blob) {
                     const file = new File([blob], 'GymProCounter_Result.png', { type: 'image/png' });
-                    // Нативный способ сохранения в Фото на iPhone (iOS Share Sheet -> "Сохранить изображение")
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({
                             files: [file],
@@ -2055,7 +2067,6 @@
                 if (err && err.name === 'AbortError') return;
             }
 
-            // Fallback для ПК и старых браузеров
             const link = document.createElement('a');
             link.download = 'GymProCounter_Result.png';
             link.href = canvas.toDataURL('image/png');
