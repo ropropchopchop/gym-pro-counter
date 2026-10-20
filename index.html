@@ -46,7 +46,7 @@
             --text-secondary: #475569;
             --input-bg: rgba(255, 255, 255, 0.72);
             --modal-bg: rgba(248, 250, 252, 0.9);
-            --toast-bg: rgba(255, 255, 255, 0.94);
+            --toast-bg: rgba(255, 255, 255, 0.95);
         }
 
         :root {
@@ -281,7 +281,7 @@
 
         .btn-danger-solid {
             background: var(--danger-gradient);
-            box-shadow: 0 10px 28px rgba(239, 68, 68, 0.35), inset 0 1.5px 2px rgba(255,255,255,0.5);
+            box-shadow: 0 10px 28px rgba(239, 68, 68, 0.35), inset 0 1.5px 2px rgba(255,255,255,0.45);
         }
 
         .btn-secondary {
@@ -317,16 +317,6 @@
             border-color: rgba(56, 189, 248, 0.35);
         }
 
-        .delete-item-btn {
-            margin-top: 0;
-            padding: 7px 12px;
-            font-size: 12px;
-            border-radius: 12px;
-            color: var(--danger);
-            border-color: rgba(239, 68, 68, 0.35);
-            flex-shrink: 0;
-        }
-
         /* Переключатель индикатора подхода и таймера */
         .status-switcher {
             position: relative;
@@ -352,7 +342,7 @@
             animation: prominentPulse 2.2s infinite ease-in-out;
             transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, padding 0.35s ease;
             opacity: 1;
-            max-height: 200px;
+            max-height: 240px;
             overflow: hidden;
         }
 
@@ -365,6 +355,23 @@
             border-width: 0;
             margin: 0;
             pointer-events: none;
+        }
+
+        /* Акцентная строка веса и повторений в окне текущего подхода */
+        .active-set-plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 7px;
+            padding: 5px 12px;
+            border-radius: 11px;
+            background: rgba(56, 189, 248, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
         }
 
         .timer-bar {
@@ -645,15 +652,17 @@
 
         .modal.open { display: flex; }
 
-        #confirmActionModal {
+        /* Окно подтверждения поверх других модальных окон */
+        #confirmModal, #sessionRecoveryModal {
             z-index: 250;
             align-items: center;
-            padding: 16px;
+            padding: 20px;
         }
 
-        #confirmActionModal .modal-content {
+        #confirmModal .modal-content, #sessionRecoveryModal .modal-content {
             border-radius: 26px;
-            max-width: 420px;
+            max-width: 400px;
+            text-align: center;
         }
 
         .modal-content {
@@ -687,41 +696,12 @@
             cursor: pointer;
             width: 100%;
             box-shadow: var(--glass-inner-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .muscle-group-btn:active { transform: scale(0.98); }
-
-        .settings-option-btn {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-top-color: var(--glass-border-top);
-            color: var(--text-main);
-            padding: 14px 16px;
-            border-radius: 16px;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 650;
-            margin-bottom: 10px;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--glass-inner-glow);
-            transition: transform 0.15s ease, background 0.2s ease;
-        }
-
-        .settings-option-btn:active { transform: scale(0.98); }
-
-        .manage-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--glass-border);
-        }
 
         .exercise-select-item {
             padding: 13px 12px;
@@ -814,12 +794,19 @@
                 </div>
 
                 <!-- Кнопки шаблонов под добавленными упражнениями -->
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                     <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openSaveTemplateModal()">💾 Сохранить тренировку</button>
                     <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openLoadTemplateModal()">📂 Загрузить тренировку</button>
                 </div>
 
-                <button class="btn" onclick="startActiveWorkout()" style="margin-top: 8px;">🚀 Начать тренировку</button>
+                <!-- Кнопка "Создать новую тренировку" (появляется только когда загружен шаблон) -->
+                <div id="createNewWorkoutContainer" style="display: none; margin-bottom: 14px;">
+                    <button class="btn-secondary" style="width: 100%; margin-top: 0; border-color: rgba(56, 189, 248, 0.45); color: var(--accent);" onclick="resetToNewWorkoutSetup()">
+                        ✨ Создать новую тренировку
+                    </button>
+                </div>
+
+                <button class="btn" onclick="startActiveWorkout()" style="margin-top: 6px;">🚀 Начать тренировку</button>
             </div>
         </div>
 
@@ -829,12 +816,13 @@
             <div class="status-switcher">
                 <!-- Окно текущего подхода -->
                 <div class="active-set-indicator" id="activeSetIndicatorBar">
-                    <div style="flex: 1; padding-right: 10px;">
+                    <div style="flex: 1; padding-right: 12px;">
                         <span style="font-size: 11px; color: var(--text-secondary); display: block;" id="activeIndicatorLabel">ТЕКУЩИЙ ПОДХОД</span>
                         <div id="activeIndicatorText" style="font-size: 14px; font-weight: 650; color: var(--text-main); margin-top: 2px;">Упражнение • Подход 1 в процессе</div>
+                        <div id="activeIndicatorPlan" class="active-set-plan-badge">🎯 0 кг × 0 повт.</div>
                     </div>
                     <div id="activeIndicatorActionArea">
-                        <button class="check-btn active-check-btn" id="activeIndicatorCheckBtn" onclick="completeCurrentActiveSet()" style="width: 42px; height: 42px;">✓</button>
+                        <button class="check-btn active-check-btn" id="activeIndicatorCheckBtn" onclick="completeCurrentActiveSet()" style="width: 44px; height: 44px;">✓</button>
                     </div>
                 </div>
 
@@ -862,6 +850,7 @@
             </div>
 
             <button class="btn" onclick="finishWorkout()" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); margin-top: 10px;">🏁 Завершить тренировку</button>
+            <button class="btn-secondary" onclick="confirmResetActiveWorkout()" style="width: 100%; margin-top: 10px; color: var(--danger); border-color: rgba(239, 68, 68, 0.35);">🗑️ Сбросить тренировку</button>
         </div>
     </div>
 
@@ -873,78 +862,80 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА: НАСТРОЙКИ УПРАВЛЕНИЯ ДАННЫМИ -->
+    <!-- МОДАЛКА: ВОССТАНОВЛЕНИЕ НЕЗАВЕРШЕННОЙ СЕССИИ -->
+    <div class="modal" id="sessionRecoveryModal">
+        <div class="modal-content">
+            <div class="card-title" style="justify-content: center;">Незавершенная тренировка</div>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.45;">
+                Обнаружена активная тренировка с прошлой сессии. Хотите продолжить её или сбросить?
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn" onclick="continueRecoveredSession()">▶️ Продолжить тренировку</button>
+                <button class="btn-secondary" style="margin-top: 0; color: var(--danger); border-color: rgba(239, 68, 68, 0.35);" onclick="resetWorkoutToCleanState()">🗑️ Сбросить тренировку</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: НАСТРОЙКИ И УПРАВЛЕНИЕ ДАННЫМИ -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
-            <div class="card-title">⚙️ Управление данными</div>
-            <button class="settings-option-btn" onclick="promptClearAllHistory()">
+            <div class="card-title">Управление данными</div>
+            <button class="muscle-group-btn" onclick="confirmClearAllHistory()">
                 <span>🗑️ Удалить историю тренировок</span>
                 <span style="color: var(--danger); font-size: 13px;">Все</span>
             </button>
-            <button class="settings-option-btn" onclick="openDeleteSelectedWorkoutsModal()">
+            <button class="muscle-group-btn" onclick="openDeleteSelectedHistoryModal()">
                 <span>📋 Удалить выбранные тренировки</span>
-                <span style="color: var(--text-secondary);">›</span>
+                <span style="color: var(--text-secondary); font-size: 13px;">→</span>
             </button>
-            <button class="settings-option-btn" onclick="openDeleteCustomExercisesModal()">
+            <button class="muscle-group-btn" onclick="openDeleteCustomExercisesModal()">
                 <span>🏋️ Удалить свои упражнения</span>
-                <span style="color: var(--text-secondary);">›</span>
+                <span style="color: var(--text-secondary); font-size: 13px;">→</span>
             </button>
-            <button class="settings-option-btn" onclick="openDeleteTemplatesModal()">
+            <button class="muscle-group-btn" onclick="openDeleteTemplatesModal()">
                 <span>📂 Удалить шаблоны тренировок</span>
-                <span style="color: var(--text-secondary);">›</span>
+                <span style="color: var(--text-secondary); font-size: 13px;">→</span>
             </button>
-            <button class="btn-secondary" onclick="closeModal('settingsModal')" style="width: 100%; margin-top: 8px;">Закрыть</button>
+            <button class="btn-secondary" onclick="closeModal('settingsModal')" style="width: 100%; margin-top: 12px;">Закрыть</button>
         </div>
     </div>
 
     <!-- МОДАЛКА: УДАЛИТЬ ВЫБРАННЫЕ ТРЕНИРОВКИ ИЗ ИСТОРИИ -->
-    <div class="modal" id="deleteHistorySelectModal">
+    <div class="modal" id="deleteHistoryModal">
         <div class="modal-content">
             <div class="card-title">Удалить выбранные тренировки</div>
             <div id="deleteHistoryListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
-            <button class="btn-secondary" onclick="backToSettingsFrom('deleteHistorySelectModal')" style="width: 100%; margin-top: 4px;">← Назад в настройки</button>
+            <button class="btn-secondary" onclick="backToSettings('deleteHistoryModal')" style="width: 100%; margin-top: 0;">← Назад в настройки</button>
         </div>
     </div>
 
     <!-- МОДАЛКА: УДАЛИТЬ СВОИ УПРАЖНЕНИЯ -->
-    <div class="modal" id="deleteCustomExercisesModal">
+    <div class="modal" id="deleteCustomExModal">
         <div class="modal-content">
             <div class="card-title">Удалить свои упражнения</div>
-            <div id="deleteCustomExercisesList" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
-            <button class="btn-secondary" onclick="backToSettingsFrom('deleteCustomExercisesModal')" style="width: 100%; margin-top: 4px;">← Назад в настройки</button>
+            <div id="deleteCustomExListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="btn-secondary" onclick="backToSettings('deleteCustomExModal')" style="width: 100%; margin-top: 0;">← Назад в настройки</button>
         </div>
     </div>
 
-    <!-- МОДАЛКА: УДАЛИТЬ ШАБЛОНЫ ТРЕНИРОВОК (ТОЛЬКО УДАЛЕНИЕ) -->
+    <!-- МОДАЛКА: УДАЛИТЬ ШАБЛОНЫ ТРЕНИРОВОК -->
     <div class="modal" id="deleteTemplatesModal">
         <div class="modal-content">
             <div class="card-title">Удалить шаблоны тренировок</div>
             <div id="deleteTemplatesListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
-            <button class="btn-secondary" onclick="backToSettingsFrom('deleteTemplatesModal')" style="width: 100%; margin-top: 4px;">← Назад в настройки</button>
+            <button class="btn-secondary" onclick="backToSettings('deleteTemplatesModal')" style="width: 100%; margin-top: 0;">← Назад в настройки</button>
         </div>
     </div>
 
-    <!-- УНИВЕРСАЛЬНАЯ МОДАЛКА ПОДТВЕРЖДЕНИЯ ДЕЙСТВИЯ -->
-    <div class="modal" id="confirmActionModal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="card-title" id="confirmModalTitle" style="justify-content: center; color: var(--danger);">Подтверждение удаления</div>
-            <p id="confirmModalText" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.45;">
-                Вы уверены, что хотите выполнить это действие?
-            </p>
-            <button class="btn btn-danger-solid" onclick="executeConfirmedAction()" style="margin-bottom: 10px;">Да, удалить</button>
-            <button class="btn-secondary" onclick="closeModal('confirmActionModal')" style="width: 100%; margin-top: 0;">Отмена</button>
-        </div>
-    </div>
-
-    <!-- МОДАЛКА: ПРЕДЛОЖЕНИЕ ПРОДОЛЖИТЬ НЕЗАВЕРШЕННУЮ ТРЕНИРОВКУ -->
-    <div class="modal" id="resumeWorkoutModal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="card-title" style="justify-content: center; color: var(--accent);">⚡ Незавершенная тренировка</div>
-            <p id="resumeWorkoutSummary" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.45;">
-                У вас осталась активная тренировка. Хотите продолжить с того же места?
-            </p>
-            <button class="btn" onclick="confirmResumeWorkout()" style="margin-bottom: 10px;">▶️ Продолжить тренировку</button>
-            <button class="btn-secondary" onclick="discardSavedActiveWorkout()" style="width: 100%; margin-top: 0; color: var(--danger);">🗑️ Сбросить и начать заново</button>
+    <!-- МОДАЛКА: ОБЯЗАТЕЛЬНОЕ ПОДТВЕРЖДЕНИЕ ДЕЙСТВИЯ -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="card-title" style="justify-content: center;" id="confirmModalTitle">Подтверждение</div>
+            <p id="confirmModalText" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.45;"></p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" onclick="closeModal('confirmModal')" style="margin-top: 0; flex: 1;">Отмена</button>
+                <button class="btn btn-danger-solid" id="confirmModalActionBtn" style="flex: 1; padding: 12px;">Удалить</button>
+            </div>
         </div>
     </div>
 
@@ -1029,10 +1020,6 @@
 
         let currentLoadedTemplateName = null;
         let isTemplateModified = false;
-        let pendingConfirmCallback = null;
-
-        const ACTIVE_SESSION_KEY = 'gym_pro_active_session';
-        const SETUP_DRAFT_KEY = 'gym_pro_setup_draft';
 
         const muscleGroupsData = {
             chest: "Грудь",
@@ -1063,7 +1050,6 @@
 
         let restTimerInterval = null;
         let restTimeRemaining = 90;
-        let restEndTimestamp = null;
         let selectedMuscleKey = null;
         let workoutElapsedSeconds = 0;
         let workoutTimerInterval = null;
@@ -1076,391 +1062,30 @@
                 window.Telegram.WebApp.expand();
             }
             initAudioEngine();
-            loadSetupDraft();
+            updateTemplateButtonUI();
             renderSetupExercises();
             renderHistory();
-            checkUnfinishedWorkoutOnStartup();
+            checkActiveSessionRecovery();
         };
 
-        // Функция правильного склонения слова "минута" (1 минута, 2 минуты, 5 минут)
-        function formatMinutes(n) {
-            const num = Math.abs(Number(n)) || 0;
-            const mod10 = num % 10;
-            const mod100 = num % 100;
-            if (mod100 >= 11 && mod100 <= 19) return `${num} минут`;
-            if (mod10 === 1) return `${num} минута`;
-            if (mod10 >= 2 && mod10 <= 4) return `${num} минуты`;
-            return `${num} минут`;
-        }
-
-        // --- УПРАВЛЕНИЕ НАСТРОЙКАМИ И УДАЛЕНИЕМ ДАННЫХ С ПОДТВЕРЖДЕНИЕМ ---
-        function openSettingsModal() {
-            document.getElementById('settingsModal').classList.add('open');
-        }
-
-        function backToSettingsFrom(modalId) {
-            closeModal(modalId);
-            openSettingsModal();
-        }
-
-        function requestConfirmation(title, message, onConfirm) {
-            document.getElementById('confirmModalTitle').innerText = title;
-            document.getElementById('confirmModalText').innerText = message;
-            pendingConfirmCallback = onConfirm;
-            document.getElementById('confirmActionModal').classList.add('open');
-        }
-
-        function executeConfirmedAction() {
-            closeModal('confirmActionModal');
-            if (typeof pendingConfirmCallback === 'function') {
-                const cb = pendingConfirmCallback;
-                pendingConfirmCallback = null;
-                cb();
+        // Склонение слова "минута" (1 минута, 2 минуты, 5 минут)
+        function formatMinutesRussian(num) {
+            const n = Math.abs(Number(num)) || 1;
+            const mod10 = n % 10;
+            const mod100 = n % 100;
+            if (mod100 >= 11 && mod100 <= 19) {
+                return `${n} минут`;
             }
-        }
-
-        // 1. Полное удаление истории тренировок
-        function promptClearAllHistory() {
-            if (!state.history || state.history.length === 0) {
-                showNotice("История тренировок уже пуста");
-                return;
+            if (mod10 === 1) {
+                return `${n} минута`;
             }
-            requestConfirmation(
-                "Удалить всю историю?",
-                `Вы действительно хотите безвозвратно удалить все тренировки из истории (${state.history.length} шт.)?`,
-                () => {
-                    state.history = [];
-                    localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
-                    renderHistory();
-                    closeModal('settingsModal');
-                    showNotice("Вся история тренировок удалена");
-                }
-            );
-        }
-
-        // 2. Удаление выбранных тренировок из истории
-        function openDeleteSelectedWorkoutsModal() {
-            closeModal('settingsModal');
-            renderDeleteSelectedWorkoutsList();
-            document.getElementById('deleteHistorySelectModal').classList.add('open');
-        }
-
-        function renderDeleteSelectedWorkoutsList() {
-            const container = document.getElementById('deleteHistoryListContainer');
-            container.innerHTML = '';
-
-            if (!state.history || state.history.length === 0) {
-                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">В истории пока нет тренировок.</p>`;
-                return;
+            if (mod10 >= 2 && mod10 <= 4) {
+                return `${n} минуты`;
             }
-
-            state.history.forEach((workout, index) => {
-                let workoutTonnage = workout.totalTonnage || 0;
-                if (!workoutTonnage) {
-                    workout.exercises.forEach(ex => {
-                        ex.sets.forEach(s => {
-                            if (s.completed && s.weight && s.reps) {
-                                workoutTonnage += Number(s.weight) * Number(s.reps);
-                            }
-                        });
-                    });
-                }
-
-                const exList = workout.exercises.map(e => e.name).join(', ');
-                const item = document.createElement('div');
-                item.className = 'manage-list-item';
-                item.innerHTML = `
-                    <div style="flex: 1; padding-right: 8px;">
-                        <strong style="font-size: 13px;">📅 ${workout.date} • ${workoutTonnage} кг</strong>
-                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">${exList}</div>
-                    </div>
-                    <button class="btn-secondary delete-item-btn" onclick="promptDeleteSingleHistoryWorkout(${index})">Удалить</button>
-                `;
-                container.appendChild(item);
-            });
+            return `${n} минут`;
         }
 
-        function promptDeleteSingleHistoryWorkout(index) {
-            const w = state.history[index];
-            if (!w) return;
-            requestConfirmation(
-                "Удалить тренировку?",
-                `Удалить тренировку от ${w.date} (${w.exercises.length} упр.) из истории?`,
-                () => {
-                    state.history.splice(index, 1);
-                    localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
-                    renderDeleteSelectedWorkoutsList();
-                    renderHistory();
-                    showNotice("Тренировка удалена");
-                }
-            );
-        }
-
-        // 3. Удаление своих (вручную добавленных) упражнений в формате "Мышечная группа / Упражнение"
-        function openDeleteCustomExercisesModal() {
-            closeModal('settingsModal');
-            renderDeleteCustomExercisesList();
-            document.getElementById('deleteCustomExercisesModal').classList.add('open');
-        }
-
-        function renderDeleteCustomExercisesList() {
-            const container = document.getElementById('deleteCustomExercisesList');
-            container.innerHTML = '';
-
-            let customItems = [];
-            for (let groupKey in muscleGroupsData) {
-                const groupList = state.customByGroup[groupKey] || [];
-                const baseList = exercisesData[groupKey] || [];
-                groupList.forEach(exName => {
-                    // Отображаем вручную добавленные пользователем упражнения
-                    if (!baseList.includes(exName)) {
-                        customItems.push({
-                            groupKey: groupKey,
-                            groupTitle: muscleGroupsData[groupKey],
-                            exName: exName
-                        });
-                    }
-                });
-            }
-
-            if (customItems.length === 0) {
-                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет вручную добавленных упражнений.</p>`;
-                return;
-            }
-
-            customItems.forEach((entry, idx) => {
-                const item = document.createElement('div');
-                item.className = 'manage-list-item';
-                item.innerHTML = `
-                    <div style="flex: 1; padding-right: 8px;">
-                        <span style="font-size: 12px; color: var(--accent); font-weight: 600;">${entry.groupTitle}</span>
-                        <span style="font-size: 12px; color: var(--text-secondary);"> / </span>
-                        <strong style="font-size: 13px;">${entry.exName}</strong>
-                    </div>
-                    <button class="btn-secondary delete-item-btn" data-gkey="${entry.groupKey}" data-exname="${encodeURIComponent(entry.exName)}" onclick="promptDeleteCustomExercise(this.dataset.gkey, decodeURIComponent(this.dataset.exname))">Удалить</button>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function promptDeleteCustomExercise(groupKey, exName) {
-            const groupTitle = muscleGroupsData[groupKey] || '';
-            requestConfirmation(
-                "Удалить своё упражнение?",
-                `Удалить «${groupTitle} / ${exName}» из списка ваших упражнений?`,
-                () => {
-                    if (state.customByGroup[groupKey]) {
-                        state.customByGroup[groupKey] = state.customByGroup[groupKey].filter(item => item !== exName);
-                        localStorage.setItem('gym_pro_custom_by_group', JSON.stringify(state.customByGroup));
-                    }
-                    renderDeleteCustomExercisesList();
-                    showNotice(`Упражнение «${exName}» удалено`);
-                }
-            );
-        }
-
-        // 4. Удаление шаблонов тренировок (только удаление, с обязательным подтверждением)
-        function openDeleteTemplatesModal() {
-            closeModal('settingsModal');
-            renderDeleteTemplatesList();
-            document.getElementById('deleteTemplatesModal').classList.add('open');
-        }
-
-        function renderDeleteTemplatesList() {
-            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
-            const container = document.getElementById('deleteTemplatesListContainer');
-            container.innerHTML = '';
-
-            const keys = Object.keys(templates);
-            if (keys.length === 0) {
-                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных шаблонов тренировок.</p>`;
-                return;
-            }
-
-            keys.forEach(tplName => {
-                const item = document.createElement('div');
-                item.className = 'manage-list-item';
-                item.innerHTML = `
-                    <div style="flex: 1; padding-right: 8px;">
-                        <strong style="font-size: 14px;">${tplName}</strong>
-                        <div style="font-size: 11px; color: var(--text-secondary);">${templates[tplName].length} упр.</div>
-                    </div>
-                    <button class="btn-secondary delete-item-btn" data-tpl="${encodeURIComponent(tplName)}" onclick="promptDeleteTemplate(decodeURIComponent(this.dataset.tpl), true)">Удалить</button>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function promptDeleteTemplate(tplName, fromSettingsModal) {
-            requestConfirmation(
-                "Удалить шаблон?",
-                `Вы действительно хотите удалить сохранённую тренировку «${tplName}»?`,
-                () => {
-                    let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
-                    delete templates[tplName];
-                    localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
-                    if (currentLoadedTemplateName === tplName) {
-                        currentLoadedTemplateName = null;
-                        isTemplateModified = false;
-                        updateTemplateButtonUI();
-                        saveSetupDraft();
-                    }
-                    if (fromSettingsModal) {
-                        renderDeleteTemplatesList();
-                    } else {
-                        openLoadTemplateModal();
-                    }
-                    showNotice(`Шаблон «${tplName}» удален`);
-                }
-            );
-        }
-
-        // --- АВТОСОХРАНЕНИЕ ЧЕРНОВИКА НАСТРОЙКИ И АКТИВНОЙ ТРЕНИРОВКИ ---
-        function saveSetupDraft() {
-            try {
-                localStorage.setItem(SETUP_DRAFT_KEY, JSON.stringify({
-                    setupExercises: state.setupExercises,
-                    initialRestSeconds: initialRestSeconds,
-                    currentLoadedTemplateName: currentLoadedTemplateName,
-                    isTemplateModified: isTemplateModified
-                }));
-            } catch (e) {}
-        }
-
-        function loadSetupDraft() {
-            try {
-                const raw = localStorage.getItem(SETUP_DRAFT_KEY);
-                if (!raw) return;
-                const draft = JSON.parse(raw);
-                if (Array.isArray(draft.setupExercises)) {
-                    state.setupExercises = draft.setupExercises;
-                }
-                if (draft.initialRestSeconds) {
-                    initialRestSeconds = draft.initialRestSeconds;
-                    restTimeRemaining = initialRestSeconds;
-                    const mins = Math.floor(initialRestSeconds / 60).toString().padStart(2, '0');
-                    const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
-                    document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
-                    document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
-                }
-                currentLoadedTemplateName = draft.currentLoadedTemplateName || null;
-                isTemplateModified = !!draft.isTemplateModified;
-                updateTemplateButtonUI();
-            } catch (e) {}
-        }
-
-        function saveActiveSessionState() {
-            try {
-                if (!state.activeWorkout || !state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
-                    localStorage.removeItem(ACTIVE_SESSION_KEY);
-                    return;
-                }
-                const payload = {
-                    activeWorkout: state.activeWorkout,
-                    initialRestSeconds: initialRestSeconds,
-                    isResting: isResting,
-                    restEndTimestamp: restEndTimestamp
-                };
-                localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(payload));
-            } catch (e) {}
-        }
-
-        function clearActiveSessionState() {
-            localStorage.removeItem(ACTIVE_SESSION_KEY);
-            setTelegramClosingProtection(false);
-        }
-
-        function setTelegramClosingProtection(enabled) {
-            try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    if (enabled && typeof window.Telegram.WebApp.enableClosingConfirmation === 'function') {
-                        window.Telegram.WebApp.enableClosingConfirmation();
-                    } else if (!enabled && typeof window.Telegram.WebApp.disableClosingConfirmation === 'function') {
-                        window.Telegram.WebApp.disableClosingConfirmation();
-                    }
-                }
-            } catch (e) {}
-        }
-
-        function checkUnfinishedWorkoutOnStartup() {
-            try {
-                const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
-                if (!raw) return;
-                const saved = JSON.parse(raw);
-                if (!saved || !saved.activeWorkout || !Array.isArray(saved.activeWorkout.exercises) || saved.activeWorkout.exercises.length === 0) {
-                    return;
-                }
-
-                let totalSets = 0;
-                let completedSets = 0;
-                saved.activeWorkout.exercises.forEach(ex => {
-                    ex.sets.forEach(s => {
-                        totalSets++;
-                        if (s.completed) completedSets++;
-                    });
-                });
-
-                const exNames = saved.activeWorkout.exercises.map(e => e.name).slice(0, 3).join(', ');
-                document.getElementById('resumeWorkoutSummary').innerHTML =
-                    `Найдена активная тренировка от <strong>${saved.activeWorkout.date || 'сегодня'}</strong>:<br>` +
-                    `<span style="color: var(--text-main);">${exNames}${saved.activeWorkout.exercises.length > 3 ? '...' : ''}</span><br>` +
-                    `Выполнено подходов: <strong>${completedSets} из ${totalSets}</strong>. Продолжить?`;
-
-                document.getElementById('resumeWorkoutModal').classList.add('open');
-            } catch (e) {}
-        }
-
-        function confirmResumeWorkout() {
-            try {
-                const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
-                if (!raw) {
-                    closeModal('resumeWorkoutModal');
-                    return;
-                }
-                const saved = JSON.parse(raw);
-                state.activeWorkout = saved.activeWorkout;
-                if (saved.initialRestSeconds) {
-                    initialRestSeconds = saved.initialRestSeconds;
-                }
-
-                unlockAudioOnUserGesture();
-                closeModal('resumeWorkoutModal');
-
-                document.getElementById('startScreen').style.display = 'none';
-                document.getElementById('activeScreen').style.display = 'block';
-                setTelegramClosingProtection(true);
-
-                if (!state.activeWorkout.startTime) {
-                    state.activeWorkout.startTime = Date.now();
-                }
-                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - state.activeWorkout.startTime) / 1000));
-                if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-                workoutTimerInterval = setInterval(() => {
-                    workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - state.activeWorkout.startTime) / 1000));
-                }, 1000);
-
-                if (saved.isResting && saved.restEndTimestamp && saved.restEndTimestamp > Date.now()) {
-                    const remainingSecs = Math.ceil((saved.restEndTimestamp - Date.now()) / 1000);
-                    startRestTimer(remainingSecs);
-                } else {
-                    stopTimer();
-                    renderActiveWorkout();
-                }
-
-                scrollToTop();
-                showNotice("Тренировка восстановлена!");
-            } catch (e) {
-                closeModal('resumeWorkoutModal');
-            }
-        }
-
-        function discardSavedActiveWorkout() {
-            clearActiveSessionState();
-            state.activeWorkout = { exercises: [] };
-            closeModal('resumeWorkoutModal');
-            showNotice("Незавершенная тренировка сброшена");
-        }
-
+        // Плавная прокрутка страницы в самое начало
         function scrollToTop() {
             setTimeout(() => {
                 try {
@@ -1528,25 +1153,338 @@
             const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
             document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
             document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
-            saveSetupDraft();
         }
 
-        // --- ОТСЛЕЖИВАНИЕ ИЗМЕНЕНИЙ В ЗАГРУЖЕННОМ ШАБЛОНЕ ---
+        // --- СОХРАНЕНИЕ, ВОССТАНОВЛЕНИЕ И ПОЛНЫЙ СБРОС СЕССИИ ---
+        function saveActiveSessionState() {
+            if (document.getElementById('activeScreen').style.display === 'block' &&
+                state.activeWorkout && state.activeWorkout.exercises && state.activeWorkout.exercises.length > 0) {
+                const sessionPayload = {
+                    activeWorkout: state.activeWorkout,
+                    elapsedSeconds: workoutElapsedSeconds,
+                    initialRestSeconds: initialRestSeconds
+                };
+                localStorage.setItem('gym_pro_active_session', JSON.stringify(sessionPayload));
+            } else {
+                localStorage.removeItem('gym_pro_active_session');
+            }
+        }
+
+        function checkActiveSessionRecovery() {
+            const savedSession = localStorage.getItem('gym_pro_active_session');
+            if (!savedSession) return;
+            try {
+                const parsed = JSON.parse(savedSession);
+                if (parsed && parsed.activeWorkout && parsed.activeWorkout.exercises && parsed.activeWorkout.exercises.length > 0) {
+                    document.getElementById('sessionRecoveryModal').classList.add('open');
+                }
+            } catch (e) {
+                localStorage.removeItem('gym_pro_active_session');
+            }
+        }
+
+        function continueRecoveredSession() {
+            closeModal('sessionRecoveryModal');
+            const savedSession = localStorage.getItem('gym_pro_active_session');
+            if (!savedSession) return;
+            try {
+                const parsed = JSON.parse(savedSession);
+                state.activeWorkout = parsed.activeWorkout;
+                workoutElapsedSeconds = parsed.elapsedSeconds || 0;
+                if (parsed.initialRestSeconds) {
+                    initialRestSeconds = parsed.initialRestSeconds;
+                    restTimeRemaining = initialRestSeconds;
+                }
+                document.getElementById('startScreen').style.display = 'none';
+                document.getElementById('activeScreen').style.display = 'block';
+
+                if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+                workoutTimerInterval = setInterval(() => {
+                    workoutElapsedSeconds++;
+                    saveActiveSessionState();
+                }, 1000);
+
+                stopTimer();
+                renderActiveWorkout();
+                scrollToTop();
+                showNotice("Тренировка восстановлена");
+            } catch (e) {
+                resetWorkoutToCleanState();
+            }
+        }
+
+        function confirmResetActiveWorkout() {
+            askConfirmation(
+                "Сбросить тренировку?",
+                "Текущий прогресс тренировки будет сброшен, и вы вернетесь на чистый стартовый экран.",
+                () => {
+                    resetWorkoutToCleanState();
+                }
+            );
+        }
+
+        // Полный сброс тренировки до абсолютно чистого стартового экрана (без упражнений и без загруженных шаблонов)
+        function resetWorkoutToCleanState() {
+            closeModal('sessionRecoveryModal');
+            localStorage.removeItem('gym_pro_active_session');
+            if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+            workoutTimerInterval = null;
+            workoutElapsedSeconds = 0;
+
+            stopTimer();
+
+            state.setupExercises = [];
+            state.activeWorkout = { exercises: [] };
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+
+            updateTemplateButtonUI();
+            renderSetupExercises();
+
+            document.getElementById('activeScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            switchTab('workout');
+            scrollToTop();
+            showNotice("Тренировка сброшена");
+        }
+
+        // --- МОДАЛКА ПОДТВЕРЖДЕНИЯ ДЕЙСТВИЯ ---
+        function askConfirmation(title, message, onConfirmCallback) {
+            document.getElementById('confirmModalTitle').innerText = title;
+            document.getElementById('confirmModalText').innerText = message;
+            const actionBtn = document.getElementById('confirmModalActionBtn');
+            actionBtn.onclick = function () {
+                closeModal('confirmModal');
+                onConfirmCallback();
+            };
+            document.getElementById('confirmModal').classList.add('open');
+        }
+
+        // --- НАСТРОЙКИ И УПРАВЛЕНИЕ ЛОКАЛЬНЫМИ ДАННЫМИ ---
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.add('open');
+        }
+
+        function backToSettings(fromModalId) {
+            closeModal(fromModalId);
+            openSettingsModal();
+        }
+
+        function confirmClearAllHistory() {
+            if (state.history.length === 0) {
+                showNotice("История тренировок уже пуста");
+                return;
+            }
+            askConfirmation(
+                "Удалить историю?",
+                "Вы уверены, что хотите полностью удалить всю историю тренировок? Это действие нельзя отменить.",
+                () => {
+                    state.history = [];
+                    localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
+                    renderHistory();
+                    renderSetupExercises();
+                    closeModal('settingsModal');
+                    showNotice("Вся история тренировок удалена");
+                }
+            );
+        }
+
+        function openDeleteSelectedHistoryModal() {
+            closeModal('settingsModal');
+            renderDeleteHistoryList();
+            document.getElementById('deleteHistoryModal').classList.add('open');
+        }
+
+        function renderDeleteHistoryList() {
+            const container = document.getElementById('deleteHistoryListContainer');
+            container.innerHTML = '';
+            if (state.history.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">История тренировок пуста.</p>`;
+                return;
+            }
+            state.history.forEach((w, idx) => {
+                const exNames = w.exercises.map(e => e.name).join(', ');
+                const tonnage = w.totalTonnage || 0;
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.style.padding = '12px';
+                item.style.borderBottom = '1px solid var(--glass-border)';
+                item.style.gap = '10px';
+
+                item.innerHTML = `
+                    <div style="flex: 1; overflow: hidden;">
+                        <strong style="font-size: 14px;">📅 ${w.date} • ${tonnage} кг</strong>
+                        <div style="font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${exNames}</div>
+                    </div>
+                    <button class="btn-secondary" style="margin-top:0; padding: 6px 12px; font-size: 12px; color: var(--danger); border-color: rgba(239,68,68,0.35);" onclick="confirmDeleteSingleHistory(${idx})">Удалить</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function confirmDeleteSingleHistory(idx) {
+            const w = state.history[idx];
+            if (!w) return;
+            askConfirmation(
+                "Удалить тренировку?",
+                `Удалить тренировку от ${w.date} (${w.totalTonnage || 0} кг) из истории?`,
+                () => {
+                    state.history.splice(idx, 1);
+                    localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
+                    renderDeleteHistoryList();
+                    renderHistory();
+                    renderSetupExercises();
+                    showNotice("Тренировка удалена");
+                }
+            );
+        }
+
+        function openDeleteCustomExercisesModal() {
+            closeModal('settingsModal');
+            renderDeleteCustomExercisesList();
+            document.getElementById('deleteCustomExModal').classList.add('open');
+        }
+
+        function renderDeleteCustomExercisesList() {
+            const container = document.getElementById('deleteCustomExListContainer');
+            container.innerHTML = '';
+
+            let customItems = [];
+            for (let groupKey in state.customByGroup) {
+                const groupName = muscleGroupsData[groupKey] || groupKey;
+                const defaultList = exercisesData[groupKey] || [];
+                const savedList = state.customByGroup[groupKey] || [];
+                savedList.forEach(exName => {
+                    if (!defaultList.includes(exName)) {
+                        customItems.push({ groupKey, groupName, exName });
+                    }
+                });
+            }
+
+            if (customItems.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">У вас пока нет вручную добавленных упражнений.</p>`;
+                return;
+            }
+
+            customItems.forEach(itemObj => {
+                const row = document.createElement('div');
+                row.style.display = 'flex';
+                row.style.justifyContent = 'space-between';
+                row.style.alignItems = 'center';
+                row.style.padding = '12px';
+                row.style.borderBottom = '1px solid var(--glass-border)';
+                row.style.gap = '10px';
+
+                const safeGroup = itemObj.groupKey.replace(/'/g, "\\'");
+                const safeEx = itemObj.exName.replace(/'/g, "\\'");
+
+                row.innerHTML = `
+                    <div style="flex: 1;">
+                        <span style="font-size: 12px; color: var(--accent); font-weight: 600;">${itemObj.groupName}</span>
+                        <span style="font-size: 13px; color: var(--text-secondary);"> / </span>
+                        <strong style="font-size: 14px;">${itemObj.exName}</strong>
+                    </div>
+                    <button class="btn-secondary" style="margin-top:0; padding: 6px 12px; font-size: 12px; color: var(--danger); border-color: rgba(239,68,68,0.35);" onclick="confirmDeleteCustomExercise('${safeGroup}', '${safeEx}')">Удалить</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function confirmDeleteCustomExercise(groupKey, exName) {
+            const groupName = muscleGroupsData[groupKey] || groupKey;
+            askConfirmation(
+                "Удалить упражнение?",
+                `Удалить «${groupName} / ${exName}» из списка ваших упражнений?`,
+                () => {
+                    if (state.customByGroup[groupKey]) {
+                        state.customByGroup[groupKey] = state.customByGroup[groupKey].filter(item => item !== exName);
+                        localStorage.setItem('gym_pro_custom_by_group', JSON.stringify(state.customByGroup));
+                    }
+                    renderDeleteCustomExercisesList();
+                    showNotice("Упражнение удалено");
+                }
+            );
+        }
+
+        function openDeleteTemplatesModal() {
+            closeModal('settingsModal');
+            renderDeleteTemplatesList();
+            document.getElementById('deleteTemplatesModal').classList.add('open');
+        }
+
+        function renderDeleteTemplatesList() {
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            const container = document.getElementById('deleteTemplatesListContainer');
+            container.innerHTML = '';
+
+            const keys = Object.keys(templates);
+            if (keys.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных шаблонов тренировок.</p>`;
+                return;
+            }
+
+            keys.forEach(tplName => {
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.style.padding = '12px';
+                item.style.borderBottom = '1px solid var(--glass-border)';
+
+                const safeName = tplName.replace(/'/g, "\\'");
+                item.innerHTML = `
+                    <div>
+                        <strong style="font-size: 14px;">${tplName}</strong>
+                        <div style="font-size: 11px; color: var(--text-secondary);">${templates[tplName].length} упр.</div>
+                    </div>
+                    <button onclick="confirmDeleteTemplate('${safeName}', true)" class="btn-secondary" style="margin-top:0; padding: 6px 12px; font-size: 12px; color: var(--danger); border-color: rgba(239,68,68,0.35);">Удалить</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function confirmDeleteTemplate(tplName, fromSettingsModal) {
+            askConfirmation(
+                "Удалить шаблон?",
+                `Вы действительно хотите удалить сохраненный шаблон «${tplName}»?`,
+                () => {
+                    let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+                    delete templates[tplName];
+                    localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+                    if (currentLoadedTemplateName === tplName) {
+                        currentLoadedTemplateName = null;
+                        isTemplateModified = false;
+                        updateTemplateButtonUI();
+                    }
+                    if (fromSettingsModal) {
+                        renderDeleteTemplatesList();
+                    } else {
+                        openLoadTemplateModal();
+                    }
+                    showNotice("Шаблон удален");
+                }
+            );
+        }
+
+        // --- ОТСЛЕЖИВАНИЕ ЗАГРУЖЕННОГО ШАБЛОНА И КНОПКИ "СОЗДАТЬ НОВУЮ ТРЕНИРОВКУ" ---
         function markTemplateModified() {
             if (currentLoadedTemplateName) {
                 isTemplateModified = true;
                 updateTemplateButtonUI();
             }
-            saveSetupDraft();
         }
 
         function updateTemplateButtonUI() {
             const badge = document.getElementById('loadedTemplateBadge');
             const updateContainer = document.getElementById('updateTemplateContainer');
             const updateBtn = document.getElementById('updateTemplateBtn');
+            const createNewContainer = document.getElementById('createNewWorkoutContainer');
 
             if (currentLoadedTemplateName) {
                 badge.innerText = `📂 ${currentLoadedTemplateName}`;
+                createNewContainer.style.display = 'block';
                 if (isTemplateModified) {
                     updateContainer.style.display = 'block';
                     updateBtn.innerText = `🔄 Обновить сохранённую тренировку «${currentLoadedTemplateName}»`;
@@ -1556,7 +1494,18 @@
             } else {
                 badge.innerText = '';
                 updateContainer.style.display = 'none';
+                createNewContainer.style.display = 'none';
             }
+        }
+
+        function resetToNewWorkoutSetup() {
+            state.setupExercises = [];
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            scrollToTop();
+            showNotice("Создана новая пустая тренировка");
         }
 
         function updateCurrentLoadedTemplate() {
@@ -1567,7 +1516,6 @@
             localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
             isTemplateModified = false;
             updateTemplateButtonUI();
-            saveSetupDraft();
             renderSetupExercises();
             showNotice(`Тренировка «${currentLoadedTemplateName}» обновлена!`);
         }
@@ -1596,7 +1544,6 @@
             currentLoadedTemplateName = nameInput;
             isTemplateModified = false;
             updateTemplateButtonUI();
-            saveSetupDraft();
             renderSetupExercises();
 
             closeModal('saveTemplateModal');
@@ -1620,15 +1567,15 @@
                     item.style.padding = '12px';
                     item.style.borderBottom = '1px solid var(--glass-border)';
 
-                    const encodedName = encodeURIComponent(tplName);
+                    const safeName = tplName.replace(/'/g, "\\'");
                     item.innerHTML = `
                         <div>
                             <strong style="font-size: 14px;">${tplName}</strong>
                             <div style="font-size: 11px; color: var(--text-secondary);">${templates[tplName].length} упр.</div>
                         </div>
                         <div style="display: flex; gap: 6px;">
-                            <button data-tpl="${encodedName}" onclick="loadSpecificTemplate(decodeURIComponent(this.dataset.tpl))" class="btn" style="width: auto; padding: 6px 14px; font-size: 12px;">Загрузить</button>
-                            <button data-tpl="${encodedName}" onclick="promptDeleteTemplate(decodeURIComponent(this.dataset.tpl), false)" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 12px; color: var(--danger);">✕</button>
+                            <button onclick="loadSpecificTemplate('${safeName}')" class="btn" style="width: auto; padding: 6px 14px; font-size: 12px;">Загрузить</button>
+                            <button onclick="confirmDeleteTemplate('${safeName}', false)" class="btn-secondary" style="margin-top:0; padding: 6px 10px; font-size: 12px; color: var(--danger);">✕</button>
                         </div>
                     `;
                     container.appendChild(item);
@@ -1647,7 +1594,6 @@
                 currentLoadedTemplateName = tplName;
                 isTemplateModified = false;
                 updateTemplateButtonUI();
-                saveSetupDraft();
                 renderSetupExercises();
                 closeModal('loadTemplateModal');
                 scrollToTop();
@@ -1666,7 +1612,6 @@
 
         function cleanAllSetupEmptySets() {
             state.setupExercises.forEach(ex => cleanExerciseEmptySets(ex));
-            saveSetupDraft();
         }
 
         function saveSetupExerciseBlock(exIdx) {
@@ -1674,7 +1619,6 @@
             const beforeCount = ex.sets.length;
             cleanExerciseEmptySets(ex);
             const removedCount = beforeCount - ex.sets.length;
-            saveSetupDraft();
             renderSetupExercises();
             if (removedCount > 0) {
                 showNotice(`Сохранено (удалено пустых подходов: ${removedCount})`);
@@ -1777,7 +1721,6 @@
 
             state.activeWorkout = {
                 date: new Date().toLocaleDateString(),
-                startTime: Date.now(),
                 exercises: state.setupExercises.map(ex => ({
                     name: ex.name,
                     manuallyOpened: false,
@@ -1791,17 +1734,17 @@
             
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('activeScreen').style.display = 'block';
-            setTelegramClosingProtection(true);
 
             workoutElapsedSeconds = 0;
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
             workoutTimerInterval = setInterval(() => {
-                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - state.activeWorkout.startTime) / 1000));
+                workoutElapsedSeconds++;
+                saveActiveSessionState();
             }, 1000);
 
             stopTimer();
-            saveActiveSessionState();
             renderActiveWorkout();
+            saveActiveSessionState();
             scrollToTop();
         }
 
@@ -1812,9 +1755,8 @@
             }
 
             if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-            if (state.activeWorkout.startTime) {
-                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - state.activeWorkout.startTime) / 1000));
-            }
+            localStorage.removeItem('gym_pro_active_session');
+
             const durationMins = Math.max(1, Math.round(workoutElapsedSeconds / 60));
             state.activeWorkout.duration = durationMins;
 
@@ -1833,9 +1775,6 @@
             state.history.unshift(lastFinishedWorkoutData);
             localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
             
-            clearActiveSessionState();
-            localStorage.removeItem(SETUP_DRAFT_KEY);
-
             state.setupExercises = [];
             state.activeWorkout = { exercises: [] };
             currentLoadedTemplateName = null;
@@ -1851,92 +1790,40 @@
             openResultModal(lastFinishedWorkoutData);
         }
 
-        // --- ЗВУКОВОЙ ДВИЖОК С ПОДДЕРЖКОЙ IPHONE ---
+        // --- ЗВУКОВОЙ ДВИЖОК AMBIENT (НЕ ОСТАНАВЛИВАЕТ МУЗЫКУ В ДРУГИХ ПРИЛОЖЕНИЯХ) ---
         let audioCtx = null;
-        let tickAudioEl = null;
-        let finishAudioEl = null;
         let audioUnlocked = false;
 
-        function createWavDataUri(freq, durationSec, volume) {
-            const sampleRate = 22050;
-            const numSamples = Math.floor(sampleRate * durationSec);
-            const buffer = new ArrayBuffer(44 + numSamples * 2);
-            const view = new DataView(buffer);
-
-            const writeStr = (offset, str) => {
-                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-            };
-
-            writeStr(0, 'RIFF');
-            view.setUint32(4, 36 + numSamples * 2, true);
-            writeStr(8, 'WAVE');
-            writeStr(12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true);
-            view.setUint16(22, 1, true);
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true);
-            view.setUint16(32, 2, true);
-            view.setUint16(34, 16, true);
-            writeStr(36, 'data');
-            view.setUint32(40, numSamples * 2, true);
-
-            for (let i = 0; i < numSamples; i++) {
-                const t = i / sampleRate;
-                const envelope = Math.exp(-t * (4 / durationSec));
-                const sample = Math.sin(2 * Math.PI * freq * t) * volume * envelope;
-                view.setInt16(44 + i * 2, Math.max(-1, Math.min(1, sample)) * 32767, true);
-            }
-
-            const bytes = new Uint8Array(buffer);
-            let binary = '';
-            for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-            return 'data:audio/wav;base64,' + btoa(binary);
+        function setAmbientAudioSession() {
+            try {
+                // В iOS 17+ / Safari WebKit режим 'ambient' микширует звук поверх играющей музыки без её остановки
+                if (navigator.audioSession && navigator.audioSession.type !== 'ambient') {
+                    navigator.audioSession.type = 'ambient';
+                }
+            } catch (e) {}
         }
 
         function initAudioEngine() {
-            try {
-                tickAudioEl = new Audio(createWavDataUri(640, 0.09, 0.25));
-                finishAudioEl = new Audio(createWavDataUri(528, 0.45, 0.45));
-                tickAudioEl.preload = 'auto';
-                finishAudioEl.preload = 'auto';
-            } catch (e) {}
-
+            setAmbientAudioSession();
             document.addEventListener('touchstart', unlockAudioOnUserGesture, { once: true, passive: true });
             document.addEventListener('click', unlockAudioOnUserGesture, { once: true });
         }
 
         function unlockAudioOnUserGesture() {
             try {
+                setAmbientAudioSession();
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 }
                 if (audioCtx.state === 'suspended') {
                     audioCtx.resume();
                 }
-                if (!audioUnlocked) {
+                if (!audioUnlocked && audioCtx) {
                     const buffer = audioCtx.createBuffer(1, 1, 22050);
                     const source = audioCtx.createBufferSource();
                     source.buffer = buffer;
                     source.connect(audioCtx.destination);
                     source.start(0);
-
-                    if (tickAudioEl) {
-                        tickAudioEl.muted = true;
-                        tickAudioEl.play().then(() => {
-                            tickAudioEl.pause();
-                            tickAudioEl.currentTime = 0;
-                            tickAudioEl.muted = false;
-                        }).catch(() => {});
-                    }
-                    if (finishAudioEl) {
-                        finishAudioEl.muted = true;
-                        finishAudioEl.play().then(() => {
-                            finishAudioEl.pause();
-                            finishAudioEl.currentTime = 0;
-                            finishAudioEl.muted = false;
-                        }).catch(() => {});
-                    }
                     audioUnlocked = true;
                 }
             } catch (e) {}
@@ -1944,19 +1831,12 @@
 
         function playTimerSound(type) {
             try {
+                setAmbientAudioSession();
                 if (type === 'tick') {
-                    if (tickAudioEl) {
-                        tickAudioEl.currentTime = 0;
-                        tickAudioEl.play().catch(() => {});
-                    }
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
                     }
                 } else if (type === 'finish') {
-                    if (finishAudioEl) {
-                        finishAudioEl.currentTime = 0;
-                        finishAudioEl.play().catch(() => {});
-                    }
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                     } else if (navigator.vibrate) {
@@ -1964,62 +1844,71 @@
                     }
                 }
 
-                if (audioCtx) {
-                    if (audioCtx.state === 'suspended') audioCtx.resume();
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const now = audioCtx.currentTime;
+                if (type === 'tick') {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'sine';
-                    const freq = type === 'tick' ? 640 : 528;
-                    const dur = type === 'tick' ? 0.08 : 0.42;
-                    const vol = type === 'tick' ? 0.08 : 0.18;
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+                    osc.frequency.setValueAtTime(660, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + dur);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'finish') {
+                    // Мягкий двойной сигнал завершения отдыха
+                    const freqs = [528, 660];
+                    freqs.forEach((f, idx) => {
+                        const start = now + idx * 0.14;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(f, start);
+                        gain.gain.setValueAtTime(0.14, start);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(start);
+                        osc.stop(start + 0.29);
+                    });
                 }
             } catch (e) {}
         }
 
-        function startRestTimer(customDurationSeconds) {
+        function startRestTimer() {
             unlockAudioOnUserGesture();
             clearInterval(restTimerInterval);
             isResting = true;
-            restTimeRemaining = typeof customDurationSeconds === 'number' ? customDurationSeconds : initialRestSeconds;
-            restEndTimestamp = Date.now() + (restTimeRemaining * 1000);
+            restTimeRemaining = initialRestSeconds;
             updateTimerDisplay();
             
             document.getElementById('activeSetIndicatorBar').classList.add('hidden-panel');
             document.getElementById('timerBarContainer').classList.remove('hidden-panel');
-            saveActiveSessionState();
             renderActiveWorkout();
 
-            let lastTickSecond = -1;
             restTimerInterval = setInterval(() => {
-                restTimeRemaining = Math.max(0, Math.ceil((restEndTimestamp - Date.now()) / 1000));
+                restTimeRemaining--;
                 updateTimerDisplay();
-
-                if (restTimeRemaining > 0 && restTimeRemaining <= 5 && restTimeRemaining !== lastTickSecond) {
-                    lastTickSecond = restTimeRemaining;
+                if (restTimeRemaining > 0 && restTimeRemaining <= 5) {
                     playTimerSound('tick');
                 }
                 if (restTimeRemaining <= 0) {
                     stopTimer();
                     playTimerSound('finish');
                 }
-            }, 250);
+            }, 1000);
         }
 
         function adjustTimer(seconds) {
-            if (isResting && restEndTimestamp) {
-                restEndTimestamp += seconds * 1000;
-                restTimeRemaining = Math.max(0, Math.ceil((restEndTimestamp - Date.now()) / 1000));
-                saveActiveSessionState();
-            } else {
-                restTimeRemaining = Math.max(0, restTimeRemaining + seconds);
-            }
+            restTimeRemaining = Math.max(0, restTimeRemaining + seconds);
             updateTimerDisplay();
         }
 
@@ -2031,13 +1920,11 @@
             clearInterval(restTimerInterval);
             restTimerInterval = null;
             isResting = false;
-            restEndTimestamp = null;
             restTimeRemaining = initialRestSeconds;
             updateTimerDisplay();
             document.getElementById('timerBarContainer').classList.add('hidden-panel');
             document.getElementById('activeSetIndicatorBar').classList.remove('hidden-panel');
             if (document.getElementById('activeScreen').style.display === 'block') {
-                saveActiveSessionState();
                 renderActiveWorkout();
             }
         }
@@ -2182,8 +2069,8 @@
             state.activeWorkout.exercises.push(tempQuickExercise);
             tempQuickExercise = null;
             closeModal('inWorkoutSetupModal');
-            saveActiveSessionState();
             renderActiveWorkout();
+            saveActiveSessionState();
             showNotice("Упражнение добавлено в тренировку!");
         }
 
@@ -2232,9 +2119,19 @@
             const chosenEx = state.activeWorkout.exercises.splice(targetIndex, 1)[0];
             chosenEx.manuallyOpened = false;
             state.activeWorkout.exercises.splice(firstUnfinishedIndex, 0, chosenEx);
-            saveActiveSessionState();
             renderActiveWorkout();
+            saveActiveSessionState();
+            scrollToTop();
             showNotice(`Текущее упражнение: ${chosenEx.name}`);
+        }
+
+        // Обновление плашки запланированного веса и повторений в окне текущего подхода
+        function updateCurrentIndicatorPlanBadge(weightVal, repsVal) {
+            const planBadge = document.getElementById('activeIndicatorPlan');
+            if (!planBadge) return;
+            const w = String(weightVal || '').trim() !== '' ? weightVal : '0';
+            const r = String(repsVal || '').trim() !== '' ? repsVal : '0';
+            planBadge.innerText = `🎯 ${w} кг × ${r} повт.`;
         }
 
         // --- ОТРИСОВКА АКТИВНОЙ ТРЕНИРОВКИ ---
@@ -2258,9 +2155,12 @@
             let firstUnfinishedIndex = state.activeWorkout.exercises.findIndex(ex => !ex.sets.every(s => s.completed));
 
             const actionArea = document.getElementById('activeIndicatorActionArea');
+            const planBadge = document.getElementById('activeIndicatorPlan');
+
             if (allExercisesDone) {
                 document.getElementById('activeIndicatorLabel').innerText = "ВСЕ УПРАЖНЕНИЯ ВЫПОЛНЕНЫ";
                 document.getElementById('activeIndicatorText').innerText = "Завершить тренировку?";
+                if (planBadge) planBadge.style.display = 'none';
                 actionArea.innerHTML = `
                     <div style="display: flex; gap: 6px;">
                         <button class="btn" style="padding: 8px 12px; font-size: 12px; width: auto;" onclick="finishWorkout()">Завершить</button>
@@ -2273,11 +2173,16 @@
                 const curEx = state.activeWorkout.exercises[firstUnfinishedIndex];
                 const unfinSetIdx = curEx.sets.findIndex(s => !s.completed);
                 const activeSetNum = unfinSetIdx !== -1 ? unfinSetIdx + 1 : 1;
+                const activeSetObj = curEx.sets[unfinSetIdx !== -1 ? unfinSetIdx : 0] || { weight: 0, reps: 0 };
 
                 document.getElementById('activeIndicatorLabel').innerText = "ТЕКУЩИЙ ПОДХОД";
                 document.getElementById('activeIndicatorText').innerText = `${curEx.name} • Подход ${activeSetNum} в процессе`;
+                if (planBadge) {
+                    planBadge.style.display = 'inline-flex';
+                    updateCurrentIndicatorPlanBadge(activeSetObj.weight, activeSetObj.reps);
+                }
                 actionArea.innerHTML = `
-                    <button class="check-btn active-check-btn" onclick="completeCurrentActiveSet()" style="width: 42px; height: 42px;">✓</button>
+                    <button class="check-btn active-check-btn" onclick="completeCurrentActiveSet()" style="width: 44px; height: 44px;">✓</button>
                 `;
                 window.currentActiveExIndex = firstUnfinishedIndex;
                 window.currentActiveSetIndex = unfinSetIdx;
@@ -2392,6 +2297,10 @@
 
         function updateSetValue(exIndex, setIndex, field, value) {
             state.activeWorkout.exercises[exIndex].sets[setIndex][field] = value;
+            if (exIndex === window.currentActiveExIndex && setIndex === window.currentActiveSetIndex) {
+                const curSet = state.activeWorkout.exercises[exIndex].sets[setIndex];
+                updateCurrentIndicatorPlanBadge(curSet.weight, curSet.reps);
+            }
             let totalTonnage = 0;
             state.activeWorkout.exercises.forEach(ex => {
                 ex.sets.forEach(s => {
@@ -2414,7 +2323,6 @@
 
         function toggleExerciseCollapse(exIndex) {
             state.activeWorkout.exercises[exIndex].manuallyOpened = !state.activeWorkout.exercises[exIndex].manuallyOpened;
-            saveActiveSessionState();
             renderActiveWorkout();
         }
 
@@ -2424,11 +2332,13 @@
             set.completed = !set.completed;
             if (set.completed) {
                 startRestTimer();
+                // Пролистываем вверх к окну таймера / текущего подхода
+                scrollToTop();
             } else {
                 stopTimer();
             }
-            saveActiveSessionState();
             renderActiveWorkout();
+            saveActiveSessionState();
         }
 
         function addSet(exIndex) {
@@ -2438,16 +2348,16 @@
                 reps: lastSet ? lastSet.reps : '',
                 completed: false
             });
-            saveActiveSessionState();
             renderActiveWorkout();
+            saveActiveSessionState();
         }
 
         function removeSet(exIndex) {
             const sets = state.activeWorkout.exercises[exIndex].sets;
             if (sets.length > 1) {
                 sets.pop();
-                saveActiveSessionState();
                 renderActiveWorkout();
+                saveActiveSessionState();
             }
         }
 
@@ -2487,7 +2397,6 @@
             currentLoadedTemplateName = null;
             isTemplateModified = false;
             updateTemplateButtonUI();
-            saveSetupDraft();
 
             document.getElementById('startScreen').style.display = 'block';
             document.getElementById('activeScreen').style.display = 'none';
@@ -2522,7 +2431,7 @@
                 card.className = 'history-card';
 
                 let exercisesSummary = workout.exercises.map(e => e.name).join(', ');
-                let durationText = workout.duration ? `⏱️ ${formatMinutes(workout.duration)}` : '';
+                let durationText = workout.duration ? `⏱️ ${formatMinutesRussian(workout.duration)}` : '';
 
                 let detailsHtml = workout.exercises.map(ex => {
                     let setsStr = ex.sets.map((s, i) => `Подход ${i+1}: ${s.weight || 0} кг × ${s.reps || 0} повт.`).join('<br>');
@@ -2603,8 +2512,8 @@
             ctx.fillText(`${tonnage} кг`, 540, 980);
 
             ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 54px -apple-system, sans-serif';
-            ctx.fillText(`⏱️ ${formatMinutes(duration)}`, 540, 1100);
+            ctx.font = 'bold 56px -apple-system, sans-serif';
+            ctx.fillText(`⏱️ ${formatMinutesRussian(duration)}`, 540, 1100);
 
             ctx.fillStyle = '#94a3b8';
             ctx.font = 'bold 36px -apple-system, sans-serif';
