@@ -1,0 +1,3183 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GymProCounter</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* ==========================================================================
+           APPLE LIQUID GLASS DESIGN SYSTEM (HIG)
+           ========================================================================== */
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            --spring-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+            --spring-bounce: cubic-bezier(0.22, 1.18, 0.36, 1);
+            
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --radius-pill: 999px;
+
+            --glass-blur: blur(44px) saturate(200%);
+            --glass-blur-heavy: blur(64px) saturate(220%);
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --bg-color: #07090e;
+            --orb-1: rgba(10, 132, 255, 0.20);
+            --orb-2: rgba(94, 92, 230, 0.16);
+            --orb-3: rgba(48, 209, 88, 0.10);
+
+            /* Liquid Glass Layers - Dark */
+            --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.04) 100%);
+            --glass-bg-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
+            --glass-bg-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%);
+            --glass-well: rgba(0, 0, 0, 0.28);
+            --glass-pill-active: rgba(255, 255, 255, 0.16);
+
+            /* Specular Rims & Shadows */
+            --glass-border: rgba(255, 255, 255, 0.11);
+            --glass-border-top: rgba(255, 255, 255, 0.34);
+            --glass-border-left: rgba(255, 255, 255, 0.20);
+            --glass-shadow: 0 22px 48px -12px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.3);
+            --glass-inner-glow: inset 0 1px 0.5px 0 rgba(255, 255, 255, 0.38), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.05);
+
+            /* Typography & Neutral Monochrome Tokens */
+            --text-main: #f5f7fa;
+            --text-secondary: rgba(235, 235, 245, 0.60);
+            --text-tertiary: rgba(235, 235, 245, 0.36);
+            --icon-neutral: rgba(245, 247, 250, 0.86);
+
+            /* System Semantic Accents */
+            --accent: #0A84FF;
+            --accent-soft: rgba(10, 132, 255, 0.16);
+            --accent-border: rgba(10, 132, 255, 0.45);
+            --accent-gradient: linear-gradient(180deg, rgba(10, 132, 255, 0.95) 0%, rgba(0, 102, 220, 0.90) 100%);
+            
+            --success: #30D158;
+            --success-soft: rgba(48, 209, 88, 0.15);
+            --success-gradient: linear-gradient(180deg, rgba(48, 209, 88, 0.95) 0%, rgba(30, 175, 68, 0.90) 100%);
+
+            --danger: #FF453A;
+            --danger-soft: rgba(255, 69, 58, 0.15);
+            --danger-gradient: linear-gradient(180deg, rgba(255, 69, 58, 0.95) 0%, rgba(215, 38, 28, 0.90) 100%);
+
+            --input-bg: rgba(0, 0, 0, 0.32);
+            --modal-bg: rgba(18, 22, 31, 0.76);
+            --toast-bg: rgba(24, 28, 38, 0.82);
+            --backdrop-dim: rgba(0, 0, 0, 0.58);
+        }
+
+        :root[data-theme="light"] {
+            color-scheme: light;
+            --bg-color: #eef2f7;
+            --orb-1: rgba(0, 122, 255, 0.18);
+            --orb-2: rgba(120, 110, 240, 0.14);
+            --orb-3: rgba(52, 199, 89, 0.12);
+
+            /* Liquid Glass Layers - Light */
+            --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.76) 0%, rgba(255, 255, 255, 0.50) 100%);
+            --glass-bg-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 100%);
+            --glass-bg-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.78) 100%);
+            --glass-well: rgba(15, 23, 42, 0.05);
+            --glass-pill-active: rgba(255, 255, 255, 0.92);
+
+            /* Specular Rims & Shadows */
+            --glass-border: rgba(255, 255, 255, 0.68);
+            --glass-border-top: rgba(255, 255, 255, 1);
+            --glass-border-left: rgba(255, 255, 255, 0.88);
+            --glass-shadow: 0 18px 40px -12px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.04);
+            --glass-inner-glow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.45);
+
+            /* Typography & Neutral Monochrome Tokens */
+            --text-main: #0f172a;
+            --text-secondary: rgba(15, 23, 42, 0.58);
+            --text-tertiary: rgba(15, 23, 42, 0.35);
+            --icon-neutral: rgba(15, 23, 42, 0.80);
+
+            /* System Semantic Accents */
+            --accent: #007AFF;
+            --accent-soft: rgba(0, 122, 255, 0.11);
+            --accent-border: rgba(0, 122, 255, 0.32);
+            --accent-gradient: linear-gradient(180deg, #007AFF 0%, #0062CC 100%);
+
+            --success: #28CD41;
+            --success-soft: rgba(40, 205, 65, 0.12);
+            --success-gradient: linear-gradient(180deg, #34C759 0%, #249A41 100%);
+
+            --danger: #FF3B30;
+            --danger-soft: rgba(255, 59, 48, 0.10);
+            --danger-gradient: linear-gradient(180deg, #FF3B30 0%, #D7261B 100%);
+
+            --input-bg: rgba(255, 255, 255, 0.68);
+            --modal-bg: rgba(246, 248, 252, 0.82);
+            --toast-bg: rgba(255, 255, 255, 0.88);
+            --backdrop-dim: rgba(15, 23, 42, 0.32);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px 16px 96px;
+            max-width: 580px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.45s var(--spring-smooth), color 0.35s var(--spring-smooth);
+        }
+
+        /* ==========================================================================
+           AMBIENT SPATIAL MESH
+           ========================================================================== */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(85px);
+            will-change: transform;
+            animation: floatOrb 18s infinite alternate ease-in-out;
+            transition: background 0.6s ease;
+        }
+
+        .orb-1 { width: 340px; height: 340px; background: var(--orb-1); top: -90px; left: -70px; }
+        .orb-2 { width: 380px; height: 380px; background: var(--orb-2); bottom: 4%; right: -100px; animation-delay: -6s; }
+        .orb-3 { width: 260px; height: 260px; background: var(--orb-3); top: 38%; left: 18%; animation-delay: -11s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(24px, 32px, 0) scale(1.08); }
+            100% { transform: translate3d(-18px, 48px, 0) scale(0.95); }
+        }
+
+        /* ==========================================================================
+           MONOCHROME NEUTRAL SVG ICON SYSTEM
+           ========================================================================== */
+        .ui-icon {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            stroke-width: 1.85;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            flex-shrink: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .ui-icon-sm { width: 14px; height: 14px; stroke-width: 2; }
+        .ui-icon-lg { width: 20px; height: 20px; stroke-width: 1.75; }
+
+        .icon-chip {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--icon-neutral);
+            flex-shrink: 0;
+        }
+
+        /* ==========================================================================
+           HEADER & NAVIGATION
+           ========================================================================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding: 4px 2px;
+        }
+
+        .user-greeting {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-greeting h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.6px;
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-greeting p {
+            font-size: 13px;
+            font-weight: 450;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .user-name-line {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-pill);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            color: var(--icon-neutral);
+            cursor: pointer;
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+            transition: transform 0.28s var(--spring-bounce), background 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-btn:hover { background: var(--glass-bg-hover); }
+        .icon-btn:active { transform: scale(0.88); }
+
+        /* ==========================================================================
+           LIQUID GLASS SEGMENTED CONTROL (TABS)
+           ========================================================================== */
+        .tabs {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 4px;
+            margin-bottom: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+        }
+
+        .tab {
+            position: relative;
+            z-index: 1;
+            padding: 10px 14px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: color 0.3s var(--spring-smooth), transform 0.2s var(--spring-smooth);
+        }
+
+        .tab:active { transform: scale(0.97); }
+
+        .tab.active {
+            color: var(--text-main);
+            background: var(--glass-pill-active);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14), var(--glass-inner-glow);
+        }
+
+        /* ==========================================================================
+           FLOATING TOAST (DYNAMIC ISLAND STYLE)
+           ========================================================================== */
+        .toast {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-130px) scale(0.9);
+            background: var(--toast-bg);
+            backdrop-filter: var(--glass-blur-heavy);
+            -webkit-backdrop-filter: var(--glass-blur-heavy);
+            border: 1px solid var(--glass-border-top);
+            color: var(--text-main);
+            padding: 11px 20px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            z-index: 1000;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), var(--glass-inner-glow);
+            transition: transform 0.45s var(--spring-bounce), opacity 0.3s ease;
+            opacity: 0;
+            text-align: center;
+            max-width: 92%;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* ==========================================================================
+           VIEWS & LIQUID GLASS CARDS
+           ========================================================================== */
+        .view-section {
+            display: none;
+            animation: viewFadeIn 0.38s var(--spring-smooth);
+        }
+
+        .view-section.active { display: block; }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        #historyView { padding-bottom: 35vh; }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 650;
+            letter-spacing: -0.35px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-pill-badge {
+            font-size: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ==========================================================================
+           BUTTONS & INTERACTIVE CONTROLS
+           ========================================================================== */
+        .btn {
+            width: 100%;
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-top-color: rgba(255, 255, 255, 0.55);
+            padding: 14px 18px;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 10px 26px rgba(10, 132, 255, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.48);
+            transition: transform 0.24s var(--spring-bounce), filter 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn:hover { filter: brightness(1.05); }
+        .btn:active { transform: scale(0.965); opacity: 0.92; }
+
+        .btn-success-solid {
+            background: var(--success-gradient);
+            box-shadow: 0 10px 26px rgba(48, 209, 88, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.48);
+        }
+
+        .btn-danger-solid {
+            background: var(--danger-gradient);
+            box-shadow: 0 10px 26px rgba(255, 69, 58, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06), var(--glass-inner-glow);
+            transition: background 0.2s ease, transform 0.24s var(--spring-bounce);
+        }
+
+        .btn-secondary:hover { background: var(--glass-bg-hover); }
+        .btn-secondary:active { transform: scale(0.965); }
+
+        .share-pill-btn {
+            margin-top: 0;
+            padding: 6px 11px;
+            font-size: 12px;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-main);
+        }
+
+        .delete-ex-btn {
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s var(--spring-bounce), background 0.2s ease, color 0.2s ease;
+        }
+
+        .delete-ex-btn:hover {
+            background: var(--danger-soft);
+            color: var(--danger);
+            border-color: rgba(255, 69, 58, 0.35);
+        }
+
+        .delete-ex-btn:active { transform: scale(0.88); }
+
+        .inline-action-btn {
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 5px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s var(--spring-bounce), background 0.2s ease;
+        }
+
+        .inline-action-btn:active { transform: scale(0.92); }
+
+        /* ==========================================================================
+           ACTIVE WORKOUT STATUS & TIMER HUD
+           ========================================================================== */
+        .status-switcher {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        @keyframes liquidPulse {
+            0%, 100% {
+                box-shadow: 0 14px 34px -8px rgba(10, 132, 255, 0.18), var(--glass-inner-glow);
+                border-color: var(--glass-border);
+                border-top-color: var(--glass-border-top);
+            }
+            50% {
+                box-shadow: 0 18px 42px -6px rgba(10, 132, 255, 0.34), var(--glass-inner-glow);
+                border-color: var(--accent-border);
+                border-top-color: rgba(255, 255, 255, 0.65);
+            }
+        }
+
+        .active-set-indicator {
+            background: var(--glass-bg-elevated);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            padding: 16px 18px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: liquidPulse 3s infinite ease-in-out;
+            transition: opacity 0.35s var(--spring-smooth), transform 0.35s var(--spring-smooth), max-height 0.4s var(--spring-smooth), padding 0.35s ease;
+            opacity: 1;
+            max-height: 240px;
+            overflow: hidden;
+        }
+
+        .active-set-indicator.hidden-panel,
+        .timer-bar.hidden-panel {
+            opacity: 0;
+            transform: scale(0.96);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-width: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .active-set-plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.2px;
+            box-shadow: var(--glass-inner-glow);
+        }
+
+        .timer-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg-elevated);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            padding: 26px 18px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+            transition: opacity 0.35s var(--spring-smooth), transform 0.35s var(--spring-smooth), max-height 0.4s var(--spring-smooth), padding 0.35s ease;
+            opacity: 1;
+            max-height: 320px;
+            overflow: hidden;
+        }
+
+        .timer-display {
+            font-size: 56px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-main);
+            margin: 4px 0 8px;
+            letter-spacing: -2px;
+            line-height: 1.05;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .timer-controls button {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--glass-inner-glow);
+            transition: transform 0.2s var(--spring-bounce), background 0.2s ease;
+        }
+
+        .timer-controls button:active { transform: scale(0.92); }
+
+        /* ==========================================================================
+           EXERCISE BLOCKS & SET ROWS
+           ========================================================================== */
+        .exercise-block {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: var(--glass-inner-glow);
+            transition: all 0.35s var(--spring-smooth);
+        }
+
+        .exercise-block.completed {
+            border-color: rgba(48, 209, 88, 0.30);
+            opacity: 0.78;
+        }
+
+        .exercise-block.pending { opacity: 0.72; }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .exercise-collapsed {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .exercise-collapsed-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .set-row {
+            display: grid;
+            grid-template-columns: 34px 1fr 1fr 42px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px 10px;
+            border-radius: var(--radius-md);
+            background: var(--glass-well);
+            border: 1px solid transparent;
+            transition: all 0.35s var(--spring-smooth);
+            transform: scale(0.95);
+            opacity: 0.52;
+        }
+
+        .set-row.active-set {
+            transform: scale(1);
+            opacity: 1;
+            background: var(--glass-bg-elevated);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14), var(--glass-inner-glow);
+        }
+
+        .setup-set-row {
+            display: grid;
+            grid-template-columns: 34px 1fr 1fr;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 7px;
+            padding: 6px 8px;
+            border-radius: 14px;
+            background: var(--glass-well);
+            border: 1px solid var(--glass-border);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 11px;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .input-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 9px 6px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            -moz-appearance: textfield;
+        }
+
+        .input-group input::placeholder { color: var(--text-tertiary); font-weight: 450; }
+        .input-group input::-webkit-outer-spin-button,
+        .input-group input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .input-group input:focus { outline: none; }
+
+        .check-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--icon-neutral);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.25s var(--spring-bounce), background 0.25s ease, border-color 0.25s ease;
+            box-shadow: var(--glass-inner-glow);
+            margin: 0 auto;
+        }
+
+        .check-btn:active { transform: scale(0.86); }
+
+        .check-btn.checked,
+        .check-btn.active-check-btn {
+            background: var(--success-gradient);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 6px 18px rgba(48, 209, 88, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+        }
+
+        .check-btn.disabled-check-btn {
+            background: var(--glass-well);
+            color: var(--text-tertiary);
+            border-color: transparent;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .ai-tip {
+            background: var(--glass-well);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        /* ==========================================================================
+           HISTORY CARDS
+           ========================================================================== */
+        .history-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            border-left-color: var(--glass-border-left);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--glass-shadow), var(--glass-inner-glow);
+            transition: border-color 0.3s var(--spring-smooth), transform 0.2s var(--spring-smooth), box-shadow 0.3s var(--spring-smooth);
+        }
+
+        .history-card.expanded {
+            border-color: var(--glass-border-top);
+            background: var(--glass-bg-elevated);
+        }
+
+        .history-details {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 13px;
+            animation: viewFadeIn 0.28s var(--spring-smooth);
+        }
+
+        .history-card.expanded .history-details { display: block; }
+
+        /* ==========================================================================
+           LIQUID GLASS MODALS & BOTTOM SHEETS
+           ========================================================================== */
+        .modal {
+            display: flex;
+            position: fixed;
+            inset: 0;
+            background: var(--backdrop-dim);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            z-index: 100;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.32s var(--spring-smooth);
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            background-image: var(--glass-bg-elevated);
+            backdrop-filter: var(--glass-blur-heavy);
+            -webkit-backdrop-filter: var(--glass-blur-heavy);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-top);
+            border-radius: 32px 32px 0 0;
+            width: 100%;
+            max-width: 580px;
+            max-height: 88vh;
+            padding: 26px 22px 28px;
+            overflow-y: auto;
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.42), var(--glass-inner-glow);
+            color: var(--text-main);
+            position: relative;
+            transform: translateY(36px) scale(0.98);
+            transition: transform 0.38s var(--spring-smooth);
+        }
+
+        /* Sheet Grabber Handle */
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 9px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 4px;
+            border-radius: 999px;
+            background: var(--text-tertiary);
+            opacity: 0.6;
+        }
+
+        .modal.open .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        #confirmModal,
+        #sessionRecoveryModal,
+        #finishActionModal {
+            z-index: 250;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #confirmModal .modal-content,
+        #sessionRecoveryModal .modal-content,
+        #finishActionModal .modal-content {
+            border-radius: 28px;
+            max-width: 420px;
+            text-align: center;
+            padding-top: 22px;
+        }
+
+        #confirmModal .modal-content::before,
+        #sessionRecoveryModal .modal-content::before,
+        #finishActionModal .modal-content::before {
+            display: none;
+        }
+
+        .muscle-group-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top-color: var(--glass-border-top);
+            color: var(--text-main);
+            padding: 13px 15px;
+            border-radius: var(--radius-md);
+            text-align: left;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: var(--glass-inner-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.22s var(--spring-bounce), background 0.2s ease;
+        }
+
+        .muscle-group-btn:hover { background: var(--glass-bg-hover); }
+        .muscle-group-btn:active { transform: scale(0.975); }
+
+        .exercise-select-item {
+            padding: 13px 12px;
+            border-bottom: 1px solid var(--glass-border);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .exercise-select-item:hover { background: var(--glass-well); }
+
+        .custom-exercise-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .custom-exercise-input input {
+            flex: 1;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+        }
+
+        .custom-exercise-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .bodyweight-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .bodyweight-toggle input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        .stepper-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--glass-well);
+            padding: 8px 10px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+
+        .tabular-num {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <div id="toastNotification" class="toast">Уведомление</div>
+
+    <header>
+        <div class="user-greeting">
+            <h1>GymProCounter</h1>
+            <p>Твой помощник в зале</p>
+            <div id="headerUserBadge" class="user-name-line"></div>
+        </div>
+        <div class="header-btns">
+            <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Сменить тему" aria-label="Сменить тему"></button>
+            <button class="icon-btn" onclick="openSettingsModal()" title="Настройки" aria-label="Настройки">
+                <svg class="ui-icon ui-icon-lg" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('workout')" id="tabWorkoutBtn">Тренировка</button>
+        <button class="tab" onclick="switchTab('history')" id="tabHistoryBtn">История</button>
+    </div>
+
+    <!-- ВКЛАДКА 1: ТРЕНИРОВКА -->
+    <div id="workoutView" class="view-section active">
+        <div id="startScreen">
+            <div class="card">
+                <div class="card-title">
+                    <span>Настройка тренировки</span>
+                    <span id="loadedTemplateBadge" class="template-pill-badge" style="display: none;"></span>
+                </div>
+                <div style="margin-bottom: 18px;">
+                    <label style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 8px;">Время отдыха между подходами</label>
+                    <div class="stepper-box">
+                        <button class="btn-secondary" style="margin-top:0; padding: 8px 16px; border-radius: 12px;" onclick="adjustInitialRest(-15)">−15 с</button>
+                        <span id="initialRestDisplay" class="tabular-num" style="font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px;">01:30</span>
+                        <button class="btn-secondary" style="margin-top:0; padding: 8px 16px; border-radius: 12px;" onclick="adjustInitialRest(15)">+15 с</button>
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div class="card-title" style="font-size: 14px; margin-bottom: 10px; color: var(--text-secondary); font-weight: 600;">Упражнения в тренировке</div>
+                    <div id="setupExercisesContainer" style="margin-bottom: 10px;"></div>
+                    <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="openMuscleGroupModal('setup')">
+                        <svg class="ui-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Добавить упражнение</span>
+                    </button>
+                </div>
+                <div id="updateTemplateContainer" style="display: none; margin-bottom: 10px;">
+                    <button class="btn-secondary" id="updateTemplateBtn" style="width: 100%; margin-top: 0; border-color: rgba(48, 209, 88, 0.45); color: var(--success);" onclick="updateCurrentLoadedTemplate()"></button>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openSaveTemplateModal()">
+                        <svg class="ui-icon" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        <span>Сохранить</span>
+                    </button>
+                    <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="openLoadTemplateModal()">
+                        <svg class="ui-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        <span>Шаблоны</span>
+                    </button>
+                </div>
+                <div id="createNewWorkoutContainer" style="display: none; margin-bottom: 14px;">
+                    <button class="btn-secondary" style="width: 100%; margin-top: 0;" onclick="resetToNewWorkoutSetup()">
+                        <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        <span>Создать пустую тренировку</span>
+                    </button>
+                </div>
+                <button class="btn" onclick="startActiveWorkout()" style="margin-top: 4px;">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
+                    <span>Начать тренировку</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- АКТИВНАЯ ТРЕНИРОВКА -->
+        <div id="activeScreen" style="display: none;">
+            <div class="status-switcher">
+                <div class="active-set-indicator" id="activeSetIndicatorBar">
+                    <div style="flex: 1; padding-right: 12px;">
+                        <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--text-secondary); display: block; text-transform: uppercase;" id="activeIndicatorLabel">ТЕКУЩИЙ ПОДХОД</span>
+                        <div id="activeIndicatorText" style="font-size: 15px; font-weight: 650; color: var(--text-main); margin-top: 3px;">Упражнение • Подход 1 в процессе</div>
+                        <div id="activeIndicatorPlan" class="active-set-plan-badge"></div>
+                    </div>
+                    <div id="activeIndicatorActionArea">
+                        <button class="check-btn active-check-btn" id="activeIndicatorCheckBtn" onclick="completeCurrentActiveSet()" style="width: 44px; height: 44px;" aria-label="Завершить подход">
+                            <svg class="ui-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="timer-bar hidden-panel" id="timerBarContainer">
+                    <span style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Отдых между подходами</span>
+                    <div class="timer-display" id="timerDisplay">01:30</div>
+                    <div class="timer-controls">
+                        <button onclick="adjustTimer(-15)">−15 с</button>
+                        <button onclick="adjustTimer(15)">+15 с</button>
+                        <button onclick="skipTimer()" style="color: var(--accent);">Пропустить</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Тренировка в процессе</span>
+                    <span id="totalTonnage" class="tabular-num" style="color: var(--text-main); font-size: 15px; font-weight: 700;">0 кг</span>
+                </div>
+                <div id="exercisesContainer"></div>
+                <button class="btn-secondary" style="width: 100%; margin-top: 12px;" onclick="openMuscleGroupModal('active')">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Добавить упражнение</span>
+                </button>
+            </div>
+
+            <button class="btn btn-success-solid" onclick="finishWorkout()" style="margin-top: 10px;">
+                <svg class="ui-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>Завершить тренировку</span>
+            </button>
+            <button class="btn-secondary" onclick="confirmResetActiveWorkout()" style="width: 100%; margin-top: 10px; color: var(--danger);">
+                <svg class="ui-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>
+                <span>Сбросить тренировку</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ВКЛАДКА 2: ИСТОРИЯ -->
+    <div id="historyView" class="view-section">
+        <div class="card">
+            <div class="card-title">История тренировок</div>
+            <div id="historyContainer"></div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: ПЕРВЫЙ ВХОД / ЛИЧНАЯ ИНФОРМАЦИЯ -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content" style="text-align: left;">
+            <div class="card-title" id="profileModalTitle">Личная информация</div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.45;">
+                Укажите параметры для персонализации и автоматической подстановки веса в упражнениях с собственным телом.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
+                <div>
+                    <label style="font-size: 12px; color: var(--text-secondary); display:block; margin-bottom:5px;">Ваше имя</label>
+                    <div class="input-group">
+                        <input type="text" id="profileNameInput" placeholder="Имя" style="text-align: left; padding: 11px 14px;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 12px; color: var(--text-secondary); display:block; margin-bottom:5px;">Рост (см)</label>
+                        <div class="input-group">
+                            <input type="number" id="profileHeightInput" placeholder="175" style="text-align: left; padding: 11px 14px;">
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 12px; color: var(--text-secondary); display:block; margin-bottom:5px;">Вес (кг)</label>
+                        <div class="input-group">
+                            <input type="number" id="profileWeightInput" placeholder="75" style="text-align: left; padding: 11px 14px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn" onclick="saveProfileData()">Сохранить</button>
+            <button class="btn-secondary" id="profileCloseBtn" onclick="closeModal('profileModal')" style="width: 100%; margin-top: 8px; display: none;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: ЗАВЕРШЕНИЕ ТРЕНИРОВКИ / ВЫБОР ТИПА РЕЗУЛЬТАТА -->
+    <div class="modal" id="finishActionModal">
+        <div class="modal-content">
+            <div class="card-title" style="justify-content: center;" id="finishProductiveTitle">Это было продуктивно!</div>
+            <p id="finishProductiveSub" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.45;">
+                Тренировка успешно сохранена в истории. Выберите действие:
+            </p>
+            <div id="finishPrimaryChoices" style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn" onclick="showFinishResultChoices()">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Результаты</span>
+                </button>
+                <button class="btn-secondary" style="margin-top: 0;" onclick="closeModal('finishActionModal')">Закрыть</button>
+            </div>
+            <div id="finishResultChoices" style="display: none; flex-direction: column; gap: 8px;">
+                <button class="btn" onclick="openStoryCardFromFinish()">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span>Краткая карточка</span>
+                </button>
+                <button class="btn-secondary" style="margin-top: 0;" onclick="openDetailedReportModal()">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    <span>Подробный отчёт</span>
+                </button>
+                <button class="btn-secondary" id="finishChoicesBackBtn" style="margin-top: 0;" onclick="handleFinishChoicesBack()">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: ПОДРОБНЫЙ ОТЧЁТ (ДЛЯ ТРЕНЕРА) -->
+    <div class="modal" id="detailedReportModal">
+        <div class="modal-content" style="text-align: left;">
+            <div class="card-title">Подробный отчёт тренировки</div>
+            <div id="detailedReportContent" style="font-size: 13px; line-height: 1.55; margin-bottom: 16px; background: var(--glass-well); padding: 14px; border-radius: 16px; border: 1px solid var(--glass-border); max-height: 50vh; overflow-y: auto; font-variant-numeric: tabular-nums;"></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn" onclick="shareOrCopyDetailedReport()">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                    <span>Поделиться с тренером</span>
+                </button>
+                <button class="btn-secondary" style="margin-top: 0; width: 100%;" onclick="returnToResultChoices('detailedReportModal')">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ВОССТАНОВЛЕНИЯ СЕССИИ -->
+    <div class="modal" id="sessionRecoveryModal">
+        <div class="modal-content">
+            <div class="card-title" style="justify-content: center;">Незавершенная тренировка</div>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.45;">
+                Обнаружена активная тренировка с прошлой сессии. Хотите продолжить её или сбросить?
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn" onclick="continueRecoveredSession()">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
+                    <span>Продолжить тренировку</span>
+                </button>
+                <button class="btn-secondary" style="margin-top: 0; color: var(--danger);" onclick="resetWorkoutToCleanState()">
+                    <svg class="ui-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+                    <span>Сбросить тренировку</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКИ НАСТРОЕК ДАННЫХ -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="card-title">Настройки</div>
+            <button class="muscle-group-btn" onclick="openProfileFromSettings()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="icon-chip"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                    <span>Личная информация</span>
+                </span>
+                <span style="color: var(--text-secondary); font-size: 13px;" id="profileSettingsBadge">Изменить</span>
+            </button>
+            <button class="muscle-group-btn" onclick="confirmClearAllHistory()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="icon-chip"><svg class="ui-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></span>
+                    <span>Удалить историю тренировок</span>
+                </span>
+                <span style="color: var(--danger); font-size: 13px;">Все</span>
+            </button>
+            <button class="muscle-group-btn" onclick="openDeleteSelectedHistoryModal()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="icon-chip"><svg class="ui-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></span>
+                    <span>Удалить выбранные тренировки</span>
+                </span>
+                <svg class="ui-icon ui-icon-sm" style="color: var(--text-secondary);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <button class="muscle-group-btn" onclick="openDeleteCustomExercisesModal()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="icon-chip"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11"></path><path d="M21 21l-1-1"></path><path d="M3 3l1 1"></path><path d="M18 22l4-4"></path><path d="M2 6l4-4"></path><path d="M3 10l7-7"></path><path d="M14 21l7-7"></path></svg></span>
+                    <span>Удалить свои упражнения</span>
+                </span>
+                <svg class="ui-icon ui-icon-sm" style="color: var(--text-secondary);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <button class="muscle-group-btn" onclick="openDeleteTemplatesModal()">
+                <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="icon-chip"><svg class="ui-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
+                    <span>Удалить шаблоны тренировок</span>
+                </span>
+                <svg class="ui-icon ui-icon-sm" style="color: var(--text-secondary);" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <button class="btn-secondary" onclick="closeModal('settingsModal')" style="width: 100%; margin-top: 12px;">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteHistoryModal">
+        <div class="modal-content">
+            <div class="card-title">Удалить выбранные тренировки</div>
+            <div id="deleteHistoryListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="btn-secondary" onclick="backToSettings('deleteHistoryModal')" style="width: 100%; margin-top: 0;">Назад в настройки</button>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteCustomExModal">
+        <div class="modal-content">
+            <div class="card-title">Удалить свои упражнения</div>
+            <div id="deleteCustomExListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="btn-secondary" onclick="backToSettings('deleteCustomExModal')" style="width: 100%; margin-top: 0;">Назад в настройки</button>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteTemplatesModal">
+        <div class="modal-content">
+            <div class="card-title">Удалить шаблоны тренировок</div>
+            <div id="deleteTemplatesListContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="btn-secondary" onclick="backToSettings('deleteTemplatesModal')" style="width: 100%; margin-top: 0;">Назад в настройки</button>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="card-title" style="justify-content: center;" id="confirmModalTitle">Подтверждение</div>
+            <p id="confirmModalText" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.45;"></p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" onclick="closeModal('confirmModal')" style="margin-top: 0; flex: 1;">Отмена</button>
+                <button class="btn btn-danger-solid" id="confirmModalActionBtn" style="flex: 1; padding: 12px;">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКИ ВЫБОРА УПРАЖНЕНИЙ И ШАБЛОНОВ -->
+    <div class="modal" id="muscleModal">
+        <div class="modal-content">
+            <div class="card-title">Выберите группу мышц</div>
+            <div id="muscleGroupsList"></div>
+            <button class="btn-secondary" onclick="closeModal('muscleModal')" style="width: 100%; margin-top: 12px;">Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal" id="exerciseModal">
+        <div class="modal-content">
+            <div class="card-title" id="selectExerciseTitle">Выберите упражнение</div>
+            <div id="exerciseListContainer" style="max-height: 260px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <div class="custom-exercise-input">
+                <input type="text" id="customExerciseInput" enterkeyhint="done" placeholder="Добавить свое в эту группу..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomExercise();}">
+                <button class="btn" style="width: auto; padding: 12px 18px;" onclick="addCustomExercise()">Добавить</button>
+            </div>
+            <label class="bodyweight-toggle">
+                <input type="checkbox" id="customBodyweightCheckbox">
+                <span>Упражнение с собственным весом</span>
+            </label>
+            <button class="btn-secondary" onclick="backToMuscleGroups()" style="width: 100%; margin-top: 12px;">Назад к группам мышц</button>
+        </div>
+    </div>
+
+    <div class="modal" id="inWorkoutSetupModal">
+        <div class="modal-content">
+            <div class="card-title" id="quickSetupExTitle">Настройка упражнения</div>
+            <div id="quickSetupSetsContainer" style="margin-bottom: 12px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="quickRemoveSet()">− Подход</button>
+                <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="quickAddSet()">+ Подход</button>
+            </div>
+            <button class="btn" onclick="confirmQuickSetup()">Сохранить</button>
+            <button class="btn-secondary" onclick="closeModal('inWorkoutSetupModal')" style="width: 100%; margin-top: 8px;">Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal" id="saveTemplateModal">
+        <div class="modal-content">
+            <div class="card-title">Сохранить тренировку</div>
+            <div class="custom-exercise-input" style="margin-bottom: 14px;">
+                <input type="text" id="templateNameInput" enterkeyhint="done" placeholder="Название (например, День ног)..." onkeydown="if(event.key==='Enter'){event.preventDefault();confirmSaveTemplate();}">
+            </div>
+            <button class="btn" onclick="confirmSaveTemplate()" style="margin-bottom: 8px;">Сохранить</button>
+            <button class="btn-secondary" onclick="closeModal('saveTemplateModal')" style="width: 100%; margin-top: 0;">Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loadTemplateModal">
+        <div class="modal-content">
+            <div class="card-title">Загрузить тренировку</div>
+            <div id="savedTemplatesList" style="max-height: 280px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="btn-secondary" onclick="closeModal('loadTemplateModal')" style="width: 100%; margin-top: 0;">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content" style="text-align: center; padding: 22px 20px 24px;">
+            <div class="card-title" style="justify-content: center; margin-bottom: 8px; font-size: 16px;">Краткая карточка</div>
+            <div style="display: flex; justify-content: center; margin: 10px auto 14px;">
+                <img id="storyCardImagePreview" alt="Story Result" style="width: 190px; height: 338px; border-radius: 22px; border: 1px solid var(--glass-border-top); box-shadow: 0 18px 40px rgba(0,0,0,0.45); object-fit: cover; display: block;">
+            </div>
+            <button class="btn" onclick="shareOrDownloadStoryImage()" style="padding: 13px; margin-bottom: 8px; font-size: 14px;">
+                <svg class="ui-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Сохранить в галерею</span>
+            </button>
+            <button class="btn-secondary" onclick="returnToResultChoices('resultModal')" style="width: 100%; margin-top: 0; padding: 11px; font-size: 14px;">Назад</button>
+        </div>
+    </div>
+
+    <canvas id="exportCanvas" width="1080" height="1920" style="display: none;"></canvas>
+
+    <script>
+        /* ==========================================================================
+           MONOCHROME NEUTRAL SVG ICON LIBRARY (SF SYMBOLS STYLE)
+           ========================================================================== */
+        const ICONS = {
+            sun: `<svg class="ui-icon ui-icon-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`,
+            moon: `<svg class="ui-icon ui-icon-lg" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+            user: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
+            folder: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
+            refresh: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
+            target: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle></svg>`,
+            check: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+            close: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+            calendar: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`,
+            clock: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg>`,
+            bolt: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+            bulb: `<svg class="ui-icon ui-icon-sm" style="margin-top:1px;" viewBox="0 0 24 24"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.75c.64.54 1 1.33 1 2.17V17h6v-.08c0-.84.36-1.63 1-2.17A7 7 0 0 0 12 2z"></path></svg>`,
+            star: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+            chevronDown: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
+            chevronUp: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>`,
+            chevronRight: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`,
+            share: `<svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>`
+        };
+
+        let currentTheme = 'dark';
+        let userManualThemeOverride = localStorage.getItem('gym_pro_theme_override') || null;
+        let initialRestSeconds = 90;
+        let isResting = false;
+        let restEndTime = null;
+        let lastTickBeepSecond = null;
+        let addingMode = 'setup';
+        let currentLoadedTemplateName = null;
+        let isTemplateModified = false;
+        let reportModalOrigin = 'finish';
+
+        const muscleGroupsData = {
+            chest: "Грудь", back: "Спина", legs: "Ноги", glutes: "Ягодицы",
+            shoulders: "Плечи", arms: "Руки (Бицепс / Трицепс)", abs: "Пресс"
+        };
+
+        const exercisesData = {
+            chest: ["Жим штанги лежа", "Жим гантелей лежа", "Жим штанги в наклоне", "Жим гантелей в наклоне", "Отжимания на брусьях", "Сведения в кроссовере", "Жим в тренажере сидя", "Пуловер с гантелью", "Отжимания от пола", "Сведения в тренажере (Бабочка)"],
+            back: ["Подтягивания широким хватом", "Тяга штанги в наклоне", "Тяга верхнего блока к груди", "Тяга гантели одной рукой", "Тяга горизонтального блока", "Пуловер на верхнем блоке", "Гиперэкстензия", "Шраги со штангой", "Тяга Т-грифа", "Австралийские подтягивания"],
+            legs: ["Приседания со штангой", "Жим ногами в тренажере", "Выпады с гантелями", "Румынская тяга", "Сгибания ног лежа", "Разгибания ног сидя", "Подъем на носки стоя", "Гакк-приседания", "Болгарские сплит-приседания", "Фронтальные приседания"],
+            glutes: ["Ягодичный мостик со штангой", "Становая тяга сумо", "Отведение ноги в кроссовере", "Румынская тяга на одной ноге", "Болгарские выпады на ягодицы", "Приседания плие с гантелью", "Гиперэкстензия с круглой спиной", "Зашагивания на тумбу", "Разведение ног в тренажере", "Выпады назад в Смите"],
+            shoulders: ["Армейский жим штанги стоя", "Жим гантелей сидя", "Махи гантелями в стороны", "Подъем гантелей перед собой", "Разведения в наклоне на заднюю дельту", "Тяга штанги к подбородку", "Жим Арнольда", "Отведения руки в кроссовере", "Обратные разведения в тренажере", "Тяга каната к лицу (Face Pull)"],
+            arms: ["Подъем штанги на бицепс стоя", "Сгибания рук «Молот»", "Французский жим лежа", "Разгибания рук на верхнем блоке", "Подъем гантелей на бицепс с супинацией", "Жим лежа узким хватом", "Сгибания на скамье Скотта", "Разгибания с гантелью из-за головы", "Концентрированный подъем на бицепс", "Отжимания на брусьях на трицепс"],
+            abs: ["Скручивания на полу", "Подъем ног в висе", "Планка классическая", "Молитва на верхнем блоке", "Русский твист с весом", "Велосипед лежа", "Подъем туловища на наклонной скамье", "Боковая планка", "Складка (книжка)", "Ролик для пресса"]
+        };
+
+        const defaultBodyweightExercises = [
+            "Отжимания на брусьях", "Отжимания от пола", "Подтягивания широким хватом",
+            "Австралийские подтягивания", "Отжимания на брусьях на трицепс", "Подъем ног в висе",
+            "Скручивания на полу", "Планка классическая", "Боковая планка", "Складка (книжка)"
+        ];
+
+        let state = {
+            setupExercises: [],
+            activeWorkout: { exercises: [] },
+            history: JSON.parse(localStorage.getItem('gym_pro_history') || '[]'),
+            customByGroup: JSON.parse(localStorage.getItem('gym_pro_custom_by_group') || '{}'),
+            bodyweightCustomList: JSON.parse(localStorage.getItem('gym_pro_bodyweight_custom') || '[]'),
+            profile: JSON.parse(localStorage.getItem('gym_pro_profile') || 'null')
+        };
+
+        let restTimerInterval = null;
+        let restTimeRemaining = 90;
+        let selectedMuscleKey = null;
+        let workoutStartTimestamp = null;
+        let workoutElapsedSeconds = 0;
+        let workoutTimerInterval = null;
+        let lastFinishedWorkoutData = null;
+        let tempQuickExercise = null;
+
+        /* ==========================================================================
+           SYSTEM THEME SYNCHRONIZATION & MANUAL OVERRIDE
+           ========================================================================== */
+        function detectSystemTheme() {
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.colorScheme) {
+                return window.Telegram.WebApp.colorScheme === 'light' ? 'light' : 'dark';
+            }
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                return 'light';
+            }
+            return 'dark';
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme === 'light' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                btn.innerHTML = currentTheme === 'dark' ? ICONS.sun : ICONS.moon;
+            }
+            if (window.Telegram && window.Telegram.WebApp) {
+                try {
+                    const bgHex = currentTheme === 'dark' ? '#07090e' : '#eef2f7';
+                    window.Telegram.WebApp.setBackgroundColor(bgHex);
+                    window.Telegram.WebApp.setHeaderColor(bgHex);
+                } catch (e) {}
+            }
+        }
+
+        function initThemeSystem() {
+            const initial = userManualThemeOverride || detectSystemTheme();
+            applyTheme(initial);
+
+            if (window.matchMedia) {
+                const mq = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleMediaChange = (e) => {
+                    if (!userManualThemeOverride) {
+                        applyTheme(e.matches ? 'dark' : 'light');
+                    }
+                };
+                if (mq.addEventListener) mq.addEventListener('change', handleMediaChange);
+            }
+
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.onEvent) {
+                window.Telegram.WebApp.onEvent('themeChanged', () => {
+                    if (!userManualThemeOverride) {
+                        applyTheme(detectSystemTheme());
+                    }
+                });
+            }
+        }
+
+        function toggleTheme() {
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            userManualThemeOverride = nextTheme;
+            localStorage.setItem('gym_pro_theme_override', nextTheme);
+            applyTheme(nextTheme);
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            }
+        }
+
+        window.onload = function () {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            }
+            initThemeSystem();
+            initAudioEngine();
+            updateHeaderProfileUI();
+            updateTemplateButtonUI();
+            updateCurrentIndicatorPlanBadge(0, 0);
+            renderSetupExercises();
+            renderHistory();
+
+            if (!state.profile || !state.profile.name) {
+                openFirstRunProfileModal();
+            } else {
+                checkActiveSessionRecovery();
+            }
+        };
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                if (workoutStartTimestamp && document.getElementById('activeScreen').style.display === 'block') {
+                    workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+                }
+                if (isResting) tickRestTimer();
+            }
+        });
+
+        // --- ЛИЧНАЯ ИНФОРМАЦИЯ И ПЕРВЫЙ ВХОД ---
+        function updateHeaderProfileUI() {
+            const badge = document.getElementById('headerUserBadge');
+            if (state.profile && state.profile.name) {
+                badge.style.display = 'inline-flex';
+                const weightInfo = state.profile.weight ? ` • ${state.profile.weight} кг` : '';
+                badge.innerHTML = `${ICONS.user}<span>${state.profile.name}${weightInfo}</span>`;
+            } else {
+                badge.style.display = 'none';
+                badge.innerHTML = '';
+            }
+        }
+
+        function openFirstRunProfileModal() {
+            document.getElementById('profileCloseBtn').style.display = 'none';
+            document.getElementById('profileModalTitle').innerText = "Добро пожаловать";
+            document.getElementById('profileModal').classList.add('open');
+        }
+
+        function openProfileFromSettings() {
+            closeModal('settingsModal');
+            document.getElementById('profileCloseBtn').style.display = 'inline-flex';
+            document.getElementById('profileModalTitle').innerText = "Личная информация";
+            if (state.profile) {
+                document.getElementById('profileNameInput').value = state.profile.name || '';
+                document.getElementById('profileHeightInput').value = state.profile.height || '';
+                document.getElementById('profileWeightInput').value = state.profile.weight || '';
+            }
+            document.getElementById('profileModal').classList.add('open');
+        }
+
+        function saveProfileData() {
+            const name = document.getElementById('profileNameInput').value.trim();
+            const height = document.getElementById('profileHeightInput').value.trim();
+            const weight = document.getElementById('profileWeightInput').value.trim();
+
+            if (!name) {
+                showNotice("Пожалуйста, введите ваше имя");
+                return;
+            }
+
+            state.profile = {
+                name: name,
+                height: height || '',
+                weight: weight || ''
+            };
+            localStorage.setItem('gym_pro_profile', JSON.stringify(state.profile));
+
+            updateHeaderProfileUI();
+            closeModal('profileModal');
+            showNotice("Личная информация сохранена");
+
+            checkActiveSessionRecovery();
+        }
+
+        function isBodyweightExercise(name) {
+            if (defaultBodyweightExercises.includes(name)) return true;
+            if (state.bodyweightCustomList.includes(name)) return true;
+            return false;
+        }
+
+        function getDefaultWeightForExercise(name) {
+            if (isBodyweightExercise(name) && state.profile && state.profile.weight) {
+                return state.profile.weight;
+            }
+            return '';
+        }
+
+        function formatMinutesRussian(num) {
+            const n = Math.abs(Number(num)) || 1;
+            const mod10 = n % 10, mod100 = n % 100;
+            if (mod100 >= 11 && mod100 <= 19) return `${n} минут`;
+            if (mod10 === 1) return `${n} минута`;
+            if (mod10 >= 2 && mod10 <= 4) return `${n} минуты`;
+            return `${n} минут`;
+        }
+
+        function scrollToTop() {
+            setTimeout(() => {
+                try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, 0); }
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 20);
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.classList.contains('nav-input')) {
+                e.preventDefault();
+                const allNavInputs = Array.from(document.querySelectorAll('input.nav-input:not([disabled])')).filter(el => el.offsetParent !== null);
+                const idx = allNavInputs.indexOf(e.target);
+                if (idx !== -1 && idx + 1 < allNavInputs.length) {
+                    allNavInputs[idx + 1].focus();
+                    allNavInputs[idx + 1].select();
+                } else {
+                    e.target.blur();
+                }
+            }
+        });
+
+        let toastTimeout = null;
+        function showNotice(text) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = text;
+            toast.classList.add('show');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            if (tab === 'workout') {
+                document.getElementById('tabWorkoutBtn').classList.add('active');
+                document.getElementById('workoutView').classList.add('active');
+            } else {
+                document.getElementById('tabHistoryBtn').classList.add('active');
+                document.getElementById('historyView').classList.add('active');
+                renderHistory();
+            }
+            scrollToTop();
+        }
+
+        function adjustInitialRest(delta) {
+            initialRestSeconds = Math.max(15, initialRestSeconds + delta);
+            if (!isResting) {
+                restTimeRemaining = initialRestSeconds;
+                updateTimerDisplay();
+            }
+            const mins = Math.floor(initialRestSeconds / 60).toString().padStart(2, '0');
+            const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
+        }
+
+        // --- СОХРАНЕНИЕ И ВОССТАНОВЛЕНИЕ СЕССИИ ---
+        function saveActiveSessionState() {
+            if (document.getElementById('activeScreen').style.display === 'block' &&
+                state.activeWorkout && state.activeWorkout.exercises && state.activeWorkout.exercises.length > 0) {
+                const payload = {
+                    activeWorkout: state.activeWorkout,
+                    workoutStartTimestamp: workoutStartTimestamp,
+                    elapsedSeconds: workoutElapsedSeconds,
+                    initialRestSeconds: initialRestSeconds,
+                    isResting: isResting,
+                    restEndTime: restEndTime
+                };
+                localStorage.setItem('gym_pro_active_session', JSON.stringify(payload));
+            } else {
+                localStorage.removeItem('gym_pro_active_session');
+            }
+        }
+
+        function checkActiveSessionRecovery() {
+            const saved = localStorage.getItem('gym_pro_active_session');
+            if (!saved) return;
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed && parsed.activeWorkout && parsed.activeWorkout.exercises && parsed.activeWorkout.exercises.length > 0) {
+                    document.getElementById('sessionRecoveryModal').classList.add('open');
+                }
+            } catch (e) {
+                localStorage.removeItem('gym_pro_active_session');
+            }
+        }
+
+        function continueRecoveredSession() {
+            closeModal('sessionRecoveryModal');
+            const saved = localStorage.getItem('gym_pro_active_session');
+            if (!saved) return;
+            try {
+                const parsed = JSON.parse(saved);
+                state.activeWorkout = parsed.activeWorkout;
+                workoutStartTimestamp = parsed.workoutStartTimestamp || (Date.now() - (parsed.elapsedSeconds || 0) * 1000);
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+
+                if (parsed.initialRestSeconds) {
+                    initialRestSeconds = parsed.initialRestSeconds;
+                    const mins = Math.floor(initialRestSeconds / 60).toString().padStart(2, '0');
+                    const secs = (initialRestSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById('initialRestDisplay').innerText = `${mins}:${secs}`;
+                }
+
+                document.getElementById('startScreen').style.display = 'none';
+                document.getElementById('activeScreen').style.display = 'block';
+
+                if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+                workoutTimerInterval = setInterval(() => {
+                    workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+                    if (window.currentActiveExIndex !== undefined && window.currentActiveExIndex !== -1) {
+                        const ex = state.activeWorkout.exercises[window.currentActiveExIndex];
+                        if (ex) ex.durationSeconds = (ex.durationSeconds || 0) + 1;
+                    }
+                    saveActiveSessionState();
+                }, 1000);
+
+                if (parsed.isResting && parsed.restEndTime && parsed.restEndTime > Date.now()) {
+                    startRestTimer(parsed.restEndTime);
+                } else {
+                    stopTimer();
+                    renderActiveWorkout();
+                }
+                scrollToTop();
+                showNotice("Тренировка восстановлена");
+            } catch (e) {
+                resetWorkoutToCleanState();
+            }
+        }
+
+        function confirmResetActiveWorkout() {
+            askConfirmation(
+                "Сбросить тренировку?",
+                "Текущий прогресс тренировки будет сброшен, и вы вернетесь на стартовый экран.",
+                () => resetWorkoutToCleanState()
+            );
+        }
+
+        function resetWorkoutToCleanState() {
+            closeModal('sessionRecoveryModal');
+            localStorage.removeItem('gym_pro_active_session');
+            if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+            workoutTimerInterval = null;
+            workoutStartTimestamp = null;
+            workoutElapsedSeconds = 0;
+            stopTimer();
+            state.setupExercises = [];
+            state.activeWorkout = { exercises: [] };
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            document.getElementById('activeScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            switchTab('workout');
+            scrollToTop();
+            showNotice("Тренировка сброшена");
+        }
+
+        function askConfirmation(title, message, onConfirmCallback) {
+            document.getElementById('confirmModalTitle').innerText = title;
+            document.getElementById('confirmModalText').innerText = message;
+            document.getElementById('confirmModalActionBtn').onclick = function () {
+                closeModal('confirmModal');
+                onConfirmCallback();
+            };
+            document.getElementById('confirmModal').classList.add('open');
+        }
+
+        // --- УПРАВЛЕНИЕ ЛОКАЛЬНЫМИ ДАННЫМИ ---
+        function openSettingsModal() { document.getElementById('settingsModal').classList.add('open'); }
+        function backToSettings(fromModalId) { closeModal(fromModalId); openSettingsModal(); }
+
+        function confirmClearAllHistory() {
+            if (state.history.length === 0) { showNotice("История тренировок уже пуста"); return; }
+            askConfirmation("Удалить историю?", "Вы уверены, что хотите полностью удалить всю историю тренировок?", () => {
+                state.history = [];
+                localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
+                renderHistory();
+                renderSetupExercises();
+                closeModal('settingsModal');
+                showNotice("Вся история тренировок удалена");
+            });
+        }
+
+        function openDeleteSelectedHistoryModal() {
+            closeModal('settingsModal');
+            renderDeleteHistoryList();
+            document.getElementById('deleteHistoryModal').classList.add('open');
+        }
+
+        function renderDeleteHistoryList() {
+            const container = document.getElementById('deleteHistoryListContainer');
+            container.innerHTML = '';
+            if (state.history.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">История тренировок пуста.</p>`;
+                return;
+            }
+            state.history.forEach((w, idx) => {
+                const exNames = w.exercises.map(e => e.name).join(', ');
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--glass-border);gap:10px;';
+                item.innerHTML = `
+                    <div style="flex:1;overflow:hidden;">
+                        <strong style="font-size:14px;display:flex;align-items:center;gap:6px;">${ICONS.calendar}<span>${w.date} • ${w.totalTonnage || 0} кг</span></strong>
+                        <div style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;">${exNames}</div>
+                    </div>
+                    <button class="btn-secondary" style="margin-top:0;padding:6px 12px;font-size:12px;color:var(--danger);" onclick="confirmDeleteSingleHistory(${idx})">Удалить</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function confirmDeleteSingleHistory(idx) {
+            const w = state.history[idx];
+            if (!w) return;
+            askConfirmation("Удалить тренировку?", `Удалить тренировку от ${w.date} (${w.totalTonnage || 0} кг)?`, () => {
+                state.history.splice(idx, 1);
+                localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
+                renderDeleteHistoryList();
+                renderHistory();
+                renderSetupExercises();
+                showNotice("Тренировка удалена");
+            });
+        }
+
+        function openDeleteCustomExercisesModal() {
+            closeModal('settingsModal');
+            renderDeleteCustomExercisesList();
+            document.getElementById('deleteCustomExModal').classList.add('open');
+        }
+
+        function renderDeleteCustomExercisesList() {
+            const container = document.getElementById('deleteCustomExListContainer');
+            container.innerHTML = '';
+            let customItems = [];
+            for (let gKey in state.customByGroup) {
+                const gName = muscleGroupsData[gKey] || gKey;
+                const defList = exercisesData[gKey] || [];
+                (state.customByGroup[gKey] || []).forEach(exName => {
+                    if (!defList.includes(exName)) customItems.push({ groupKey: gKey, groupName: gName, exName });
+                });
+            }
+            if (customItems.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">У вас пока нет вручную добавленных упражнений.</p>`;
+                return;
+            }
+            customItems.forEach(obj => {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--glass-border);gap:10px;';
+                const safeG = obj.groupKey.replace(/'/g, "\\'");
+                const safeE = obj.exName.replace(/'/g, "\\'");
+                row.innerHTML = `
+                    <div style="flex:1;">
+                        <span style="font-size:12px;color:var(--text-secondary);font-weight:600;">${obj.groupName}</span>
+                        <span style="font-size:13px;color:var(--text-tertiary);"> / </span>
+                        <strong style="font-size:14px;">${obj.exName}</strong>
+                    </div>
+                    <button class="btn-secondary" style="margin-top:0;padding:6px 12px;font-size:12px;color:var(--danger);" onclick="confirmDeleteCustomExercise('${safeG}', '${safeE}')">Удалить</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function confirmDeleteCustomExercise(groupKey, exName) {
+            const gName = muscleGroupsData[groupKey] || groupKey;
+            askConfirmation("Удалить упражнение?", `Удалить «${gName} / ${exName}»?`, () => {
+                if (state.customByGroup[groupKey]) {
+                    state.customByGroup[groupKey] = state.customByGroup[groupKey].filter(item => item !== exName);
+                    localStorage.setItem('gym_pro_custom_by_group', JSON.stringify(state.customByGroup));
+                }
+                state.bodyweightCustomList = state.bodyweightCustomList.filter(item => item !== exName);
+                localStorage.setItem('gym_pro_bodyweight_custom', JSON.stringify(state.bodyweightCustomList));
+                renderDeleteCustomExercisesList();
+                showNotice("Упражнение удалено");
+            });
+        }
+
+        function openDeleteTemplatesModal() {
+            closeModal('settingsModal');
+            renderDeleteTemplatesList();
+            document.getElementById('deleteTemplatesModal').classList.add('open');
+        }
+
+        function renderDeleteTemplatesList() {
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            const container = document.getElementById('deleteTemplatesListContainer');
+            container.innerHTML = '';
+            const keys = Object.keys(templates);
+            if (keys.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных шаблонов тренировок.</p>`;
+                return;
+            }
+            keys.forEach(tplName => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--glass-border);';
+                const safeName = tplName.replace(/'/g, "\\'");
+                item.innerHTML = `
+                    <div>
+                        <strong style="font-size:14px;">${tplName}</strong>
+                        <div style="font-size:11px;color:var(--text-secondary);">${templates[tplName].length} упр.</div>
+                    </div>
+                    <button onclick="confirmDeleteTemplate('${safeName}', true)" class="btn-secondary" style="margin-top:0;padding:6px 12px;font-size:12px;color:var(--danger);">Удалить</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function confirmDeleteTemplate(tplName, fromSettingsModal) {
+            askConfirmation("Удалить шаблон?", `Удалить сохраненный шаблон «${tplName}»?`, () => {
+                let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+                delete templates[tplName];
+                localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+                if (currentLoadedTemplateName === tplName) {
+                    currentLoadedTemplateName = null;
+                    isTemplateModified = false;
+                    updateTemplateButtonUI();
+                }
+                if (fromSettingsModal) renderDeleteTemplatesList();
+                else openLoadTemplateModal();
+                showNotice("Шаблон удален");
+            });
+        }
+
+        // --- ШАБЛОНЫ И НАСТРОЙКА ТРЕНИРОВКИ ---
+        function markTemplateModified() {
+            if (currentLoadedTemplateName) {
+                isTemplateModified = true;
+                updateTemplateButtonUI();
+            }
+        }
+
+        function updateTemplateButtonUI() {
+            const badge = document.getElementById('loadedTemplateBadge');
+            const updateContainer = document.getElementById('updateTemplateContainer');
+            const updateBtn = document.getElementById('updateTemplateBtn');
+            const createNewContainer = document.getElementById('createNewWorkoutContainer');
+
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                currentLoadedTemplateName = null;
+                isTemplateModified = false;
+            }
+
+            if (currentLoadedTemplateName) {
+                badge.style.display = 'inline-flex';
+                badge.innerHTML = `${ICONS.folder}<span>${currentLoadedTemplateName}</span>`;
+                createNewContainer.style.display = 'block';
+                if (isTemplateModified) {
+                    updateContainer.style.display = 'block';
+                    updateBtn.innerHTML = `${ICONS.refresh}<span>Обновить «${currentLoadedTemplateName}»</span>`;
+                } else {
+                    updateContainer.style.display = 'none';
+                }
+            } else {
+                badge.style.display = 'none';
+                badge.innerHTML = '';
+                updateContainer.style.display = 'none';
+                createNewContainer.style.display = 'none';
+            }
+        }
+
+        function resetToNewWorkoutSetup() {
+            state.setupExercises = [];
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            scrollToTop();
+            showNotice("Создана пустая тренировка");
+        }
+
+        function updateCurrentLoadedTemplate() {
+            if (!currentLoadedTemplateName) return;
+            cleanAllSetupEmptySets();
+            if (state.setupExercises.length === 0) {
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice("Заполните вес и повторения хотя бы в одном подходе");
+                return;
+            }
+            let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            templates[currentLoadedTemplateName] = JSON.parse(JSON.stringify(state.setupExercises));
+            localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            showNotice(`Тренировка «${currentLoadedTemplateName}» обновлена`);
+        }
+
+        function openSaveTemplateModal() {
+            cleanAllSetupEmptySets();
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе");
+                return;
+            }
+            document.getElementById('templateNameInput').value = currentLoadedTemplateName || `Тренировка ${new Date().toLocaleDateString()}`;
+            document.getElementById('saveTemplateModal').classList.add('open');
+        }
+
+        function confirmSaveTemplate() {
+            const nameInput = document.getElementById('templateNameInput').value.trim();
+            if (!nameInput) { showNotice("Введите название тренировки"); return; }
+            cleanAllSetupEmptySets();
+            if (state.setupExercises.length === 0) {
+                closeModal('saveTemplateModal');
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice("Нет полностью заполненных подходов для сохранения");
+                return;
+            }
+            let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            templates[nameInput] = JSON.parse(JSON.stringify(state.setupExercises));
+            localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
+            currentLoadedTemplateName = nameInput;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            renderSetupExercises();
+            closeModal('saveTemplateModal');
+            showNotice(`Тренировка «${nameInput}» сохранена`);
+        }
+
+        function openLoadTemplateModal() {
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            const container = document.getElementById('savedTemplatesList');
+            container.innerHTML = '';
+            const keys = Object.keys(templates);
+            if (keys.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary);">Нет сохраненных тренировок.</p>`;
+            } else {
+                keys.forEach(tplName => {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--glass-border);';
+                    const safeName = tplName.replace(/'/g, "\\'");
+                    item.innerHTML = `
+                        <div>
+                            <strong style="font-size:14px;">${tplName}</strong>
+                            <div style="font-size:11px;color:var(--text-secondary);">${templates[tplName].length} упр.</div>
+                        </div>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <button onclick="loadSpecificTemplate('${safeName}')" class="btn" style="width:auto;padding:7px 14px;font-size:12px;border-radius:12px;">Загрузить</button>
+                            <button onclick="confirmDeleteTemplate('${safeName}', false)" class="delete-ex-btn" aria-label="Удалить">${ICONS.close}</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+            document.getElementById('loadTemplateModal').classList.add('open');
+        }
+
+        function loadSpecificTemplate(tplName) {
+            const templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
+            if (templates[tplName]) {
+                state.setupExercises = templates[tplName].map(ex => ({
+                    name: ex.name,
+                    sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
+                }));
+                currentLoadedTemplateName = tplName;
+                isTemplateModified = false;
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                closeModal('loadTemplateModal');
+                scrollToTop();
+                showNotice(`Загружена тренировка «${tplName}»`);
+            }
+        }
+
+        function isSetFullyFilled(s) {
+            const wStr = String(s.weight ?? '').trim();
+            const rStr = String(s.reps ?? '').trim();
+            return wStr !== '' && rStr !== '' && Number(wStr) > 0 && Number(rStr) > 0;
+        }
+
+        function cleanExerciseEmptySets(ex) {
+            ex.sets = ex.sets.filter(s => isSetFullyFilled(s));
+        }
+
+        function cleanAllSetupEmptySets() {
+            state.setupExercises.forEach(ex => cleanExerciseEmptySets(ex));
+            state.setupExercises = state.setupExercises.filter(ex => ex.sets.length > 0);
+        }
+
+        function saveSetupExerciseBlock(exIdx) {
+            const ex = state.setupExercises[exIdx];
+            const before = ex.sets.length;
+            cleanExerciseEmptySets(ex);
+            if (ex.sets.length === 0) {
+                state.setupExercises.splice(exIdx, 1);
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice(`Упражнение «${ex.name}» удалено (не заполнены вес и повторы)`);
+                return;
+            }
+            const removed = before - ex.sets.length;
+            renderSetupExercises();
+            showNotice(removed > 0 ? `Сохранено (удалено незаполненных подходов: ${removed})` : `Параметры «${ex.name}» сохранены`);
+        }
+
+        function renderSetupExercises() {
+            const container = document.getElementById('setupExercisesContainer');
+            container.innerHTML = '';
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Список упражнений пока пуст</p>`;
+                return;
+            }
+            state.setupExercises.forEach((ex, exIdx) => {
+                const block = document.createElement('div');
+                block.style.cssText = 'background:var(--glass-well);border:1px solid var(--glass-border);border-radius:18px;padding:14px;margin-bottom:10px;';
+                let overloadTip = checkProgressiveOverload(ex.name);
+                let setsHtml = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:6px;">
+                        <strong style="font-size:14px;letter-spacing:-0.2px;">${ex.name}</strong>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <button class="inline-action-btn" onclick="removeSetupSet(${exIdx})">− Подх.</button>
+                            <button class="inline-action-btn" onclick="addSetupSet(${exIdx})">+ Подх.</button>
+                            <button class="delete-ex-btn" title="Удалить упражнение" onclick="removeSetupExercise(${exIdx})">${ICONS.close}</button>
+                        </div>
+                    </div>
+                `;
+                ex.sets.forEach((set, setIdx) => {
+                    setsHtml += `
+                        <div class="setup-set-row">
+                            <span class="tabular-num" style="text-align:center;font-size:12px;color:var(--text-secondary);font-weight:600;">#${setIdx + 1}</span>
+                            <div class="input-group">
+                                <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="Вес (кг)" value="${set.weight}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].weight = this.value; markTemplateModified();">
+                            </div>
+                            <div class="input-group">
+                                <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="Повторы" value="${set.reps}" oninput="state.setupExercises[${exIdx}].sets[${setIdx}].reps = this.value; markTemplateModified();">
+                            </div>
+                        </div>
+                    `;
+                });
+                if (overloadTip) setsHtml += `<div class="ai-tip">${ICONS.bulb}<span>${overloadTip}</span></div>`;
+                setsHtml += `<button class="btn-secondary" style="width:100%;margin-top:8px;padding:9px;font-size:12px;" onclick="saveSetupExerciseBlock(${exIdx})">Проверить и сохранить</button>`;
+                block.innerHTML = setsHtml;
+                container.appendChild(block);
+            });
+        }
+
+        function addSetupSet(exIdx) {
+            const ex = state.setupExercises[exIdx];
+            const last = ex.sets.slice(-1)[0];
+            const defW = last ? last.weight : getDefaultWeightForExercise(ex.name);
+            ex.sets.push({ weight: defW, reps: last ? last.reps : '', completed: false });
+            markTemplateModified();
+            renderSetupExercises();
+        }
+
+        function removeSetupSet(exIdx) {
+            if (state.setupExercises[exIdx].sets.length > 1) {
+                state.setupExercises[exIdx].sets.pop();
+                markTemplateModified();
+                renderSetupExercises();
+            }
+        }
+
+        function removeSetupExercise(exIdx) {
+            state.setupExercises.splice(exIdx, 1);
+            if (state.setupExercises.length === 0) {
+                currentLoadedTemplateName = null;
+                isTemplateModified = false;
+                updateTemplateButtonUI();
+                scrollToTop();
+            } else {
+                markTemplateModified();
+            }
+            renderSetupExercises();
+        }
+
+        // --- СТАРТ И ЗАВЕРШЕНИЕ ТРЕНИРОВКИ ---
+        function startActiveWorkout() {
+            cleanAllSetupEmptySets();
+
+            if (!state.setupExercises || state.setupExercises.length === 0) {
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе");
+                return;
+            }
+
+            unlockAudioOnUserGesture();
+
+            state.activeWorkout = {
+                date: new Date().toLocaleDateString(),
+                exercises: state.setupExercises.map(ex => ({
+                    name: ex.name,
+                    manuallyOpened: false,
+                    durationSeconds: 0,
+                    sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, completed: false }))
+                }))
+            };
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('activeScreen').style.display = 'block';
+
+            workoutStartTimestamp = Date.now();
+            workoutElapsedSeconds = 0;
+            if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+            workoutTimerInterval = setInterval(() => {
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+                if (window.currentActiveExIndex !== undefined && window.currentActiveExIndex !== -1) {
+                    const ex = state.activeWorkout.exercises[window.currentActiveExIndex];
+                    if (ex) ex.durationSeconds = (ex.durationSeconds || 0) + 1;
+                }
+                saveActiveSessionState();
+            }, 1000);
+
+            stopTimer();
+            renderActiveWorkout();
+            saveActiveSessionState();
+            scrollToTop();
+        }
+
+        function finishWorkout() {
+            if (!state.activeWorkout || !state.activeWorkout.exercises || state.activeWorkout.exercises.length === 0) {
+                showNotice("Нет данных тренировки");
+                return;
+            }
+            if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+            if (workoutStartTimestamp) {
+                workoutElapsedSeconds = Math.max(0, Math.floor((Date.now() - workoutStartTimestamp) / 1000));
+            }
+            localStorage.removeItem('gym_pro_active_session');
+
+            const durationMins = Math.max(1, Math.round(workoutElapsedSeconds / 60));
+            state.activeWorkout.duration = durationMins;
+
+            let totalTonnage = 0;
+            state.activeWorkout.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) totalTonnage += Number(s.weight) * Number(s.reps);
+                });
+            });
+            state.activeWorkout.totalTonnage = totalTonnage;
+
+            lastFinishedWorkoutData = JSON.parse(JSON.stringify(state.activeWorkout));
+            state.history.unshift(lastFinishedWorkoutData);
+            localStorage.setItem('gym_pro_history', JSON.stringify(state.history));
+
+            state.setupExercises = [];
+            state.activeWorkout = { exercises: [] };
+            workoutStartTimestamp = null;
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+
+            stopTimer();
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('activeScreen').style.display = 'none';
+            renderSetupExercises();
+            switchTab('history');
+
+            openFinishActionModal(lastFinishedWorkoutData);
+        }
+
+        // --- ОКНО ВЫБОРА РЕЗУЛЬТАТА (ПОСЛЕ ТРЕНИРОВКИ И ИЗ ИСТОРИИ) ---
+        function openFinishActionModal(workoutData) {
+            reportModalOrigin = 'finish';
+            lastFinishedWorkoutData = workoutData;
+            const userName = (state.profile && state.profile.name) ? `, ${state.profile.name}` : '';
+            document.getElementById('finishProductiveTitle').innerText = `Это было продуктивно${userName}`;
+            document.getElementById('finishProductiveSub').innerText = "Тренировка успешно сохранена в истории. Выберите действие:";
+            document.getElementById('finishChoicesBackBtn').innerText = "Назад";
+            backToFinishPrimary();
+            document.getElementById('finishActionModal').classList.add('open');
+        }
+
+        function openResultModalFromHistory(index) {
+            const workoutData = state.history[index];
+            if (!workoutData) return;
+            reportModalOrigin = 'history';
+            lastFinishedWorkoutData = workoutData;
+            document.getElementById('finishProductiveTitle').innerText = "Поделиться результатом";
+            document.getElementById('finishProductiveSub').innerText = "Выберите формат отчёта:";
+            document.getElementById('finishChoicesBackBtn').innerText = "Закрыть";
+            showFinishResultChoices();
+            document.getElementById('finishActionModal').classList.add('open');
+        }
+
+        function showFinishResultChoices() {
+            document.getElementById('finishPrimaryChoices').style.display = 'none';
+            document.getElementById('finishResultChoices').style.display = 'flex';
+        }
+
+        function backToFinishPrimary() {
+            document.getElementById('finishPrimaryChoices').style.display = 'flex';
+            document.getElementById('finishResultChoices').style.display = 'none';
+        }
+
+        function handleFinishChoicesBack() {
+            if (reportModalOrigin === 'history') {
+                closeModal('finishActionModal');
+            } else {
+                backToFinishPrimary();
+            }
+        }
+
+        function returnToResultChoices(currentModalId) {
+            closeModal(currentModalId);
+            showFinishResultChoices();
+            document.getElementById('finishActionModal').classList.add('open');
+        }
+
+        function openStoryCardFromFinish() {
+            closeModal('finishActionModal');
+            openResultModal(lastFinishedWorkoutData);
+        }
+
+        // --- ПОДРОБНЫЙ ОТЧЁТ (ДЛЯ ТРЕНЕРА) ---
+        function generateDetailedReportText(workoutData) {
+            const dateStr = workoutData.date || new Date().toLocaleDateString();
+            const dur = workoutData.duration || 1;
+            const ton = workoutData.totalTonnage || 0;
+            const userName = (state.profile && state.profile.name) ? state.profile.name : 'Не указано';
+
+            let report = `ОТЧЁТ О ТРЕНИРОВКЕ\n`;
+            report += `Атлет: ${userName}\n`;
+            report += `Дата: ${dateStr}\n`;
+            report += `Общее время: ${formatMinutesRussian(dur)}\n`;
+            report += `Суммарный тоннаж: ${ton} кг\n\n`;
+            report += `— УПРАЖНЕНИЯ —\n`;
+
+            workoutData.exercises.forEach((ex, idx) => {
+                const exDurMins = Math.max(1, Math.round((ex.durationSeconds || 60) / 60));
+                report += `\n${idx + 1}. ${ex.name} (~${formatMinutesRussian(exDurMins)}):\n`;
+                ex.sets.forEach((s, sIdx) => {
+                    const status = s.completed ? 'Выполнено' : 'Пропущено';
+                    report += `   • Подход ${sIdx + 1}: ${s.weight || 0} кг × ${s.reps || 0} повт. [${status}]\n`;
+                });
+            });
+
+            report += `\nСформировано в @GymProCounterBot`;
+            return report;
+        }
+
+        function openDetailedReportModal() {
+            closeModal('finishActionModal');
+            const workoutData = lastFinishedWorkoutData;
+            if (!workoutData) return;
+
+            const text = generateDetailedReportText(workoutData);
+            document.getElementById('detailedReportContent').innerHTML = text.replace(/\n/g, '<br>');
+            document.getElementById('detailedReportModal').classList.add('open');
+        }
+
+        async function shareOrCopyDetailedReport() {
+            const workoutData = lastFinishedWorkoutData;
+            if (!workoutData) return;
+            const text = generateDetailedReportText(workoutData);
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Отчёт о тренировке — GymProCounter',
+                        text: text
+                    });
+                    showNotice("Отчёт отправлен");
+                    return;
+                } catch (e) {
+                    if (e && e.name === 'AbortError') return;
+                }
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                showNotice("Отчёт скопирован в буфер обмена");
+            } catch (err) {
+                showNotice("Скопируйте текст отчёта вручную из окна");
+            }
+        }
+
+        // --- ЗВУК AMBIENT БЕЗ ОСТАНОВКИ ФОНОВОЙ МУЗЫКИ ---
+        let audioCtx = null;
+        let audioUnlocked = false;
+
+        function setAmbientAudioSession() {
+            try {
+                if (navigator.audioSession && navigator.audioSession.type !== 'ambient') {
+                    navigator.audioSession.type = 'ambient';
+                }
+            } catch (e) {}
+        }
+
+        function initAudioEngine() {
+            setAmbientAudioSession();
+            document.addEventListener('touchstart', unlockAudioOnUserGesture, { once: true, passive: true });
+            document.addEventListener('click', unlockAudioOnUserGesture, { once: true });
+        }
+
+        function unlockAudioOnUserGesture() {
+            try {
+                setAmbientAudioSession();
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                if (!audioUnlocked && audioCtx) {
+                    const buf = audioCtx.createBuffer(1, 1, 22050);
+                    const src = audioCtx.createBufferSource();
+                    src.buffer = buf;
+                    src.connect(audioCtx.destination);
+                    src.start(0);
+                    audioUnlocked = true;
+                }
+            } catch (e) {}
+        }
+
+        function playTimerSound(type) {
+            try {
+                setAmbientAudioSession();
+                if (type === 'tick' && window.Telegram?.WebApp?.HapticFeedback) {
+                    window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                } else if (type === 'finish') {
+                    if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                    else if (navigator.vibrate) navigator.vibrate(200);
+                }
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                if (type === 'tick') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(660, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'finish') {
+                    [528, 660].forEach((f, idx) => {
+                        const start = now + idx * 0.14;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(f, start);
+                        gain.gain.setValueAtTime(0.14, start);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(start);
+                        osc.stop(start + 0.29);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        // --- ТАЙМЕР ОТДЫХА ---
+        function startRestTimer(customEndTime) {
+            unlockAudioOnUserGesture();
+            clearInterval(restTimerInterval);
+            isResting = true;
+            restEndTime = customEndTime || (Date.now() + initialRestSeconds * 1000);
+            restTimeRemaining = Math.max(0, Math.ceil((restEndTime - Date.now()) / 1000));
+            lastTickBeepSecond = null;
+
+            if (restTimeRemaining <= 0) {
+                stopTimer();
+                return;
+            }
+            updateTimerDisplay();
+            document.getElementById('activeSetIndicatorBar').classList.add('hidden-panel');
+            document.getElementById('timerBarContainer').classList.remove('hidden-panel');
+            renderActiveWorkout();
+            saveActiveSessionState();
+
+            restTimerInterval = setInterval(tickRestTimer, 250);
+        }
+
+        function tickRestTimer() {
+            if (!isResting || !restEndTime) return;
+            const remaining = Math.max(0, Math.ceil((restEndTime - Date.now()) / 1000));
+            if (remaining !== restTimeRemaining) {
+                restTimeRemaining = remaining;
+                updateTimerDisplay();
+                if (restTimeRemaining > 0 && restTimeRemaining <= 5 && lastTickBeepSecond !== restTimeRemaining) {
+                    lastTickBeepSecond = restTimeRemaining;
+                    playTimerSound('tick');
+                }
+            }
+            if (restTimeRemaining <= 0) {
+                stopTimer();
+                playTimerSound('finish');
+            }
+        }
+
+        function adjustTimer(seconds) {
+            if (isResting && restEndTime) {
+                restEndTime += seconds * 1000;
+                const now = Date.now();
+                if (restEndTime < now) restEndTime = now;
+                restTimeRemaining = Math.max(0, Math.ceil((restEndTime - now) / 1000));
+                updateTimerDisplay();
+                saveActiveSessionState();
+                if (restTimeRemaining <= 0) stopTimer();
+            } else {
+                restTimeRemaining = Math.max(0, restTimeRemaining + seconds);
+                updateTimerDisplay();
+            }
+        }
+
+        function skipTimer() { stopTimer(); }
+
+        function stopTimer() {
+            clearInterval(restTimerInterval);
+            restTimerInterval = null;
+            isResting = false;
+            restEndTime = null;
+            lastTickBeepSecond = null;
+            restTimeRemaining = initialRestSeconds;
+            updateTimerDisplay();
+            document.getElementById('timerBarContainer').classList.add('hidden-panel');
+            document.getElementById('activeSetIndicatorBar').classList.remove('hidden-panel');
+            if (document.getElementById('activeScreen').style.display === 'block') {
+                renderActiveWorkout();
+                saveActiveSessionState();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(restTimeRemaining / 60).toString().padStart(2, '0');
+            const secs = (restTimeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+        }
+
+        // --- МОДАЛКИ ВЫБОРА УПРАЖНЕНИЙ ---
+        function openMuscleGroupModal(mode) {
+            if (mode) addingMode = mode;
+            const listEl = document.getElementById('muscleGroupsList');
+            listEl.innerHTML = '';
+            for (let key in muscleGroupsData) {
+                const btn = document.createElement('button');
+                btn.className = 'muscle-group-btn';
+                btn.innerHTML = `<span>${muscleGroupsData[key]}</span>${ICONS.chevronRight}`;
+                btn.onclick = () => selectMuscleGroup(key);
+                listEl.appendChild(btn);
+            }
+            document.getElementById('muscleModal').classList.add('open');
+        }
+
+        function selectMuscleGroup(key) {
+            selectedMuscleKey = key;
+            closeModal('muscleModal');
+            openExerciseModal();
+        }
+
+        function backToMuscleGroups() {
+            closeModal('exerciseModal');
+            openMuscleGroupModal();
+        }
+
+        function openExerciseModal() {
+            const container = document.getElementById('exerciseListContainer');
+            container.innerHTML = '';
+            document.getElementById('selectExerciseTitle').innerText = muscleGroupsData[selectedMuscleKey];
+            document.getElementById('customBodyweightCheckbox').checked = false;
+            const customList = state.customByGroup[selectedMuscleKey] || [];
+            const baseList = exercisesData[selectedMuscleKey] || [];
+            const combined = [...new Set([...customList, ...baseList])];
+
+            combined.forEach(exName => {
+                const isPrior = customList.includes(exName);
+                const isBw = isBodyweightExercise(exName);
+                const item = document.createElement('div');
+                item.className = 'exercise-select-item';
+                item.innerHTML = `
+                    <div>
+                        <span>${exName}</span>
+                        ${isBw ? '<span style="font-size:11px; color:var(--text-secondary); margin-left:6px;">• Свой вес</span>' : ''}
+                    </div>
+                    ${isPrior ? `<span style="font-size:11px;color:var(--text-secondary);display:inline-flex;align-items:center;gap:4px;">${ICONS.star}<span>Недавнее</span></span>` : ''}
+                `;
+                item.onclick = () => rememberAndSelectExercise(exName, isBw);
+                container.appendChild(item);
+            });
+            document.getElementById('exerciseModal').classList.add('open');
+        }
+
+        function addCustomExercise() {
+            const input = document.getElementById('customExerciseInput');
+            const val = input.value.trim();
+            if (!val) return;
+            const isBw = document.getElementById('customBodyweightCheckbox').checked;
+            input.value = '';
+            rememberAndSelectExercise(val, isBw);
+        }
+
+        function rememberAndSelectExercise(name, isBw) {
+            if (!state.customByGroup[selectedMuscleKey]) state.customByGroup[selectedMuscleKey] = [];
+            state.customByGroup[selectedMuscleKey] = [name, ...state.customByGroup[selectedMuscleKey].filter(i => i !== name)];
+            localStorage.setItem('gym_pro_custom_by_group', JSON.stringify(state.customByGroup));
+
+            if (isBw && !state.bodyweightCustomList.includes(name)) {
+                state.bodyweightCustomList.push(name);
+                localStorage.setItem('gym_pro_bodyweight_custom', JSON.stringify(state.bodyweightCustomList));
+            }
+
+            closeModal('exerciseModal');
+
+            const defWeight = getDefaultWeightForExercise(name);
+
+            const newEx = {
+                name: name,
+                manuallyOpened: false,
+                sets: [
+                    { weight: defWeight, reps: '', completed: false },
+                    { weight: defWeight, reps: '', completed: false },
+                    { weight: defWeight, reps: '', completed: false }
+                ]
+            };
+
+            if (addingMode === 'active' || document.getElementById('activeScreen').style.display === 'block') {
+                openQuickSetupModal(newEx);
+            } else {
+                state.setupExercises.push(newEx);
+                markTemplateModified();
+                renderSetupExercises();
+                showNotice(`Добавлено: ${name}`);
+            }
+        }
+
+        function openQuickSetupModal(exObj) {
+            tempQuickExercise = JSON.parse(JSON.stringify(exObj));
+            document.getElementById('quickSetupExTitle').innerText = tempQuickExercise.name;
+            renderQuickSetupSets();
+            document.getElementById('inWorkoutSetupModal').classList.add('open');
+        }
+
+        function renderQuickSetupSets() {
+            const container = document.getElementById('quickSetupSetsContainer');
+            container.innerHTML = '';
+            tempQuickExercise.sets.forEach((set, sIdx) => {
+                container.innerHTML += `
+                    <div class="setup-set-row">
+                        <span class="tabular-num" style="text-align:center;font-size:12px;color:var(--text-secondary);font-weight:600;">#${sIdx + 1}</span>
+                        <div class="input-group">
+                            <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="Вес (кг)" value="${set.weight}" oninput="tempQuickExercise.sets[${sIdx}].weight = this.value">
+                        </div>
+                        <div class="input-group">
+                            <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="Повторы" value="${set.reps}" oninput="tempQuickExercise.sets[${sIdx}].reps = this.value">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function quickAddSet() {
+            const last = tempQuickExercise.sets.slice(-1)[0];
+            const defW = last ? last.weight : getDefaultWeightForExercise(tempQuickExercise.name);
+            tempQuickExercise.sets.push({ weight: defW, reps: last ? last.reps : '', completed: false });
+            renderQuickSetupSets();
+        }
+
+        function quickRemoveSet() {
+            if (tempQuickExercise.sets.length > 1) {
+                tempQuickExercise.sets.pop();
+                renderQuickSetupSets();
+            }
+        }
+
+        function confirmQuickSetup() {
+            cleanExerciseEmptySets(tempQuickExercise);
+            if (tempQuickExercise.sets.length === 0) {
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе");
+                return;
+            }
+            tempQuickExercise.durationSeconds = 0;
+            state.activeWorkout.exercises.push(tempQuickExercise);
+            tempQuickExercise = null;
+            closeModal('inWorkoutSetupModal');
+            renderActiveWorkout();
+            saveActiveSessionState();
+            showNotice("Упражнение добавлено в тренировку");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('open');
+        }
+
+        function checkProgressiveOverload(exerciseName) {
+            if (!state.history || state.history.length === 0) return null;
+            let pastRecords = [];
+            state.history.forEach(w => {
+                w.exercises.forEach(e => {
+                    if (e.name === exerciseName) {
+                        const done = e.sets.filter(s => s.completed || (Number(s.weight) > 0 && Number(s.reps) > 0));
+                        if (done.length > 0) pastRecords.push(done);
+                    }
+                });
+            });
+            if (pastRecords.length === 0) return null;
+            if (pastRecords[0].every(s => Number(s.reps) >= 12)) {
+                return "Вы уверенно делаете 12+ повторений. Рекомендуем увеличить рабочий вес на 2.5–5 кг.";
+            }
+            if (pastRecords.length >= 2) {
+                const maxLast = Math.max(...pastRecords[0].map(s => Number(s.weight) || 0));
+                const maxPrev = Math.max(...pastRecords[1].map(s => Number(s.weight) || 0));
+                if (maxLast > 0 && maxLast === maxPrev) {
+                    return `Вес ${maxLast} кг держится несколько тренировок. Попробуйте добавить 2.5 кг или +1–2 повторения.`;
+                }
+            }
+            return null;
+        }
+
+        function makeExerciseCurrent(targetIndex) {
+            let firstUnfinished = state.activeWorkout.exercises.findIndex(ex => !ex.sets.every(s => s.completed));
+            if (firstUnfinished === -1 || targetIndex === firstUnfinished) return;
+            const chosen = state.activeWorkout.exercises.splice(targetIndex, 1)[0];
+            chosen.manuallyOpened = false;
+            state.activeWorkout.exercises.splice(firstUnfinished, 0, chosen);
+            renderActiveWorkout();
+            saveActiveSessionState();
+            scrollToTop();
+            showNotice(`Текущее упражнение: ${chosen.name}`);
+        }
+
+        function updateCurrentIndicatorPlanBadge(weightVal, repsVal) {
+            const badge = document.getElementById('activeIndicatorPlan');
+            if (!badge) return;
+            const w = String(weightVal || '').trim() !== '' ? weightVal : '0';
+            const r = String(repsVal || '').trim() !== '' ? repsVal : '0';
+            badge.innerHTML = `${ICONS.target}<span>${w} кг × ${r} повт.</span>`;
+        }
+
+        // --- ОТРИСОВКА АКТИВНОЙ ТРЕНИРОВКИ ---
+        function renderActiveWorkout() {
+            const container = document.getElementById('exercisesContainer');
+            container.innerHTML = '';
+
+            let totalTonnage = 0;
+            state.activeWorkout.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) totalTonnage += Number(s.weight) * Number(s.reps);
+                });
+            });
+            document.getElementById('totalTonnage').innerText = `${totalTonnage} кг`;
+
+            const allDone = state.activeWorkout.exercises.length > 0 && state.activeWorkout.exercises.every(ex => ex.sets.every(s => s.completed));
+            let firstUnfinishedIndex = state.activeWorkout.exercises.findIndex(ex => !ex.sets.every(s => s.completed));
+
+            const actionArea = document.getElementById('activeIndicatorActionArea');
+            const planBadge = document.getElementById('activeIndicatorPlan');
+
+            if (allDone) {
+                document.getElementById('activeIndicatorLabel').innerText = "ВСЕ УПРАЖНЕНИЯ ВЫПОЛНЕНЫ";
+                document.getElementById('activeIndicatorText').innerText = "Завершить тренировку?";
+                if (planBadge) planBadge.style.display = 'none';
+                actionArea.innerHTML = `
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn" style="padding:8px 14px;font-size:12px;width:auto;border-radius:12px;" onclick="finishWorkout()">Завершить</button>
+                        <button class="btn-secondary" style="margin-top:0;padding:8px 12px;font-size:12px;border-radius:12px;" onclick="openMuscleGroupModal('active')">+ Упр.</button>
+                    </div>
+                `;
+                window.currentActiveExIndex = -1;
+                window.currentActiveSetIndex = -1;
+            } else if (firstUnfinishedIndex !== -1) {
+                const curEx = state.activeWorkout.exercises[firstUnfinishedIndex];
+                const unfinSetIdx = curEx.sets.findIndex(s => !s.completed);
+                const activeSetNum = unfinSetIdx !== -1 ? unfinSetIdx + 1 : 1;
+                const activeSetObj = curEx.sets[unfinSetIdx !== -1 ? unfinSetIdx : 0] || { weight: 0, reps: 0 };
+
+                document.getElementById('activeIndicatorLabel').innerText = "ТЕКУЩИЙ ПОДХОД";
+                document.getElementById('activeIndicatorText').innerText = `${curEx.name} • Подход ${activeSetNum}`;
+                if (planBadge) {
+                    planBadge.style.display = 'inline-flex';
+                    updateCurrentIndicatorPlanBadge(activeSetObj.weight, activeSetObj.reps);
+                }
+                actionArea.innerHTML = `<button class="check-btn active-check-btn" onclick="completeCurrentActiveSet()" style="width:44px;height:44px;" aria-label="Выполнить">${ICONS.check}</button>`;
+                window.currentActiveExIndex = firstUnfinishedIndex;
+                window.currentActiveSetIndex = unfinSetIdx;
+            }
+
+            state.activeWorkout.exercises.forEach((ex, exIndex) => {
+                const block = document.createElement('div');
+                const isAllCompleted = ex.sets.every(s => s.completed);
+                const isCurrent = exIndex === firstUnfinishedIndex;
+
+                block.className = `exercise-block ${isAllCompleted ? 'completed' : (isCurrent ? 'current' : 'pending')}`;
+
+                let exTonnage = 0;
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) exTonnage += Number(s.weight) * Number(s.reps);
+                });
+
+                const isCollapsed = !isCurrent && !ex.manuallyOpened;
+
+                if (isCollapsed) {
+                    const statusIcon = isAllCompleted ? ICONS.check : ICONS.clock;
+                    const statusText = isAllCompleted ? `Выполнено (${exTonnage} кг)` : `Ожидает • ${ex.sets.length} подх.`;
+                    block.innerHTML = `
+                        <div class="exercise-collapsed" onclick="toggleExerciseCollapse(${exIndex})">
+                            <div style="flex:1;">
+                                <strong style="font-size:15px;">${ex.name}</strong>
+                                <div class="exercise-collapsed-info">${statusIcon}<span>${statusText}</span></div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                ${!isCurrent && !isAllCompleted ? `<button onclick="event.stopPropagation(); makeExerciseCurrent(${exIndex})" class="btn-secondary" style="margin-top:0;padding:6px 10px;font-size:11px;border-radius:999px;">${ICONS.bolt}<span>Текущее</span></button>` : ''}
+                                <span style="color:var(--text-secondary);display:inline-flex;">${ICONS.chevronDown}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let setsHtml = `
+                        <div class="exercise-header" onclick="${!isCurrent ? `toggleExerciseCollapse(${exIndex})` : ''}" style="${!isCurrent ? 'cursor:pointer;' : ''}">
+                            <div>
+                                <strong style="font-size:15px;">${ex.name}</strong>
+                                <span class="tabular-num" style="font-size:12px;color:var(--text-secondary);margin-left:8px;font-weight:600;">${exTonnage} кг</span>
+                            </div>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                ${!isCurrent && !isAllCompleted ? `<button onclick="event.stopPropagation(); makeExerciseCurrent(${exIndex})" class="btn-secondary" style="margin-top:0;padding:5px 10px;font-size:11px;border-radius:999px;">${ICONS.bolt}<span>Текущее</span></button>` : ''}
+                                ${!isCurrent ? `<span style="color:var(--text-secondary);font-size:12px;display:inline-flex;align-items:center;gap:3px;">${ICONS.chevronUp}<span>Свернуть</span></span>` : ''}
+                                ${isCurrent ? `<button class="inline-action-btn" onclick="removeSet(${exIndex})">− Подх.</button>` : ''}
+                                ${isCurrent ? `<button class="inline-action-btn" onclick="addSet(${exIndex})">+ Подх.</button>` : ''}
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:34px 1fr 1fr 42px;gap:8px;font-size:11px;color:var(--text-secondary);margin:8px 0 6px;text-align:center;font-weight:500;">
+                            <div>#</div><div>Вес (кг)</div><div>Повторы</div><div></div>
+                        </div>
+                    `;
+
+                    let firstUnfinSet = ex.sets.findIndex(s => !s.completed);
+
+                    ex.sets.forEach((set, setIndex) => {
+                        const isCurSet = !isResting && isCurrent && setIndex === firstUnfinSet && !set.completed;
+                        const rowClass = isCurSet ? 'set-row active-set' : 'set-row';
+
+                        let actionHtml = '';
+                        if (!isCurrent) {
+                            actionHtml = `<span style="text-align:center;display:inline-flex;justify-content:center;color:${set.completed ? 'var(--success)' : 'var(--text-tertiary)'};">${set.completed ? ICONS.check : '•'}</span>`;
+                        } else {
+                            let btnClass = 'check-btn';
+                            let disabled = false;
+                            if (set.completed) btnClass += ' checked';
+                            else if (isCurSet) btnClass += ' active-check-btn';
+                            else { btnClass += ' disabled-check-btn'; disabled = true; }
+                            actionHtml = `<button class="${btnClass}" ${disabled ? 'disabled' : ''} onclick="toggleSet(${exIndex}, ${setIndex})" aria-label="Отметить подход">${ICONS.check}</button>`;
+                        }
+
+                        setsHtml += `
+                            <div class="${rowClass}">
+                                <span class="tabular-num" style="text-align:center;font-size:13px;color:var(--text-secondary);font-weight:600;">${setIndex + 1}</span>
+                                <div class="input-group">
+                                    <input type="number" inputmode="decimal" enterkeyhint="next" class="nav-input" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.weight}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'weight', this.value)">
+                                </div>
+                                <div class="input-group">
+                                    <input type="number" inputmode="numeric" enterkeyhint="next" class="nav-input" placeholder="0" ${!isCurrent ? 'disabled' : ''} value="${set.reps}" oninput="updateSetValue(${exIndex}, ${setIndex}, 'reps', this.value)">
+                                </div>
+                                ${actionHtml}
+                            </div>
+                        `;
+                    });
+
+                    let tip = checkProgressiveOverload(ex.name);
+                    if (tip) setsHtml += `<div class="ai-tip">${ICONS.bulb}<span>${tip}</span></div>`;
+                    block.innerHTML = setsHtml;
+                }
+                container.appendChild(block);
+            });
+        }
+
+        function updateSetValue(exIndex, setIndex, field, value) {
+            state.activeWorkout.exercises[exIndex].sets[setIndex][field] = value;
+            if (exIndex === window.currentActiveExIndex && setIndex === window.currentActiveSetIndex) {
+                const cur = state.activeWorkout.exercises[exIndex].sets[setIndex];
+                updateCurrentIndicatorPlanBadge(cur.weight, cur.reps);
+            }
+            let total = 0;
+            state.activeWorkout.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    if (s.completed && s.weight && s.reps) total += Number(s.weight) * Number(s.reps);
+                });
+            });
+            document.getElementById('totalTonnage').innerText = `${total} кг`;
+            saveActiveSessionState();
+        }
+
+        function completeCurrentActiveSet() {
+            unlockAudioOnUserGesture();
+            if (window.currentActiveExIndex !== undefined && window.currentActiveExIndex !== -1 &&
+                window.currentActiveSetIndex !== undefined && window.currentActiveSetIndex !== -1) {
+                toggleSet(window.currentActiveExIndex, window.currentActiveSetIndex);
+            }
+        }
+
+        function toggleExerciseCollapse(exIndex) {
+            state.activeWorkout.exercises[exIndex].manuallyOpened = !state.activeWorkout.exercises[exIndex].manuallyOpened;
+            renderActiveWorkout();
+        }
+
+        function toggleSet(exIndex, setIndex) {
+            unlockAudioOnUserGesture();
+            const set = state.activeWorkout.exercises[exIndex].sets[setIndex];
+            set.completed = !set.completed;
+            if (set.completed) {
+                startRestTimer();
+                scrollToTop();
+            } else {
+                stopTimer();
+            }
+            renderActiveWorkout();
+            saveActiveSessionState();
+        }
+
+        function addSet(exIndex) {
+            const ex = state.activeWorkout.exercises[exIndex];
+            const last = ex.sets.slice(-1)[0];
+            const defW = last ? last.weight : getDefaultWeightForExercise(ex.name);
+            ex.sets.push({ weight: defW, reps: last ? last.reps : '', completed: false });
+            renderActiveWorkout();
+            saveActiveSessionState();
+        }
+
+        function removeSet(exIndex) {
+            const sets = state.activeWorkout.exercises[exIndex].sets;
+            if (sets.length > 1) {
+                sets.pop();
+                renderActiveWorkout();
+                saveActiveSessionState();
+            }
+        }
+
+        // --- ИСТОРИЯ И КАРТОЧКА РЕЗУЛЬТАТА ---
+        function toggleHistoryCard(headerEl) {
+            const card = headerEl.parentElement;
+            const expanding = !card.classList.contains('expanded');
+            card.classList.toggle('expanded');
+            if (expanding) {
+                setTimeout(() => {
+                    const rect = card.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const targetY = Math.max(0, scrollTop + rect.top - (window.innerHeight * 0.2));
+                    try { window.scrollTo({ top: targetY, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, targetY); }
+                }, 40);
+            }
+        }
+
+        function repeatWorkoutFromHistory(index) {
+            const workout = state.history[index];
+            if (!workout) return;
+            state.setupExercises = workout.exercises.map(ex => ({
+                name: ex.name,
+                sets: ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
+            }));
+            currentLoadedTemplateName = null;
+            isTemplateModified = false;
+            updateTemplateButtonUI();
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('activeScreen').style.display = 'none';
+            renderSetupExercises();
+            switchTab('workout');
+            scrollToTop();
+            showNotice("Тренировка перенесена в настройку");
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyContainer');
+            if (state.history.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-secondary); font-size: 14px;">Пока нет завершенных тренировок.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            state.history.forEach((workout, index) => {
+                let tonnage = workout.totalTonnage || 0;
+                if (!tonnage) {
+                    workout.exercises.forEach(ex => ex.sets.forEach(s => {
+                        if (s.completed && s.weight && s.reps) tonnage += Number(s.weight) * Number(s.reps);
+                    }));
+                }
+                const card = document.createElement('div');
+                card.className = 'history-card';
+                const summary = workout.exercises.map(e => e.name).join(', ');
+                const durHtml = workout.duration ? `<span style="display:inline-flex;align-items:center;gap:4px;color:var(--text-secondary);font-weight:500;">• ${ICONS.clock}<span>${formatMinutesRussian(workout.duration)}</span></span>` : '';
+                const detailsHtml = workout.exercises.map(ex => {
+                    const setsStr = ex.sets.map((s, i) => `Подход ${i + 1}: ${s.weight || 0} кг × ${s.reps || 0} повт.`).join('<br>');
+                    return `<div style="margin-bottom:10px;"><strong style="color:var(--text-main);">${ex.name}</strong> <span style="color:var(--text-secondary);font-size:12px;">(${ex.sets.length} подх.)</span><br><span class="tabular-num" style="color:var(--text-secondary);line-height:1.5;">${setsStr}</span></div>`;
+                }).join('');
+
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:8px;" onclick="toggleHistoryCard(this)">
+                        <div style="flex:1;min-width:0;">
+                            <strong style="font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                ${ICONS.calendar}<span>${workout.date}</span>${durHtml}
+                            </strong>
+                            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${summary}</div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+                            <span class="tabular-num" style="color:var(--text-main);font-size:13px;font-weight:700;">${tonnage} кг</span>
+                            <button onclick="event.stopPropagation(); openResultModalFromHistory(${index})" class="btn-secondary share-pill-btn">
+                                ${ICONS.share}
+                                <span>Отчёт</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="history-details">
+                        ${detailsHtml}
+                        <button class="btn-secondary" style="width:100%;margin-top:8px;" onclick="event.stopPropagation(); repeatWorkoutFromHistory(${index})">
+                            ${ICONS.refresh}
+                            <span>Повторить эту тренировку</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function drawStoryCanvas(workoutData) {
+            const canvas = document.getElementById('exportCanvas');
+            const ctx = canvas.getContext('2d');
+            const tonnage = workoutData ? (workoutData.totalTonnage || 0) : 0;
+            const duration = workoutData ? (workoutData.duration || 1) : 1;
+
+            // Spatial Obsidian Background
+            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+            bgGrad.addColorStop(0, '#06080e');
+            bgGrad.addColorStop(0.5, '#0d1322');
+            bgGrad.addColorStop(1, '#090d16');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // Ambient Orbs
+            const orb1 = ctx.createRadialGradient(860, 320, 20, 860, 320, 480);
+            orb1.addColorStop(0, 'rgba(10, 132, 255, 0.28)');
+            orb1.addColorStop(1, 'rgba(10, 132, 255, 0)');
+            ctx.fillStyle = orb1;
+            ctx.beginPath(); ctx.arc(860, 320, 480, 0, Math.PI * 2); ctx.fill();
+
+            const orb2 = ctx.createRadialGradient(220, 1600, 20, 220, 1600, 520);
+            orb2.addColorStop(0, 'rgba(94, 92, 230, 0.24)');
+            orb2.addColorStop(1, 'rgba(94, 92, 230, 0)');
+            ctx.fillStyle = orb2;
+            ctx.beginPath(); ctx.arc(220, 1600, 520, 0, Math.PI * 2); ctx.fill();
+
+            // Liquid Glass Card Surface
+            const cardGrad = ctx.createLinearGradient(120, 320, 960, 1600);
+            cardGrad.addColorStop(0, 'rgba(255, 255, 255, 0.11)');
+            cardGrad.addColorStop(1, 'rgba(255, 255, 255, 0.03)');
+            ctx.fillStyle = cardGrad;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(120, 320, 840, 1280, 64);
+            ctx.fill();
+            ctx.stroke();
+
+            // Header Typography
+            ctx.fillStyle = '#f5f7fa';
+            ctx.font = '700 68px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('GymProCounter', 540, 500);
+
+            ctx.fillStyle = 'rgba(235, 235, 245, 0.55)';
+            ctx.font = '500 34px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Твой помощник в зале', 540, 565);
+
+            ctx.fillStyle = 'rgba(235, 235, 245, 0.55)';
+            ctx.font = '600 30px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('ОБЩИЙ ТОННАЖ ЗА ТРЕНИРОВКУ', 540, 815);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 132px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText(`${tonnage} кг`, 540, 980);
+
+            // Monochrome Vector Clock + Duration on Canvas
+            const durText = formatMinutesRussian(duration);
+            ctx.font = '600 50px -apple-system, BlinkMacSystemFont, sans-serif';
+            const textWidth = ctx.measureText(durText).width;
+            const iconRadius = 20;
+            const totalW = iconRadius * 2 + 18 + textWidth;
+            const startX = 540 - totalW / 2;
+            const centerY = 1095;
+
+            ctx.strokeStyle = '#0A84FF';
+            ctx.lineWidth = 4.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(startX + iconRadius, centerY, iconRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(startX + iconRadius, centerY - 10);
+            ctx.lineTo(startX + iconRadius, centerY);
+            ctx.lineTo(startX + iconRadius + 7, centerY + 5);
+            ctx.stroke();
+
+            ctx.fillStyle = '#0A84FF';
+            ctx.textAlign = 'left';
+            ctx.fillText(durText, startX + iconRadius * 2 + 18, centerY + 17);
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(235, 235, 245, 0.45)';
+            ctx.font = '600 34px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('@GymProCounterBot', 540, 1470);
+
+            return canvas.toDataURL('image/png');
+        }
+
+        function openResultModal(workoutData) {
+            lastFinishedWorkoutData = workoutData;
+            document.getElementById('storyCardImagePreview').src = drawStoryCanvas(workoutData);
+            document.getElementById('resultModal').classList.add('open');
+        }
+
+        async function shareOrDownloadStoryImage() {
+            const canvas = document.getElementById('exportCanvas');
+            drawStoryCanvas(lastFinishedWorkoutData);
+            try {
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                if (blob) {
+                    const file = new File([blob], 'GymProCounter_Result.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title: 'GymProCounter' });
+                        showNotice("Готово");
+                        return;
+                    }
+                }
+            } catch (err) {
+                if (err && err.name === 'AbortError') return;
+            }
+            const link = document.createElement('a');
+            link.download = 'GymProCounter_Result.png';
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotice("Зажмите превью карточки пальцем, чтобы сохранить в Фото");
+        }
+    </script>
+</body>
+</html>
