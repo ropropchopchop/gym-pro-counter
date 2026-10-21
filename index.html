@@ -59,11 +59,13 @@
         .orb-2 { width: 340px; height: 340px; background: var(--orb-2); bottom: 5%; right: -80px; animation-delay: -5s; }
         .orb-3 { width: 240px; height: 240px; background: var(--orb-3); top: 40%; left: 20%; animation-delay: -9s; }
         @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 40px) scale(1.12); } }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding: 0 4px; }
-        .user-greeting h1 { font-size: 23px; font-weight: 800; letter-spacing: -0.6px; }
-        .user-greeting p { font-size: 13px; color: var(--text-secondary); }
-        .header-btns { display: flex; gap: 8px; align-items: center; }
-        .icon-btn { background: var(--glass-bg); backdrop-filter: var(--blur-filter); -webkit-backdrop-filter: var(--blur-filter); border: 1px solid var(--glass-border); border-top-color: var(--glass-border-top); border-left-color: var(--glass-border-left); color: var(--text-main); padding: 9px 13px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: var(--glass-shadow), var(--glass-inner-glow); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+        header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; padding: 0 4px; }
+        .user-greeting { min-width: 0; flex: 1; }
+        .user-greeting h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-greeting p { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+        .user-name-line { font-size: 12px; font-weight: 650; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; display: none; }
+        .header-btns { display: flex; gap: 8px; align-items: center; flex-shrink: 0; white-space: nowrap; }
+        .icon-btn { background: var(--glass-bg); backdrop-filter: var(--blur-filter); -webkit-backdrop-filter: var(--blur-filter); border: 1px solid var(--glass-border); border-top-color: var(--glass-border-top); border-left-color: var(--glass-border-left); color: var(--text-main); padding: 9px 13px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: var(--glass-shadow), var(--glass-inner-glow); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; flex-shrink: 0; line-height: 1; }
         .icon-btn:active { transform: scale(0.92); }
         .toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-120px); background: var(--toast-bg); backdrop-filter: var(--blur-filter); -webkit-backdrop-filter: var(--blur-filter); border: 1px solid var(--glass-border-top); color: var(--text-main); padding: 12px 22px; border-radius: 999px; font-size: 13px; font-weight: 650; z-index: 1000; box-shadow: 0 14px 35px rgba(0,0,0,0.35), var(--glass-inner-glow); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); text-align: center; max-width: 92%; }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -145,8 +147,9 @@
 
     <header>
         <div class="user-greeting">
-            <h1 id="headerUserName">GymProCounter</h1>
+            <h1>GymProCounter</h1>
             <p>Твой помощник в зале</p>
+            <div id="headerUserBadge" class="user-name-line"></div>
         </div>
         <div class="header-btns">
             <button class="icon-btn" onclick="toggleTheme()" title="Сменить тему">☀️ / 🌙</button>
@@ -465,7 +468,7 @@
         let addingMode = 'setup';
         let currentLoadedTemplateName = null;
         let isTemplateModified = false;
-        let reportModalOrigin = 'finish'; // 'finish' или 'history'
+        let reportModalOrigin = 'finish';
 
         const muscleGroupsData = {
             chest: "Грудь", back: "Спина", legs: "Ноги", glutes: "Ягодицы",
@@ -535,11 +538,14 @@
 
         // --- ЛИЧНАЯ ИНФОРМАЦИЯ И ПЕРВЫЙ ВХОД ---
         function updateHeaderProfileUI() {
-            const h = document.getElementById('headerUserName');
+            const badge = document.getElementById('headerUserBadge');
             if (state.profile && state.profile.name) {
-                h.innerText = `GymProCounter • ${state.profile.name}`;
+                badge.style.display = 'block';
+                const weightInfo = state.profile.weight ? ` • ${state.profile.weight} кг` : '';
+                badge.innerText = `👤 ${state.profile.name}${weightInfo}`;
             } else {
-                h.innerText = `GymProCounter`;
+                badge.style.display = 'none';
+                badge.innerText = '';
             }
         }
 
@@ -950,7 +956,6 @@
             const updateBtn = document.getElementById('updateTemplateBtn');
             const createNewContainer = document.getElementById('createNewWorkoutContainer');
 
-            // Если в шаблоне удалили все упражнения — автоматически возвращаем на чистый первоначальный экран
             if (!state.setupExercises || state.setupExercises.length === 0) {
                 currentLoadedTemplateName = null;
                 isTemplateModified = false;
@@ -988,6 +993,7 @@
             if (state.setupExercises.length === 0) {
                 updateTemplateButtonUI();
                 renderSetupExercises();
+                showNotice("Заполните вес и повторения хотя бы в одном подходе!");
                 return;
             }
             let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
@@ -1004,7 +1010,7 @@
             if (!state.setupExercises || state.setupExercises.length === 0) {
                 updateTemplateButtonUI();
                 renderSetupExercises();
-                showNotice("Сначала добавьте и заполните упражнения!");
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе!");
                 return;
             }
             document.getElementById('templateNameInput').value = currentLoadedTemplateName || `Тренировка ${new Date().toLocaleDateString()}`;
@@ -1015,6 +1021,13 @@
             const nameInput = document.getElementById('templateNameInput').value.trim();
             if (!nameInput) { showNotice("Введите название тренировки!"); return; }
             cleanAllSetupEmptySets();
+            if (state.setupExercises.length === 0) {
+                closeModal('saveTemplateModal');
+                updateTemplateButtonUI();
+                renderSetupExercises();
+                showNotice("Нет полностью заполненных подходов для сохранения!");
+                return;
+            }
             let templates = JSON.parse(localStorage.getItem('gym_pro_templates') || '{}');
             templates[nameInput] = JSON.parse(JSON.stringify(state.setupExercises));
             localStorage.setItem('gym_pro_templates', JSON.stringify(templates));
@@ -1071,8 +1084,15 @@
             }
         }
 
+        // СТРОГАЯ ПРОВЕРКА: подход сохраняется только если заполнены ОБА поля (и вес > 0, и повторы > 0)
+        function isSetFullyFilled(s) {
+            const wStr = String(s.weight ?? '').trim();
+            const rStr = String(s.reps ?? '').trim();
+            return wStr !== '' && rStr !== '' && Number(wStr) > 0 && Number(rStr) > 0;
+        }
+
         function cleanExerciseEmptySets(ex) {
-            ex.sets = ex.sets.filter(s => String(s.weight).trim() !== '' || String(s.reps).trim() !== '');
+            ex.sets = ex.sets.filter(s => isSetFullyFilled(s));
         }
 
         function cleanAllSetupEmptySets() {
@@ -1088,12 +1108,12 @@
                 state.setupExercises.splice(exIdx, 1);
                 updateTemplateButtonUI();
                 renderSetupExercises();
-                showNotice(`Упражнение «${ex.name}» удалено (не было подходов)`);
+                showNotice(`Упражнение «${ex.name}» удалено (не заполнены вес и повторы)`);
                 return;
             }
             const removed = before - ex.sets.length;
             renderSetupExercises();
-            showNotice(removed > 0 ? `Сохранено (удалено пустых подходов: ${removed})` : `Параметры «${ex.name}» сохранены`);
+            showNotice(removed > 0 ? `Сохранено (удалено незаполненных подходов: ${removed})` : `Параметры «${ex.name}» сохранены`);
         }
 
         function renderSetupExercises() {
@@ -1174,7 +1194,7 @@
             if (!state.setupExercises || state.setupExercises.length === 0) {
                 updateTemplateButtonUI();
                 renderSetupExercises();
-                showNotice("Добавьте и заполните хотя бы одно упражнение!");
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе!");
                 return;
             }
 
@@ -1186,7 +1206,7 @@
                     name: ex.name,
                     manuallyOpened: false,
                     durationSeconds: 0,
-                    sets: ex.sets.map(s => ({ weight: s.weight || '0', reps: s.reps || '0', completed: false }))
+                    sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, completed: false }))
                 }))
             };
             document.getElementById('startScreen').style.display = 'none';
@@ -1294,7 +1314,6 @@
             }
         }
 
-        // Возврат из краткого или подробного отчёта обратно в окно выбора типа отчёта
         function returnToResultChoices(currentModalId) {
             closeModal(currentModalId);
             showFinishResultChoices();
@@ -1661,7 +1680,7 @@
         function confirmQuickSetup() {
             cleanExerciseEmptySets(tempQuickExercise);
             if (tempQuickExercise.sets.length === 0) {
-                showNotice("Заполните хотя бы один подход!");
+                showNotice("Заполните оба поля (вес и повторы) хотя бы в одном подходе!");
                 return;
             }
             tempQuickExercise.durationSeconds = 0;
